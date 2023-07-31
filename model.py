@@ -1,24 +1,16 @@
 from dataclasses import dataclass
 import json
 import pygame
-from sys import os
 
 
 @dataclass
-class Enemy(pygame.sprite.Sprite):
+class Enemy():
     """Enemy Class."""
 
-    def __init__(self):
-        _name: str = "KAL"
-        _health: int = 100
-        _damage: int = 25
-        # pygame.sprite.Sprite.__init__(self)
-        # self.images = []
-
-        # img = pygame.image.load(os.path.join('images', 'enemy.png')).convert()
-        # self.images.append(img)
-        # self.image = self.images[0]
-        # self.rect = self.image.get_rect()
+    def __init__(self, name: str, health: int, damage: int):
+        self._name: str = name
+        self._health: int = health
+        self._damage: int = damage
 
     @property
     def name(self) -> str:
@@ -36,5 +28,5 @@ class Enemy(pygame.sprite.Sprite):
         return self._damage
 
 
-enemy = Enemy()
+enemy = Enemy("jamal", 100, 25)
 print(enemy.health)
