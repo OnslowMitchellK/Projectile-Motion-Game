@@ -1,33 +1,36 @@
+##
 # This youtubers guides were used for this program
 # https://www.youtube.com/@CodingWithRuss
 
 import pygame
+FPS = 60
 
 pygame.init()
 
 
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Shooter')
 
 
-class Soldier(pygame.sprite.Sprite):
+class Test_Character(pygame.sprite.Sprite):
 	def __init__(self, x, y, scale):
 		pygame.sprite.Sprite.__init__(self)
-		img = pygame.image.load('C:/Downloads/test_player.png')
+		img = pygame.image.load('C:/Downloads/mario.png')
+		# Rescaling the img of the character that appears on the screen
 		self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
 		self.rect = self.image.get_rect()
 		self.rect.center = (x, y)
 
 	def draw(self):
-		screen.blit(self.image, self.rect)
+		window.blit(self.image, self.rect)
 
 
 
-player = Soldier(200, 200, 3)
-player2 = Soldier(400, 200, 3)
+player = Test_Character(200, 200, 3)
+player2 = Test_Character(400, 200, 3)
 
 
 

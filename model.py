@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import json
 import pygame
+LEVEL_ONE_ENEMY_NUM = 2
 
 
 @dataclass
@@ -27,6 +28,8 @@ class Enemy():
         """Damage getter."""
         return self._damage
 
-
+level_one_enemies = {}
+for i in range(LEVEL_ONE_ENEMY_NUM):
+    level_one_enemies[i] = Enemy(f"Enemy {i}", 100, 25)
 enemy = Enemy("jamal", 100, 25)
-print(enemy.health)
+print(level_one_enemies[1].name)
