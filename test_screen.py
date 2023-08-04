@@ -14,6 +14,26 @@ window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Shooter')
 
 background_image = pygame.image.load("background.jpg")
+bg = pygame.transform.scale(background_image, [SCREEN_WIDTH, SCREEN_HEIGHT])
+
+FLOOR_HEIGHT = 100
+floor = pygame.Rect(0, SCREEN_HEIGHT - FLOOR_HEIGHT,
+                    SCREEN_WIDTH, FLOOR_HEIGHT)
+enemy_rect = enemy_image.get_rect()
+x_speed, y_speed = 5,4
+
+
+def bouncing_rect():
+    global x_speed, y_speed
+    enemy_rect.x += x_speed
+    enemy_rect.y += y_speed
+
+    if enemy_rect.right >= SCREEN_WIDTH or enemy_rect.left <= 0:
+        x_speed *= -1
+    if enemy_rect.bottom >= SCREEN_HEIGHT or enemy_rect.top <= 0:
+        y_speed *= -1
+    window.blit(enemy_image, enemy_rect)
+    pygame.display.flip()
 
 
 def main(window):
@@ -28,10 +48,13 @@ def main(window):
             if event.type == pygame.QUIT:
                 run = False
                 break
-        # window.blit(background_image, [0, 0])
-        # pygame.display.flip()
-        window.blit(enemy_image, [SCREEN_WIDTH - level_one_enemies[0]._x, SCREEN_HEIGHT - enemy_image.getheight])
+        # window.blit(bg, [0, 0])
+        # window.blit(enemy_image, [SCREEN_WIDTH - enemy_image.get_width(), SCREEN_HEIGHT - enemy_image.get_height()])
+        pygame.draw.rect(window, (255, 0, 255), floor)
+        window.blit(enemy_image, enemy_rect)
         pygame.display.flip()
+
+        bouncing_rect()
 
         # draw(window, background, bg_image)
     pygame.quit()
