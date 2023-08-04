@@ -30,7 +30,7 @@ def bouncing_rect():
 
     if enemy_rect.right >= SCREEN_WIDTH or enemy_rect.left <= 0:
         x_speed *= -1
-    if enemy_rect.bottom >= SCREEN_HEIGHT or enemy_rect.top <= 0:
+    if enemy_rect.bottom >= SCREEN_HEIGHT - FLOOR_HEIGHT or enemy_rect.top <= 0:
         y_speed *= -1
     window.blit(enemy_image, enemy_rect)
     pygame.display.flip()

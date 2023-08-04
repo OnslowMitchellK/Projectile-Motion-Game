@@ -12,7 +12,7 @@ class Enemy():
 
     def __init__(self, name: str, health: int,
                  damage: int, x: int, y: int, width: int, height: int):
-        """Enemy variables"""
+        """Enemy variables."""
         self._name: str = name
         self._health: int = health
         self._damage: int = damage
@@ -41,3 +41,11 @@ level_one_enemies = {}
 for i in range(LEVEL_ONE_ENEMY_NUM):
     level_one_enemies[i] = Enemy(f"Enemy {i}", 100, 25,
                                  randint(0, 20), randint(0, 20), 40, 40)
+
+print("Name: ", level_one_enemies[1].name)
+print("Health: ", level_one_enemies[1].health)
+print("Damage: ", level_one_enemies[1].damage)
+print("x Coordinate: ", level_one_enemies[1]._x)
+print("y Coordinate: ", level_one_enemies[1]._y)
+print("Width: ", level_one_enemies[1]._width)
+print("Height: ", level_one_enemies[1]._height)
