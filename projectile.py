@@ -5,7 +5,8 @@ import time
 pygame.init()
 
 win = pygame.display.set_mode((1000, 500))
-HEIGHT = 500
+background = pygame.Surface((1000, 500))
+background.fill((255, 255, 255))
 pygame.display.set_caption("Test projectile")
 win.fill((255, 255, 255))
 
@@ -54,11 +55,10 @@ class Projectile:
         while run:
             if test.vert_distance(launch_time) < 0:
                 break
-            win.blit(img, (test.horz_distance(launch_time), (500 - test.vert_distance(launch_time))))
-            #pygame.draw.circle(win, (0, 200, 200), (test.horz_distance(launch_time), (500 - test.vert_distance(launch_time))), 10)
+            win.blit(background, (0, 0))
+            win.blit(img, ((-20 + test.horz_distance(launch_time)), (480 - test.vert_distance(launch_time))))
             time.sleep(0.01)
             launch_time += (1 / FPS)
-            print(test.horz_distance(launch_time), test.vert_distance(launch_time))
             pygame.display.update()
 
 test = Projectile("Cannon", 200, 200, -9.81)
