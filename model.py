@@ -10,11 +10,12 @@ enemy_image = pygame.image.load("enemy.jpeg")
 class Enemy():
     """Enemy Class."""
 
-    def __init__(self, name: str, health: int,
+    def __init__(self, name: str, health: int, shield: int,
                  damage: int, x: int, y: int, width: int, height: int):
         """Enemy variables."""
         self._name: str = name
         self._health: int = health
+        self._shield: int = shield
         self._damage: int = damage
         self._x: int = x
         self._y: int = y
@@ -30,6 +31,11 @@ class Enemy():
     def health(self) -> int:
         """Health getter."""
         return self._health
+
+    @property
+    def shield(self) -> int:
+        """Shield getter."""
+        return self._shield
 
     @property
     def damage(self) -> int:
