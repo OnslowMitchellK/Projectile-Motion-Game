@@ -1,5 +1,5 @@
 ##
-# This youtubers guides were used for this program
+# This youtubers guides were used in this program
 # https://www.youtube.com/@CodingWithRuss
 
 import pygame
@@ -18,7 +18,7 @@ pygame.display.set_caption('Shooter')
 class Test_Character(pygame.sprite.Sprite):
 	def __init__(self, x, y, scale):
 		pygame.sprite.Sprite.__init__(self)
-		img = pygame.image.load('C:/Downloads/mario.png')
+		img = pygame.image.load('Assets/test_slime.jpeg')
 		# Rescaling the img of the character that appears on the screen
 		self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
 		self.rect = self.image.get_rect()
@@ -29,8 +29,8 @@ class Test_Character(pygame.sprite.Sprite):
 
 
 
-player = Test_Character(200, 200, 3)
-player2 = Test_Character(400, 200, 3)
+player = Test_Character(200, 200, 5)
+player2 = Test_Character(600, 600, 5)
 
 
 
