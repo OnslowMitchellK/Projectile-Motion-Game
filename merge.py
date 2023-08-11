@@ -11,10 +11,6 @@ level_one_enemies = {}
 for i in range(LEVEL_ONE_ENEMY_NUM):
     level_one_enemies[i] = Enemy(f"Enemy {i}", 100, 100, 25, SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100, 40, 40)
 
-FLOOR_HEIGHT = 100
-floor = pygame.Rect(0, SCREEN_HEIGHT - FLOOR_HEIGHT,
-                    SCREEN_WIDTH, FLOOR_HEIGHT)
-
 pygame.init()
 
 def make_window(width: int, height:int, caption: str) -> pygame.Surface:
@@ -91,7 +87,6 @@ def main():
         pygame.display.set_caption(f"Angle: {angle} Speed: {speed}")
         window.blit(background, (0, 0))
         window.blit(projectile, (x, y))
-        pygame.draw.rect(window, (255, 0, 255), floor)
         window.blit(level_one_enemies[0].image, [SCREEN_WIDTH - level_one_enemies[0].image.get_width(), SCREEN_HEIGHT - level_one_enemies[0].image.get_height()])
         pygame.display.update()
 
