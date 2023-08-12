@@ -9,7 +9,7 @@ SCREEN_WIDTH = 1280
 LEVEL_ONE_ENEMY_NUM = 2
 level_one_enemies = {}
 for i in range(LEVEL_ONE_ENEMY_NUM):
-    level_one_enemies[i] = Enemy(f"Enemy {i}", 100, 100, 25, SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100, 40, 40)
+    level_one_enemies[i] = Enemy(f"Enemy {i}", 100, 100, 25, SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100, 40, 40, pygame.Rect(30, 30, 60, 60))
 
 
 map_1_small = """                                
@@ -167,7 +167,8 @@ def main():
             projectile_rect.x = (x + 0.25 * PROJECTILE_SIDE)
             projectile_rect.y = (y + 0.25 * PROJECTILE_SIDE)
             draw_tiles(map_1)
-            window.blit(level_one_enemies[i].image, [0, 0])
+            # window.blit(level_one_enemies[i].image, [0, 0])
+            window.blit(level_one_enemies[i].image, level_one_enemies[i].rect)
 
             window.blit(projectile, (x, y))
             pygame.display.update()
