@@ -91,14 +91,19 @@ def draw_tiles(map):
     for row in game_map:
         x = 0
         for tile in row:
+            duplicate = False
             tile_rect.x = x * TILE_SIZE
             tile_rect.y = y * TILE_SIZE
+            if tile_rect.copy() in tile_rects:
+                duplicate = True
             if tile == "1":
                 window.blit(img_1, (x * TILE_SIZE, y * TILE_SIZE))
-                tile_rects.append(tile_rect.copy())
+                if not duplicate:
+                    tile_rects.append(tile_rect.copy())
             elif tile == "2":
                 window.blit(img_2, (x * TILE_SIZE, y * TILE_SIZE))
-                tile_rects.append(tile_rect.copy())
+                if not duplicate:
+                    tile_rects.append(tile_rect.copy())
             x += 1
         y += 1
     pygame.display.update()
@@ -123,10 +128,7 @@ def main():
     draw_tiles(map_1)
     pygame.display.update()
 
-    clock = pygame.time.Clock()
-
     while not quit:
-        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit = True
