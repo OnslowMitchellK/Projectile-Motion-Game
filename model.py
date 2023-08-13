@@ -14,7 +14,7 @@ class Enemy(pygame.sprite.Sprite):
                  screen):
         """Enemy variables."""
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('enemy.png')
+        self.image = pygame.image.load('tile1.png')
         self.rect = self.image.get_rect()
         self._name: str = name
         self._health: int = health
