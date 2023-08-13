@@ -1,12 +1,14 @@
 import pygame
 import math
 import time
+from button import Button
+
 pygame.init()
 
-SCREEN_HEIGHT = 720
 SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
 
-map_1_small = """                                
+map_1 = """                                
                                 
                                 
                                 
@@ -25,7 +27,7 @@ map_1_small = """
 11111111111111111111111111111111
 11111111111111111111111111111111"""
 
-map_1 = """                                                                
+map_2 = """                                                                
                                                                 
                                                                 
                                                                 
@@ -62,21 +64,22 @@ map_1 = """
 1111111111111111111111111111111111111111111111111111111111111111
 1111111111111111111111111111111111111111111111111111111111111111"""
 
-map_1_background = pygame.image.load("airport_background.png")
-map_1_background = pygame.transform.scale(map_1_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+airport_background = pygame.image.load("airport_background.png")
+airport_background = pygame.transform.scale(airport_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-TILE_SIZE = 20
+map_2_background = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+map_2_background.fill((200, 30, 20))
+
 
 img_1 = pygame.image.load("tile1.png")
 img_2 = pygame.image.load("tile2.png")
-img_1 = pygame.transform.scale(img_1, (TILE_SIZE, TILE_SIZE))
-img_2 = pygame.transform.scale(img_2, (TILE_SIZE, TILE_SIZE))
 
-tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
 tile_rects = []
+# projectile_side
+PJ_S = 80
 
 class Projectile:
-    def __init__(self, start_x, start_y, image, size, background, map) -> None:
+    def __init__(self, start_x, start_y, image, size, background, map, screen, tile_size) -> None:
         self.start_x = start_x
         self.start_y = start_y
         self.size = size
@@ -84,6 +87,8 @@ class Projectile:
         self._projectile_rect = pygame.Rect(0, 0, 0.5 * self.size, 0.5 * self.size)
         self.background = background
         self.map = map
+        self.screen = screen
+        self.tile_size = tile_size
 
         self.gravity = -9.81
         self._shoot = False
@@ -117,7 +122,7 @@ class Projectile:
     def draw_starting_point(self):
         self.projectile_rect.x = self.start_x + 0.25 * self.size
         self.projectile_rect.y = self.start_y + 0.25 * self.size
-        window.blit(self.image, (self.start_x, self.start_y))
+        self.screen.blit(self.image, (self.start_x, self.start_y))
         pygame.display.update()
 
     def trajectory(self, change_in_time):
@@ -138,9 +143,9 @@ class Projectile:
             x = coords[0]
             y = coords[1]
 
-            window.blit(self.background, (0, 0))
-            draw_tiles(self.map)
-            window.blit(self.image, (x, y))
+            self.screen.blit(self.background, (0, 0))
+            draw_tiles(self.map, self.tile_size)
+            self.screen.blit(self.image, (x, y))
             self.projectile_rect.x = x + 0.25 * self.size
             self.projectile_rect.y = y + 0.25 * self.size
             pygame.display.update()
@@ -155,7 +160,10 @@ def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
     pygame.display.set_caption(caption)
     return win
 
-def draw_tiles(map, first = False):
+def draw_tiles(map, tile_size, first = False):
+    scaled_img_1 = pygame.transform.scale(img_1, (tile_size, tile_size))
+    scaled_img_2 = pygame.transform.scale(img_2, (tile_size, tile_size))
+    tile_rect = pygame.Rect(0, 0, tile_size, tile_size)
     game_map = map.split("\n")
     x = 0
     y = 0
@@ -164,17 +172,17 @@ def draw_tiles(map, first = False):
         for tile in row:
             if first:
                 duplicate = False
-                tile_rect.x = x * TILE_SIZE
-                tile_rect.y = y * TILE_SIZE
+                tile_rect.x = x * tile_size
+                tile_rect.y = y * tile_size
                 if tile_rect.copy() in tile_rects:
                     duplicate = True
             if tile == "1":
-                window.blit(img_1, (x * TILE_SIZE, y * TILE_SIZE))
+                window.blit(scaled_img_1, (x * tile_rect.width, y * tile_rect.height))
                 if first:
                     if not duplicate:
                         tile_rects.append(tile_rect.copy())
             elif tile == "2":
-                window.blit(img_2, (x * TILE_SIZE, y * TILE_SIZE))
+                window.blit(scaled_img_2, (x * tile_rect.width, y * tile_rect.height))
                 if first:
                     if not duplicate:
                         tile_rects.append(tile_rect.copy())
@@ -182,28 +190,21 @@ def draw_tiles(map, first = False):
         y += 1
     pygame.display.update()
 
-class Button:
-    def __init__(self) -> None:
-        pass
-
-
-def menu():
-    pass
-
-
-
-def main(projectile: Projectile):
+def level_play(screen, map_background, map_tiles, tile_size, projectile_starting_coords):
     current = True
     shoot = False
 
-    window.blit(map_1_background, (0, 0))
-    draw_tiles(map_1, True)
-    projectile_one.draw_starting_point()
+    projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], pygame.image.load("test.png"), PJ_S, map_background, map_tiles, screen, tile_size)
 
-    while True:
+    screen.blit(map_background, (0, 0))
+    draw_tiles(map_tiles, tile_size, True)
+    projectile.draw_starting_point()
+
+    run = True
+    while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                run = False
             elif event.type == pygame.KEYDOWN:
                 if event.__dict__["key"] == pygame.K_q:
                     current = False if current else True
@@ -221,13 +222,56 @@ def main(projectile: Projectile):
                     projectile.change_speed(-5)
         if shoot:
             shoot = projectile.draw_trajectory()
-            window.blit(map_1_background, (0, 0))
-            draw_tiles(map_1)
+            screen.blit(map_background, (0, 0))
+            draw_tiles(map_tiles, tile_size)
             projectile.draw_starting_point()
-            pygame.display.update()
 
-window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Angle: 0 Speed: 0")
-# projectile_side
-PJ_S = 80
-projectile_one = Projectile((0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - (0.75 * PJ_S) - 60), pygame.image.load("test.png"), PJ_S, map_1_background, map_1)
-main(projectile_one)
+        pygame.display.update()
+    pygame.quit()
+
+def main_menu():
+    window.fill((40, 90, 150))
+    pygame.display.set_caption("Main Menu")
+    play_button.draw(window)
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and play_button.is_pressed():
+                    level_menu()
+        pygame.display.update()
+    pygame.quit()
+
+def level_menu():
+    level_1_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.33, 200, 100, "level_1.png", "Level 1")
+    level_2_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.33, 200, 100, "level_2.png", "Level 2")
+
+    pygame.display.set_caption("Level Menu")
+    window.fill((90, 80, 40))
+
+    level_1_button.draw(window)
+    level_2_button.draw(window)
+
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and level_1_button.is_pressed():
+                    level_play(window, airport_background, map_1, 40, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - (0.75 * PJ_S) - 120)])
+                elif event.button == 1 and level_2_button.is_pressed():
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - (0.75 * PJ_S) - 60)])
+        pygame.display.update()
+    pygame.quit()
+
+
+window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
+
+play_button = Button(SCREEN_WIDTH * 0.5, 200, 500, 200, "play.png", "Play")
+#options_button = Button(100, 200, "tile2.png", "Options")
+
+main_menu()
+
