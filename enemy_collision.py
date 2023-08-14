@@ -163,7 +163,7 @@ class Projectile(pygame.sprite.Sprite):
             self.screen.blit(self.background, (0, 0))
             draw_tiles(self.map, self.tile_size)
             # draw_enemies(level_one_enemies)
-            pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
+            # pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
             enemy_group.draw(self.screen)
 
             self.screen.blit(self.image, (x, y))
@@ -205,6 +205,9 @@ def deduct_health(enemy_hit):
 
     if enemy_hit.health <= 0:
         print("RIP")
+        for i in range(255, 0, -1):
+            enemy_hit.image.set_alpha(i)
+            time.sleep(0.5)
     #     return True
     # else:
     #     return False
