@@ -101,7 +101,7 @@ class Projectile:
         self._shoot = False
         self._angle = 0
         self._speed = 0
-    
+
     @property
     def shoot(self):
         return self._shoot
@@ -144,9 +144,8 @@ class Projectile:
         return coordinates
 
     def draw_trajectory(self):
-        coordinates = self.trajectory(1 / 5)
+        coordinates = self.trajectory(1 / 10)
         for coords in coordinates:
-            time.sleep(1 / 1000)
             x = coords[0]
             y = coords[1]
 
@@ -237,8 +236,10 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     projectile.draw_starting_point()
     draw_enemies(level_one_enemies)
 
+    clock = pygame.time.Clock()
     run = True
     while run:
+        clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
