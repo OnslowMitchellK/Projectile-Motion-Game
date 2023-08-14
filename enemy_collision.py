@@ -150,7 +150,6 @@ class Projectile:
             x = coords[0]
             y = coords[1]
 
-            self.screen.fill(BLACK)
             self.screen.blit(self.background, (0, 0))
             draw_tiles(self.map, self.tile_size)
             draw_enemies(level_one_enemies)
@@ -258,7 +257,6 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
                 elif event.button == 5 and not current:
                     projectile.change_speed(-5)
         if shoot:
-            screen.fill(BLACK)
             shoot = projectile.draw_trajectory()
             screen.blit(map_background, (0, 0))
             draw_tiles(map_tiles, tile_size)
