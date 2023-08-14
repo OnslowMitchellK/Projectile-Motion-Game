@@ -146,7 +146,7 @@ class Projectile:
     def draw_trajectory(self):
         coordinates = self.trajectory(1 / 5)
         for coords in coordinates:
-            time.sleep(1 / 100)
+            time.sleep(1 / 1000)
             x = coords[0]
             y = coords[1]
 
@@ -171,9 +171,10 @@ class Projectile:
 
 def deduct_health(enemy_hit):
     damage = randint(30, 90)
+    old_shield = enemy_hit.shield
     enemy_hit.shield -= damage
     if enemy_hit.shield == 0:
-        enemy_hit.health -= damage
+        enemy_hit.health -= (damage - old_shield)
 
     if enemy_hit.health <= 0:
         print("RIP")
