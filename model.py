@@ -1,11 +1,9 @@
-from dataclasses import dataclass
 import pygame
 from random import randint
 LEVEL_ONE_ENEMY_NUM = 2
 enemy_image = pygame.image.load("enemy.jpeg")
 
 
-@dataclass
 class Enemy(pygame.sprite.Sprite):
     """Enemy Class."""
 
@@ -13,18 +11,20 @@ class Enemy(pygame.sprite.Sprite):
                  damage: int, x: int, y: int, width: int, height: int,
                  screen):
         """Enemy variables."""
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('enemy.png')
+        super().__init__()
+        self.image = pygame.image.load('enemy.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (int(self.image.get_width() * 3), int(self.image.get_height() * 3)))
         self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.image_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.image_mask.to_surface()
+
         self._name: str = name
         self._health: int = health
         self._shield: int = shield
         self._damage: int = damage
         self._width: int = width
         self._height: int = height
-        self.rect = self.image.get_rect()
-        self.rect.x: int = x
-        self.rect.y: int = y
         self.screen = screen
 
     # @property
@@ -65,6 +65,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def draw(self):
         self.screen.blit(self.image, self.rect)
+        pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
 
 # print("Name: ", level_one_enemies[1].name)
 # print("Health: ", level_one_enemies[1].health)
