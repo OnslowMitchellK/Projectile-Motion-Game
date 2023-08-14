@@ -40,6 +40,8 @@ class Test_Character(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.center = (x, y)
 
+		
+
 	def move(self, moving_left, moving_right):
 		# reset movement
 		dx = 0
@@ -54,7 +56,6 @@ class Test_Character(pygame.sprite.Sprite):
 			dx = self.speed
 			self.flip = False
 			self.direction = 1
-
 
 		#update rectangle position
 		self.rect.x += dx
