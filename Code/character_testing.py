@@ -29,12 +29,13 @@ def draw_bg():
 
 
 class Test_Character(pygame.sprite.Sprite):
-	def __init__(self, x, y, scale, speed):
+	def __init__(self, char_type, x, y, scale, speed):
 		pygame.sprite.Sprite.__init__(self)
+		self.char_type = char_type
 		self.speed = speed
 		self.direction = 1
 		self.flip = False
-		img = pygame.image.load('Assets/test_slime.jpeg')
+		img = pygame.image.load(f'Assets/{self.char_type}/test_slime.jpeg')
 		# Rescaling the img of the character that appears on the screen
 		self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
 		self.rect = self.image.get_rect()
@@ -65,8 +66,22 @@ class Test_Character(pygame.sprite.Sprite):
 		screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
 
+class Upgrade(pygame.sprite.Sprite):
+	def __init__(self, char_type, x, y, scale):
+		pygame.sprite.Sprite.__init__(self)
+		self.char_type = char_type
+		img = pygame.image.load(f'Assets/{char_type}/arrow.png')
+		self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
+		self.rect = self.image.get_rect()
+		self.rect.center = (x, y)
+
+	def draw(self):
+		screen.blit(self.image, self.rect)
+
+
 # character spawn location
-player = Test_Character(200, 200, 3, 5)
+player = Test_Character('player', 200, 200, 3, 5)
+upgrade = Upgrade('upgrade', 400, 400, 0.5)
 
 
 
