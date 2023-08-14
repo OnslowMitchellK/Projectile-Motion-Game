@@ -64,7 +64,7 @@ class Enemy(pygame.sprite.Sprite):
     #     return self._damage
 
     def draw(self):
-        self.screen.blit(self.image, self.rect)
+        self.screen.blit(self.mask_image, self.rect)
         pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
 
 # print("Name: ", level_one_enemies[1].name)

@@ -96,7 +96,7 @@ class Projectile(pygame.sprite.Sprite):
         self.start_y = start_y
         self.size = size
         self.image = pygame.image.load(image).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (self.size, self.size))
+        self.image = pygame.transform.scale(self.image, (self.size * 0.5, self.size * 0.5))
         self._rect = self.image.get_rect()
         # self.rect.topleft = (start_x - self.image.get_width(), start_y - self.image.get_height())
         self.image_mask = pygame.mask.from_surface(self.image)
