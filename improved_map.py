@@ -1,12 +1,16 @@
+"""DOGSTRING."""
 import pygame
 import math
 import time
 from button import Button
+from model import Enemy
+from random import randint
 
 pygame.init()
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
+BLACK = (0, 0, 0)
 
 map_1 = """                                
                                 
@@ -64,6 +68,9 @@ map_2 = """
 1111111111111111111111111111111111111111111111111111111111111111
 1111111111111111111111111111111111111111111111111111111111111111"""
 
+level_one_enemies = {}
+level_one_coordinates = [[40 * 17, 40 * 4], [40 * 23, 40 * 14]]
+
 airport_background = pygame.image.load("airport_background.png")
 airport_background = pygame.transform.scale(airport_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -94,7 +101,8 @@ class Projectile:
         self._shoot = False
         self._angle = 0
         self._speed = 0
-    
+        self.speeds = []
+
     @property
     def shoot(self):
         return self._shoot
@@ -125,40 +133,115 @@ class Projectile:
         self.screen.blit(self.image, (self.start_x, self.start_y))
         pygame.display.update()
 
-    def trajectory(self, change_in_time):
+    def trajectory(self, change_in_time, start_x, start_y, angle, speed):
         coordinates = []
         launch_time = 0
         y = self.start_y
         while y + (0.5 * self.size) <= SCREEN_HEIGHT:
             launch_time += change_in_time
-            x = (self.start_x + (self._speed * math.cos(math.radians(self._angle)) * launch_time))
-            y = (self.start_y - ((self._speed * math.sin(math.radians(self._angle)) * launch_time) + (0.5 * self.gravity * launch_time ** 2)))
+            x = (start_x + (speed * math.cos(math.radians(angle)) * launch_time))
+            y = (start_y - ((speed * math.sin(math.radians(angle)) * launch_time) + (0.5 * self.gravity * launch_time ** 2)))
             coordinates.append([x, y])
         return coordinates
 
     def draw_trajectory(self):
-        coordinates = self.trajectory(1 / 5)
-        for coords in coordinates:
-            time.sleep(1 / 100)
-            x = coords[0]
-            y = coords[1]
+        self.speeds.append(self._speed)
+        coordinates = self.trajectory(1 / 10, self.start_x, self.start_y, self._angle, self._speed)
+        run = True
+        while run:
+            for coords in coordinates:
+                x = coords[0]
+                y = coords[1]
 
-            self.screen.blit(self.background, (0, 0))
-            draw_tiles(self.map, self.tile_size)
-            self.screen.blit(self.image, (x, y))
-            self.projectile_rect.x = x + 0.25 * self.size
-            self.projectile_rect.y = y + 0.25 * self.size
-            pygame.display.update()
+                self.screen.blit(self.background, (0, 0))
+                draw_tiles(self.map, self.tile_size)
+                draw_enemies(level_one_enemies)
+                self.screen.blit(self.image, (x, y))
+                self.projectile_rect.x = x + 0.25 * self.size
+                self.projectile_rect.y = y + 0.25 * self.size
+                pygame.display.update()
 
-            for tile in tile_rects:
-                if self.projectile_rect.colliderect(tile):
-                    time.sleep(0.5)
-                    return False
+                for tile in tile_rects:
+                    if self.projectile_rect.colliderect(tile):
+                        self.bounce(x, y, old[0], old[1])
+                        run = False
+                        break
+                for i in range(len(level_one_enemies)):
+                    if self.projectile_rect.colliderect(level_one_enemies[i]):
+                        time.sleep(0.5)
+                        deduct_health(level_one_enemies[i])
+                        run = False
+                        break
+                old = coords
+                if not run:
+                    break
+            break
+        return
+
+    def bounce(self, current_x, current_y, old_x, old_y, first = True):
+        run = True
+        for i in range(10):
+            try:
+                angle = round(math.degrees(math.atan2(new[1] - y, new[0] - x)), 1)
+                used_x = x
+                used_y = y
+            except Exception:
+                if first:
+                    angle = round(math.degrees(math.atan2(current_y - old_y, current_x - old_x)), 1)
+                    used_x = current_x
+                    used_y = current_y
+                    first = False
+
+            speed = self.speeds[-1] * 0.8
+            self.speeds.append(speed)
+            coordinates = self.trajectory(1 / 10, used_x, used_y, angle, speed)
+            for coords in coordinates:
+                new = coords
+                if not run:
+                    break
+                x = coords[0]
+                y = coords[1]
+
+                self.screen.blit(self.background, (0, 0))
+                draw_tiles(self.map, self.tile_size)
+                draw_enemies(level_one_enemies)
+                self.screen.blit(self.image, (x, y))
+                self.projectile_rect.x = x + 0.25 * self.size
+                self.projectile_rect.y = y + 0.25 * self.size
+                pygame.display.update()
+
+                for tile in tile_rects:
+                    if self.projectile_rect.colliderect(tile):
+                        print("collide")
+                        run = False
+                        break
+
+                for i in range(len(level_one_enemies)):
+                    if self.projectile_rect.colliderect(level_one_enemies[i]):
+                        time.sleep(0.5)
+                        deduct_health(level_one_enemies[i])
+                        return
+
+def deduct_health(enemy_hit):
+    damage = randint(30, 90)
+    old_shield = enemy_hit.shield
+    enemy_hit.shield -= damage
+    if enemy_hit.shield == 0:
+        enemy_hit.health -= (damage - old_shield)
+
+    if enemy_hit.health <= 0:
+        print("RIP")
+
+    print("health: ", enemy_hit.health)
+    print("shield: ", enemy_hit.shield)
+
+
 
 def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
     win = pygame.display.set_mode((width, height))
     pygame.display.set_caption(caption)
     return win
+
 
 def draw_tiles(map, tile_size, first = False):
     scaled_img_1 = pygame.transform.scale(img_1, (tile_size, tile_size))
@@ -188,7 +271,12 @@ def draw_tiles(map, tile_size, first = False):
                         tile_rects.append(tile_rect.copy())
             x += 1
         y += 1
-    pygame.display.update()
+
+
+def draw_enemies(enemy_level_list):
+    for i in range(len(level_one_enemies)):
+        level_one_enemies[i].draw()
+
 
 def level_play(screen, map_background, map_tiles, tile_size, projectile_starting_coords):
     current = True
@@ -199,9 +287,12 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     screen.blit(map_background, (0, 0))
     draw_tiles(map_tiles, tile_size, True)
     projectile.draw_starting_point()
+    draw_enemies(level_one_enemies)
 
+    clock = pygame.time.Clock()
     run = True
     while run:
+        clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -221,13 +312,16 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
                 elif event.button == 5 and not current:
                     projectile.change_speed(-5)
         if shoot:
-            shoot = projectile.draw_trajectory()
+            projectile.draw_trajectory()
             screen.blit(map_background, (0, 0))
             draw_tiles(map_tiles, tile_size)
             projectile.draw_starting_point()
+            draw_enemies(level_one_enemies)
+            shoot = False
 
         pygame.display.update()
     pygame.quit()
+
 
 def main_menu():
     window.fill((40, 90, 150))
@@ -261,7 +355,14 @@ def level_menu():
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and level_1_button.is_pressed():
+                    for i in range(len(level_one_coordinates)):
+                        level_one_enemies[i] = Enemy(f"Enemy {2}", 100, 100, 25,
+                                    level_one_coordinates[i][0],
+                                    SCREEN_HEIGHT - level_one_coordinates[i][1],
+                                    40, 40, window)
+
                     level_play(window, airport_background, map_1, 40, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - (0.75 * PJ_S) - 120)])
+
                 elif event.button == 1 and level_2_button.is_pressed():
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - (0.75 * PJ_S) - 60)])
         pygame.display.update()
@@ -274,4 +375,3 @@ play_button = Button(SCREEN_WIDTH * 0.5, 200, 500, 200, "play.png", "Play")
 #options_button = Button(100, 200, "tile2.png", "Options")
 
 main_menu()
-
