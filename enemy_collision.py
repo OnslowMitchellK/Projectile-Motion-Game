@@ -205,9 +205,9 @@ def deduct_health(enemy_hit):
 
     if enemy_hit.health <= 0:
         print("RIP")
-        for i in range(255, 0, -1):
-            enemy_hit.image.set_alpha(i)
-            time.sleep(0.5)
+        enemy_hit.image = pygame.image.load("real_chicken_dog.png")
+        # for i in range(250, -50, -50):
+        #     enemy_hit.image.set_alpha(i)
     #     return True
     # else:
     #     return False
