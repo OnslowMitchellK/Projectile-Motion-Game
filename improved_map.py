@@ -13,13 +13,13 @@ SCREEN_HEIGHT = 720
 BLACK = (0, 0, 0)
 
 map_1 = """                                
-                                
-                                
-                                
-                                
+                               
+                               
+                               
+                               
                     2222        
                     1111        
-                                
+                               
                            22222
                           211111
                          2111111
@@ -32,30 +32,30 @@ map_1 = """
 11111111111111111111111111111111"""
 
 map_2 = """                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
                          22222222222222222222222                
-                          111111111111111111111                 
-                            11111111111111111                   
-                              1111111111111                     
-                                111111111                       
-                                111111111                       
-                                111111111                       
-                               1111111111                       
-                               1111111111                       
-                               111111111                       
+                          111111111111111111111                
+                            11111111111111111                  
+                              1111111111111                    
+                                111111111                      
+                                111111111                      
+                                111111111                      
+                               1111111111                      
+                               1111111111                      
+                               111111111                      
                                111111111                        
            22222222222         111111111                    2222
            11111111111           11111111                  21111
@@ -118,7 +118,7 @@ class Projectile:
     @property
     def projectile_rect(self):
         return self._projectile_rect
-    
+   
     def change_angle(self, change_in_angle):
         self._angle += change_in_angle if 0 <= self._angle + change_in_angle <= 90 else 0
         pygame.display.set_caption(f"Angle: {self._angle} Speed: {self._speed}")
@@ -144,9 +144,77 @@ class Projectile:
             coordinates.append([x, y])
         return coordinates
 
-    def draw_trajectory(self):
-        self.speeds.append(self._speed)
+    def draw_trajectory(self, bounce_coords = 0):
         coordinates = self.trajectory(1 / 10, self.start_x, self.start_y, self._angle, self._speed)
+        run = True
+        if type(bounce_coords) != int:
+            coordinates = bounce_coords
+
+        while run:
+            for coords in coordinates:
+                x = coords[0]
+                y = coords[1]
+
+                self.screen.blit(self.background, (0, 0))
+                draw_tiles(self.map, self.tile_size)
+                draw_enemies(level_one_enemies)
+                self.screen.blit(self.image, (x, y))
+                self.projectile_rect.x = x + 0.25 * self.size
+                self.projectile_rect.y = y + 0.25 * self.size
+                pygame.display.update()
+
+                for tile in tile_rects:
+                    if self.projectile_rect.colliderect(tile):
+                        left = False
+                        if abs(self.projectile_rect.bottom - tile.top) <= 10:
+                            print("top")
+                        elif abs(self.projectile_rect.right - tile.left) <= 10:
+                            left = True
+                        speed = 100
+                        info = None
+                        while speed >= 10:
+                            run = True
+                            if info:
+                                x = info[0][0]
+                                y = info[0][1]
+                                old_coords = info[1]
+                            else:
+                                old_coords = coordinates[coordinates.index(coords) - 1]
+                            angle = round(math.degrees(math.atan2(y - old_coords[1], x - old_coords[0])), 1)
+                            try:
+                                if info[2][0] == "left" or left:
+                                    angle = (360 - abs(angle))
+                            except Exception:
+                                pass
+                            try:
+                                speed = self.speeds[-1] * 0.8
+                            except Exception:
+                                speed = self.speed * 0.8
+                            self.speeds.append(speed)
+                            bounce_coordinates = self.trajectory(1 / 10, old_coords[0], old_coords[1], angle, speed)
+                            if left:
+                                print(bounce_coordinates)
+                            info = self.bounce(bounce_coordinates)
+                            if info == 0:
+                                break
+                        self.speeds = []
+                        run = False
+                        break
+
+                for i in range(len(level_one_enemies)):
+                    if self.projectile_rect.colliderect(level_one_enemies[i]):
+                        time.sleep(0.5)
+                        deduct_health(level_one_enemies[i])
+                        run = False
+                        break
+                if not run:
+                    break
+            break
+        return
+    
+    def bounce(self, bounce_coords):
+        hit = 0
+        coordinates = bounce_coords
         run = True
         while run:
             for coords in coordinates:
@@ -163,22 +231,19 @@ class Projectile:
 
                 for tile in tile_rects:
                     if self.projectile_rect.colliderect(tile):
-                        self.bounce(x, y, old[0], old[1])
-                        run = False
-                        break
+                        if abs(self.projectile_rect.bottom - tile.top) <= 10:
+                            hit = "top"
+                        elif abs(self.projectile_rect.right - tile.left) <= 10:
+                            hit = "left"
+                        return [[x, y], coordinates[coordinates.index(coords) - 1], [hit]]
+                        
                 for i in range(len(level_one_enemies)):
                     if self.projectile_rect.colliderect(level_one_enemies[i]):
-                        time.sleep(0.5)
-                        deduct_health(level_one_enemies[i])
-                        run = False
-                        break
-                old = coords
-                if not run:
-                    break
+                        return 0
             break
         return
 
-    def bounce(self, current_x, current_y, old_x, old_y, first = True):
+    """def bounce(self, current_x, current_y, old_x, old_y, first = True):
         run = True
         for i in range(10):
             try:
@@ -220,7 +285,8 @@ class Projectile:
                     if self.projectile_rect.colliderect(level_one_enemies[i]):
                         time.sleep(0.5)
                         deduct_health(level_one_enemies[i])
-                        return
+                        return"""
+
 
 def deduct_health(enemy_hit):
     damage = randint(30, 90)
