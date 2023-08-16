@@ -194,6 +194,7 @@ class Projectile(pygame.sprite.Sprite):
 
 
 def deduct_health(enemy_hit):
+    global enemy_group
     damage = randint(30, 90)
     old_shield = enemy_hit.shield
     enemy_hit.shield -= damage
@@ -206,6 +207,7 @@ def deduct_health(enemy_hit):
     if enemy_hit.health <= 0:
         print("RIP")
         enemy_hit.image = pygame.image.load("real_chicken_dog.png")
+        enemy_hit.die()
         # for i in range(250, -50, -50):
         #     enemy_hit.image.set_alpha(i)
     #     return True

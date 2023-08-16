@@ -67,6 +67,8 @@ class Enemy(pygame.sprite.Sprite):
         self.screen.blit(self.mask_image, self.rect)
         pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
 
+    def die(self):
+        self.kill()
 # print("Name: ", level_one_enemies[1].name)
 # print("Health: ", level_one_enemies[1].health)
 # print("Damage: ", level_one_enemies[1].damage)
