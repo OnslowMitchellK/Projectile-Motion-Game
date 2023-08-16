@@ -165,14 +165,15 @@ class Projectile:
 
                 for tile in tile_rects:
                     if self.projectile_rect.colliderect(tile):
+                        bounce_left = False
                         left = False
                         if abs(self.projectile_rect.bottom - tile.top) <= 10:
-                            print("top")
+                            pass
                         elif abs(self.projectile_rect.right - tile.left) <= 10:
                             left = True
                         speed = 100
                         info = None
-                        while speed >= 10:
+                        while speed >= 10 or y + (0.5 * self.size) <= SCREEN_HEIGHT:
                             run = True
                             if info:
                                 x = info[0][0]
@@ -182,8 +183,8 @@ class Projectile:
                                 old_coords = coordinates[coordinates.index(coords) - 1]
                             angle = round(math.degrees(math.atan2(y - old_coords[1], x - old_coords[0])), 1)
                             try:
-                                if info[2][0] == "left" or left:
-                                    angle = (360 - abs(angle))
+                                if info[2][0] == "left":
+                                    bounce_left = True
                             except Exception:
                                 pass
                             try:
@@ -191,9 +192,9 @@ class Projectile:
                             except Exception:
                                 speed = self.speed * 0.8
                             self.speeds.append(speed)
+                            if bounce_left or left:
+                                angle = 270 - angle
                             bounce_coordinates = self.trajectory(1 / 10, old_coords[0], old_coords[1], angle, speed)
-                            if left:
-                                print(bounce_coordinates)
                             info = self.bounce(bounce_coordinates)
                             if info == 0:
                                 break
@@ -235,6 +236,7 @@ class Projectile:
                             hit = "top"
                         elif abs(self.projectile_rect.right - tile.left) <= 10:
                             hit = "left"
+                            print(x, y)
                         return [[x, y], coordinates[coordinates.index(coords) - 1], [hit]]
                         
                 for i in range(len(level_one_enemies)):
