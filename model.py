@@ -17,7 +17,6 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.image_mask = pygame.mask.from_surface(self.image)
-        self.mask_image = self.image_mask.to_surface()
 
         self._name: str = name
         self._health: int = health
@@ -64,7 +63,7 @@ class Enemy(pygame.sprite.Sprite):
     #     return self._damage
 
     def draw(self):
-        self.screen.blit(self.mask_image, self.rect)
+        self.screen.blit(self.image, self.rect)
         pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
 
     def die(self):

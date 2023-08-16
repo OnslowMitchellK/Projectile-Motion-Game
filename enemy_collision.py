@@ -5,6 +5,7 @@ import time
 from button import Button
 from model import Enemy
 from random import randint
+from character_testing import Test_Character
 
 pygame.init()
 
@@ -89,6 +90,9 @@ enemy_group = pygame.sprite.Group()
 projectile_group = pygame.sprite.Group()
 
 
+jamal = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0)
+
+
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, start_x, start_y, image, size, background, map, screen, tile_size) -> None:
         super().__init__()
@@ -164,6 +168,7 @@ class Projectile(pygame.sprite.Sprite):
             draw_tiles(self.map, self.tile_size)
             # draw_enemies(level_one_enemies)
             # pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
+            self.screen.blit(jamal.image, jamal.rect)
             enemy_group.draw(self.screen)
 
             self.screen.blit(self.image, (x, y))
@@ -266,8 +271,8 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     screen.blit(map_background, (0, 0))
     draw_tiles(map_tiles, tile_size, True)
     projectile.draw_starting_point()
+    screen.blit(jamal.image, jamal.rect)
     # draw_enemies(level_one_enemies)
-    pygame.draw.rect(screen, (255, 0, 0), projectile.rect, 2)
     enemy_group.draw(screen)
 
     clock = pygame.time.Clock()
@@ -297,6 +302,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
             screen.blit(map_background, (0, 0))
             draw_tiles(map_tiles, tile_size)
             projectile.draw_starting_point()
+            screen.blit(jamal.image, jamal.rect)
             pygame.draw.rect(screen, (255, 0, 0), projectile.rect, 2)
             # draw_enemies(level_one_enemies)
             enemy_group.draw(screen)
@@ -344,7 +350,7 @@ def level_menu():
                                     40, 40, window)
                         enemy_group.add(level_one_enemies[i])
 
-                    level_play(window, airport_background, map_1, 40, [(0 - (0.25 * PJ_S) + 50), (SCREEN_HEIGHT - (0.75 * PJ_S) - 120 - 50)])
+                    level_play(window, airport_background, map_1, 40, [(0 - (0.25 * PJ_S) + 90), (SCREEN_HEIGHT - (0.75 * PJ_S) - 120 - 30)])
 
                 elif event.button == 1 and level_2_button.is_pressed():
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - (0.75 * PJ_S) - 60)])
