@@ -5,7 +5,6 @@ import time
 from button import Button
 from model import Enemy
 from random import randint
-
 pygame.init()
 
 SCREEN_WIDTH = 1280
@@ -80,7 +79,7 @@ map_2_background.fill((200, 30, 20))
 
 img_1 = pygame.image.load("tile1.png")
 img_2 = pygame.image.load("tile2.png")
-
+font_directory = "C:/Fonts/Barriecito-Regular.ttf"
 tile_rects = []
 # projectile_side
 PJ_S = 80
@@ -278,18 +277,98 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     pygame.quit()
 
 
+class Main_Menu_Projectile:
+    def __init__(self, image="test.png") -> None:
+        self._image = pygame.image.load(image)
+        size = randint(30, 60)
+        self._image = pygame.transform.scale(self._image, (size, size))
+        self._rect = self._image.get_rect()
+        self._rect.x = randint(0, SCREEN_WIDTH)
+        self._rect.y = randint(0, 50)
+        self.dx = randint(2, 6)
+        self.dy = randint(2, 6)
+
+    def image(self):
+        return self._image
+
+    def rect(self):
+        return self._rect
+    
+    def rect_x(self):
+        return self._rect.x
+    
+    def rect_y(self):
+        return self._rect.y
+    
+    def plus_x(self):
+        self._rect.x += self.dx
+
+    def plus_y(self):
+        self._rect.y += self.dy
+    
+    def draw(self, screen):
+        screen.blit(self._image, (self._rect.x, self._rect.y))
+    
+    def border_collission(self):
+        if self._rect.right >= SCREEN_WIDTH or self._rect.left <= 0:
+            self.dx *= -1
+        elif self._rect.bottom >= SCREEN_HEIGHT or self._rect.top <= 0:
+            self.dy *= -1
+    
+    def button_collission(self, tol, button):
+            if self._rect.colliderect(button.get_button_rect()):
+                if abs(self._rect.top - button.get_button_rect().bottom) <= tol:
+                    self.dy *= -1
+                elif abs(self._rect.bottom - button.get_button_rect().top) <= tol:
+                    self.dy *= -1
+                elif abs(self._rect.right - button.get_button_rect().left) <= tol:
+                    self.dx *= -1
+                elif abs(self._rect.left - button.get_button_rect().right) <= tol:
+                    self.dx *= -1
+
+projectile_rects = [Main_Menu_Projectile() for x in range(10)]
+
+def main_menu_collision(**kwargs):
+    TOLERANCE = 5
+    for proj in projectile_rects:
+        proj.plus_x()
+        proj.plus_y()
+        window.fill((19, 50, 143))
+
+        proj.draw(window)
+        proj.border_collission()
+        for button in kwargs.values():
+            button.draw(window)
+            proj.button_collission(TOLERANCE, button)
+
+        
+
+
 def main_menu():
-    window.fill((40, 90, 150))
+    main_menu_clock = pygame.time.Clock()
+    window.fill((19, 50, 143))
     pygame.display.set_caption("Main Menu")
+
+    play_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, "Play")
+    options_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "Options")
+    quit_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.75, "Quit")
+
     play_button.draw(window)
+    options_button.draw(window)
+    quit_button.draw(window)
+
     run = True
     while run:
+        main_menu_clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and play_button.is_pressed():
                     level_menu()
+        main_menu_collision(b1=play_button, b2=options_button, b3=quit_button)
+
+
         pygame.display.update()
     pygame.quit()
 
@@ -326,7 +405,5 @@ def level_menu():
 
 window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
 
-play_button = Button(SCREEN_WIDTH * 0.5, 200, 500, 200, "play.png", "Play")
-#options_button = Button(100, 200, "tile2.png", "Options")
 
 main_menu()
