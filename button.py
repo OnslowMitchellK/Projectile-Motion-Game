@@ -1,19 +1,32 @@
 import pygame
-import time
 pygame.init()
 
 class Button:
-    def __init__(self, x, y, width, height, image: pygame.Surface, text) -> None:
-        self.image = pygame.image.load(image)
-        self.image = pygame.transform.scale(self.image, (width, height))
-        self.text = text
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+    def __init__(self, x, y, text, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.font = pygame.font.SysFont(font, font_size)
+        self.text = self.font.render(text, True, font_colour)
+        self.background_colour = background_colour
+        self._rect = pygame.Rect(x - width / 2, y - height / 2, width, height)
+        self.border_radius = border_radius
+        self.outline = outline
+
+    def get_button_rect(self):
+        return self._rect
 
     def draw(self, screen: pygame.Surface):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
-        #pygame.draw.rect(screen, "Yellow", self.rect)
+        pygame.draw.rect(screen, self.background_colour, self._rect, self.outline, border_radius=self.border_radius)
+        screen.blit(self.text, (self._rect.centerx - self.text.get_width() / 2, self._rect.centery - self.text.get_height() / 2))
 
     def is_pressed(self) -> bool:
         pos = pygame.mouse.get_pos()
-        return True if self.rect.collidepoint(pos[0], pos[1]) else False
+        return True if self._rect.collidepoint(pos[0], pos[1]) else False
+
+# class Collision_Button(Button):
+#     def __init__(self, x, y, text, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+#         super().__init__(x, y, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
+#         pass
+
