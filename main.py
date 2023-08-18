@@ -12,7 +12,7 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 BLACK = (0, 0, 0)
 
-map_1= """00000000000000000000000000000000
+map_1 = """00000000000000000000000000000000
 0000000000000000000000000000000
 0000000000000000000000000000000
 0000000000000000000000000000000
@@ -30,6 +30,7 @@ map_1= """00000000000000000000000000000000
 00000000000000000000000000000000
 33333333333333333333333333333333
 33333333333333333333333333333333"""
+
 
 map_2 = """                                                                
                                                                
@@ -94,8 +95,8 @@ class Main_Menu_Projectile:
         self._rect = self._image.get_rect()
         self._rect.x = randint(50, 300)
         self._rect.y = randint(50, SCREEN_HEIGHT - 50)
-        self._dx = randint(4, 5)
-        self._dy = randint(4, 5)
+        self._dx = randint(3, 8)
+        self._dy = randint(3, 8)
 
     @property
     def image(self):
@@ -401,7 +402,7 @@ def main_menu():
                     elif abs(proj.rect_bottom - button.get_button_rect().top) < TOLERANCE and proj.dy > 0:
                         proj.multiply_y(-1)
                         break
-                    elif abs(proj.rect_right - button.get_button_rect().left) < TOLERANCE  and proj.dx > 0:
+                    elif abs(proj.rect_right - button.get_button_rect().left) < TOLERANCE and proj.dx > 0:
                         proj.multiply_x(-1)
                         break
                     elif abs(proj.rect_left - button.get_button_rect().right) < TOLERANCE and proj.dx < 0:
