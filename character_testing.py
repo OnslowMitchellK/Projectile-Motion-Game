@@ -25,44 +25,46 @@ moving_right = False
 BG = (215, 142, 32)
 
 def draw_bg():
-	screen.fill(BG)
+    screen.fill(BG)
 
 
 class Test_Character(pygame.sprite.Sprite):
-	def __init__(self, x, y, scale, speed):
-		pygame.sprite.Sprite.__init__(self)
-		self.speed = speed
-		self.direction = 1
-		self.flip = False
-		img = pygame.image.load(f'test_slime.jpeg')
-		# Rescaling the img of the character that appears on the screen
-		self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
-		self.rect = self.image.get_rect()
-		self.rect.center = (x, y)
+    def __init__(self, x, y, scale, speed):
+        pygame.sprite.Sprite.__init__(self)
+        self.speed = speed
+        self.direction = 1
+        self.flip = False
+        img = pygame.image.load(f'test_slime.jpeg')
+        # Rescaling the img of the character that appears on the screen
+        self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.level_points = 0
+        self.super_points = 0
 
-		
+        
 
-	def move(self, moving_left, moving_right):
-		# reset movement
-		dx = 0
-		dy = 0
+    def move(self, moving_left, moving_right):
+        # reset movement
+        dx = 0
+        dy = 0
 
-		# left or right movement
-		if moving_left:
-			dx = -self.speed
-			self.flip = True
-			self.direction = -1
-		if moving_right:
-			dx = self.speed
-			self.flip = False
-			self.direction = 1
+        # left or right movement
+        if moving_left:
+            dx = -self.speed
+            self.flip = True
+            self.direction = -1
+        if moving_right:
+            dx = self.speed
+            self.flip = False
+            self.direction = 1
 
-		#update rectangle position
-		self.rect.x += dx
-		self.rect.y += dy
+        #update rectangle position
+        self.rect.x += dx
+        self.rect.y += dy
 
-	def draw(self):
-		screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+    def draw(self):
+        screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
 
 # class Upgrade(pygame.sprite.Sprite):

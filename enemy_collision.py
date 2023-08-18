@@ -302,11 +302,18 @@ def deduct_health(enemy_hit):
         print("RIP")
         enemy_hit.image = pygame.image.load("real_chicken_dog.png")
         enemy_hit.die()
+        dead_check()
         # for i in range(250, -50, -50):
         #     enemy_hit.image.set_alpha(i)
     #     return True
     # else:
     #     return False
+
+
+def dead_check():
+    if len(enemy_group) == 0:
+        jamal.level_points += 1
+        print(jamal.level_points)
 
 
 def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
