@@ -80,11 +80,78 @@ map_2_background.fill((200, 30, 20))
 
 img_1 = pygame.image.load("tile1.png")
 img_2 = pygame.image.load("tile2.png")
-airport_ground = pygame.image.load("transparent_tile.png")
+transparent_tile = pygame.image.load("transparent_tile.png")
 font_directory = "C:/Fonts/Barriecito-Regular.ttf"
 tile_rects = []
 # projectile_side
 PJ_S = 40
+
+class Main_Menu_Projectile:
+    def __init__(self, image="test.png") -> None:
+        self._image = pygame.image.load(image)
+        size = randint(30, 40)
+        self._image = pygame.transform.scale(self._image, (size, size))
+        self._rect = self._image.get_rect()
+        self._rect.x = randint(50, 300)
+        self._rect.y = randint(50, SCREEN_HEIGHT - 50)
+        self._dx = randint(4, 5)
+        self._dy = randint(4, 5)
+
+    @property
+    def image(self):
+        return self._image
+    
+    @property
+    def dx(self):
+        return self._dx
+    
+    @property
+    def dy(self):
+        return self._dy
+    
+    @property
+    def rect_left(self) -> float:
+        return self._rect.left
+    
+    @property
+    def rect_right(self) -> float:
+        return self._rect.right
+    
+    @property
+    def rect_top(self) -> float:
+        return self._rect.top
+    
+    @property
+    def rect_bottom(self) -> float:
+        return self._rect.bottom
+    
+    @property
+    def rect(self):
+        return self._rect
+   
+    @property
+    def rect_x(self):
+        return self._rect.x
+    
+    @property
+    def rect_y(self):
+        return self._rect.y
+   
+    def plus_x(self):
+        self._rect.x += self._dx
+
+    def plus_y(self):
+        self._rect.y += self._dy
+
+    def multiply_x(self, num):
+        self._dx *= num
+
+    def multiply_y(self, num):
+        self._dy *= num
+   
+    def draw(self, screen):
+        screen.blit(self._image, (self._rect.x, self._rect.y))
+
 
 class Projectile:
     def __init__(self, start_x, start_y, image, size, background, map, screen, tile_size) -> None:
@@ -194,7 +261,6 @@ def deduct_health(enemy_hit):
     print("shield: ", enemy_hit.shield)
 
 
-
 def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
     win = pygame.display.set_mode((width, height))
     pygame.display.set_caption(caption)
@@ -204,7 +270,7 @@ def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
 def draw_tiles(map, tile_size, first = False):
     scaled_img_1 = pygame.transform.scale(img_1, (tile_size, tile_size))
     scaled_img_2 = pygame.transform.scale(img_2, (tile_size, tile_size))
-    scaled_airport_ground = pygame.transform.scale(airport_ground, (tile_size, tile_size))
+    scaled_transparent_tile = pygame.transform.scale(transparent_tile, (tile_size, tile_size))
     tile_rect = pygame.Rect(0, 0, tile_size, tile_size)
     game_map = map.split("\n")
     x = 0
@@ -229,7 +295,7 @@ def draw_tiles(map, tile_size, first = False):
                     if not duplicate:
                         tile_rects.append(tile_rect.copy())
             elif tile == "3":
-                window.blit(scaled_airport_ground, (x * tile_rect.width, y * tile_rect.height))
+                window.blit(scaled_transparent_tile, (x * tile_rect.width, y * tile_rect.height))
                 if first:
                     if not duplicate:
                         tile_rects.append(tile_rect.copy())
@@ -285,73 +351,6 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     pygame.quit()
 
 
-class Main_Menu_Projectile:
-    def __init__(self, image="test.png") -> None:
-        self._image = pygame.image.load(image)
-        size = randint(30, 40)
-        self._image = pygame.transform.scale(self._image, (size, size))
-        self._rect = self._image.get_rect()
-        self._rect.x = randint(50, 300)
-        self._rect.y = randint(50, SCREEN_HEIGHT - 50)
-        self._dx = randint(4, 5)
-        self._dy = randint(4, 5)
-
-    @property
-    def image(self):
-        return self._image
-    
-    @property
-    def dx(self):
-        return self._dx
-    
-    @property
-    def dy(self):
-        return self._dy
-    
-    @property
-    def rect_left(self) -> float:
-        return self._rect.left
-    
-    @property
-    def rect_right(self) -> float:
-        return self._rect.right
-    
-    @property
-    def rect_top(self) -> float:
-        return self._rect.top
-    
-    @property
-    def rect_bottom(self) -> float:
-        return self._rect.bottom
-    
-    @property
-    def rect(self):
-        return self._rect
-   
-    @property
-    def rect_x(self):
-        return self._rect.x
-    
-    @property
-    def rect_y(self):
-        return self._rect.y
-   
-    def plus_x(self):
-        self._rect.x += self._dx
-
-    def plus_y(self):
-        self._rect.y += self._dy
-
-    def multiply_x(self, num):
-        self._dx *= num
-
-    def multiply_y(self, num):
-        self._dy *= num
-   
-    def draw(self, screen):
-        screen.blit(self._image, (self._rect.x, self._rect.y))
-
-
 projectile_rects = [Main_Menu_Projectile() for x in range(20)]
 
 def main_menu():
@@ -378,13 +377,21 @@ def main_menu():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and play_button.is_pressed():
                     level_menu()
+                elif event.button == 1 and options_button.is_pressed():
+                    options_menu()
+                elif event.button == 1 and quit_button.is_pressed():
+                    pygame.quit()
         window.fill((19, 50, 143))
         for proj in projectile_rects:
             proj.plus_x()
             proj.plus_y()
-            if proj.rect_right >= SCREEN_WIDTH or proj.rect_left < 0:
+            if proj.rect_right >= SCREEN_WIDTH and proj.dx > 0:
                 proj.multiply_x(-1)
-            elif proj.rect_bottom >= SCREEN_HEIGHT or proj.rect_top < 0:
+            elif proj.rect_left <= 0 and proj.dx < 0:
+                proj.multiply_x(-1)
+            elif proj.rect_bottom >= SCREEN_HEIGHT and proj.dy > 0:
+                proj.multiply_y(-1)
+            elif proj.rect_top <= 0 and proj.dy < 0:
                 proj.multiply_y(-1)
             for button in buttons:
                 if proj.rect.colliderect(button.get_button_rect()):
@@ -412,6 +419,19 @@ def main_menu():
 
     pygame.quit()
 
+
+def options_menu():
+    pygame.display.set_caption("Options Menu")
+    window.fill((20, 90, 130))
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        pygame.display.update()
+    pygame.quit()
+
 def level_menu():
     level_1_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.33,"Level 1", 100, 100, font_size=30, border_radius=20)
     level_2_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.33, "Level 2", 100, 100, font_size=30, border_radius=20)
@@ -429,6 +449,7 @@ def level_menu():
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and level_1_button.is_pressed():
+                    pygame.display.set_caption("Level 1 Menu")
                     for i in range(len(level_one_coordinates)):
                         level_one_enemies[i] = Enemy(f"Enemy {2}", 100, 100, 25,
                                     level_one_coordinates[i][0],
@@ -438,6 +459,7 @@ def level_menu():
                     level_play(window, airport_background, map_1, 40, [0, (SCREEN_HEIGHT - 120)])
 
                 elif event.button == 1 and level_2_button.is_pressed():
+                    pygame.display.set_caption("Level 2 Menu")
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
         pygame.display.update()
     pygame.quit()
