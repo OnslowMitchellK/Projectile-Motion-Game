@@ -88,9 +88,13 @@ PJ_S = 80
 
 enemy_group = pygame.sprite.Group()
 projectile_group = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
+
 
 
 jamal = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0)
+player_group.add(jamal)
+
 
 
 class Projectile(pygame.sprite.Sprite):
@@ -181,11 +185,6 @@ class Projectile(pygame.sprite.Sprite):
                     time.sleep(0.5)
                     print("HIT")
                     return False
-            # for i in range(len(level_one_enemies)):
-            #     if self.rect.colliderect(level_one_enemies[i]):
-            #         time.sleep(0.5)
-            #         deduct_health(level_one_enemies[i])
-            #         return False
             # Use groupcollide() to detect collisions
             dead = False
             collisions = pygame.sprite.groupcollide(enemy_group, projectile_group, False, dead, pygame.sprite.collide_mask)
@@ -196,6 +195,96 @@ class Projectile(pygame.sprite.Sprite):
                 time.sleep(0.5)
                 deduct_health(enemy)
                 return False
+
+
+class Enemy_Projectile(pygame.sprite.Sprite):
+    def __init__(self, start_x, start_y, image, size, background, map, screen, tile_size) -> None:
+        super().__init__()
+        self.start_x = start_x
+        self.start_y = start_y
+        self.size = size
+        self.image = pygame.image.load(image).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.size * 0.5, self.size * 0.5))
+        self._rect = self.image.get_rect()
+        self.image_mask = pygame.mask.from_surface(self.image)
+
+        self.background = background
+        self.map = map
+        self.screen = screen
+        self.tile_size = tile_size
+
+        self.gravity = -9.81
+        self._shoot = False
+        self._angle = 130
+        self._speed = 40
+
+    @property
+    def shoot(self):
+        return self._shoot
+
+    @property
+    def angle(self):
+        return self._angle
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @property
+    def rect(self):
+        return self._rect
+
+    def draw_starting_point(self):
+        # self.rect.x = self.start_x + 0.25 * self.size
+        # self.rect.y = self.start_y + 0.25 * self.size
+        self.rect.x = self.start_x
+        self.rect.y = self.start_y
+        self.screen.blit(self.image, (self.start_x, self.start_y))
+        pygame.display.update()
+
+    def trajectory(self, change_in_time):
+        coordinates = []
+        launch_time = 0
+        y = self.start_y
+        while y + (0.5 * self.size) <= SCREEN_HEIGHT:
+            launch_time += change_in_time
+            x = (self.start_x + (self._speed * math.cos(math.radians(self._angle)) * launch_time))
+            y = (self.start_y - ((self._speed * math.sin(math.radians(self._angle)) * launch_time) + (0.5 * self.gravity * launch_time ** 2)))
+            coordinates.append([x, y])
+        return coordinates
+
+    def draw_trajectory(self):
+        coordinates = self.trajectory(1 / 10)
+        for coords in coordinates:
+            x = coords[0]
+            y = coords[1]
+
+            self.screen.blit(self.background, (0, 0))
+            draw_tiles(self.map, self.tile_size)
+            self.screen.blit(jamal.image, jamal.rect)
+            enemy_group.draw(self.screen)
+
+            self.screen.blit(self.image, (x, y))
+            self.rect.x = x
+            self.rect.y = y
+            pygame.display.update()
+
+            for tile in tile_rects:
+                if self.rect.colliderect(tile):
+                    time.sleep(0.5)
+                    print("HIT")
+                    return False
+            # Use groupcollide() to detect collisions
+            # dead = False
+            # collisions = pygame.sprite.groupcollide(enemy_group, projectile_group, False, dead, pygame.sprite.collide_mask)
+
+            # Handle collisions
+            # for enemy, projectiles in collisions.items():
+            #     print("Character hit by projectiles:", len(projectiles))
+            #     time.sleep(0.5)
+            #     deduct_health(enemy)
+            #     return False
+
 
 
 def deduct_health(enemy_hit):
@@ -267,10 +356,16 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
 
     projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], "test.png", PJ_S, map_background, map_tiles, screen, tile_size)
     projectile_group.add(projectile)
+    enemy_projectile = Enemy_Projectile(500, 200, "test.png", PJ_S, map_background, map_tiles, screen, tile_size)
+    enemy_projectile.start_x = level_one_coordinates[0][0] + 80
+    enemy_projectile.start_y = SCREEN_HEIGHT - level_one_coordinates[0][1] + 20
+    projectile_group.add(enemy_projectile)
 
     screen.blit(map_background, (0, 0))
     draw_tiles(map_tiles, tile_size, True)
     projectile.draw_starting_point()
+    enemy_projectile.draw_starting_point()
+    enemy_projectile.draw_trajectory()
     screen.blit(jamal.image, jamal.rect)
     # draw_enemies(level_one_enemies)
     enemy_group.draw(screen)
@@ -302,8 +397,8 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
             screen.blit(map_background, (0, 0))
             draw_tiles(map_tiles, tile_size)
             projectile.draw_starting_point()
+            enemy_projectile.draw_starting_point()
             screen.blit(jamal.image, jamal.rect)
-            pygame.draw.rect(screen, (255, 0, 0), projectile.rect, 2)
             # draw_enemies(level_one_enemies)
             enemy_group.draw(screen)
 
