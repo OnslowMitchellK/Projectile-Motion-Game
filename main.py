@@ -5,8 +5,6 @@ import time
 from button import Button
 from model import Enemy
 from random import randint
-from threading import Thread
-from dataclasses import dataclass
 
 pygame.init()
 
@@ -14,24 +12,24 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 BLACK = (0, 0, 0)
 
-map_1 = """                                
-                               
-                               
-                               
-                               
-                    2222        
-                    1111        
-                               
-                           22222
-                          211111
-                         2111111
-                        21111111
-                       211111111
-          222         2111111111
-         211122      21111111111
-22222222211111122222211111111111
-11111111111111111111111111111111
-11111111111111111111111111111111"""
+map_1= """00000000000000000000000000000000
+0000000000000000000000000000000
+0000000000000000000000000000000
+0000000000000000000000000000000
+0000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+0000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+33333333333333333333333333333333
+33333333333333333333333333333333"""
 
 map_2 = """                                                                
                                                                
@@ -52,9 +50,9 @@ map_2 = """
                           111111111111111111111                
                             11111111111111111                  
                               1111111111111                    
-                                111111111                      
-                                111111111                      
-                                111111111                      
+                                111111111                          
+                                111111111                
+                                111111111                     
                                1111111111                      
                                1111111111                      
                                111111111                      
@@ -82,10 +80,11 @@ map_2_background.fill((200, 30, 20))
 
 img_1 = pygame.image.load("tile1.png")
 img_2 = pygame.image.load("tile2.png")
+airport_ground = pygame.image.load("transparent_tile.png")
 font_directory = "C:/Fonts/Barriecito-Regular.ttf"
 tile_rects = []
 # projectile_side
-PJ_S = 80
+PJ_S = 40
 
 class Projectile:
     def __init__(self, start_x, start_y, image, size, background, map, screen, tile_size) -> None:
@@ -93,7 +92,7 @@ class Projectile:
         self.start_y = start_y
         self.size = size
         self.image = pygame.transform.scale(image, (self.size, self.size))
-        self._projectile_rect = pygame.Rect(0, 0, 0.5 * self.size, 0.5 * self.size)
+        self._projectile_rect = pygame.Rect(0, 0, self.size, self.size)
         self.background = background
         self.map = map
         self.screen = screen
@@ -130,8 +129,8 @@ class Projectile:
         pygame.display.set_caption(f"Angle: {self._angle} Speed: {self._speed}")
 
     def draw_starting_point(self):
-        self.projectile_rect.x = self.start_x + 0.25 * self.size
-        self.projectile_rect.y = self.start_y + 0.25 * self.size
+        self.projectile_rect.x = self.start_x
+        self.projectile_rect.y = self.start_y
         self.screen.blit(self.image, (self.start_x, self.start_y))
         pygame.display.update()
 
@@ -159,8 +158,8 @@ class Projectile:
                 draw_tiles(self.map, self.tile_size)
                 draw_enemies(level_one_enemies)
                 self.screen.blit(self.image, (x, y))
-                self.projectile_rect.x = x + 0.25 * self.size
-                self.projectile_rect.y = y + 0.25 * self.size
+                self.projectile_rect.x = x
+                self.projectile_rect.y = y
                 pygame.display.update()
 
                 for tile in tile_rects:
@@ -205,6 +204,7 @@ def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
 def draw_tiles(map, tile_size, first = False):
     scaled_img_1 = pygame.transform.scale(img_1, (tile_size, tile_size))
     scaled_img_2 = pygame.transform.scale(img_2, (tile_size, tile_size))
+    scaled_airport_ground = pygame.transform.scale(airport_ground, (tile_size, tile_size))
     tile_rect = pygame.Rect(0, 0, tile_size, tile_size)
     game_map = map.split("\n")
     x = 0
@@ -225,6 +225,11 @@ def draw_tiles(map, tile_size, first = False):
                         tile_rects.append(tile_rect.copy())
             elif tile == "2":
                 window.blit(scaled_img_2, (x * tile_rect.width, y * tile_rect.height))
+                if first:
+                    if not duplicate:
+                        tile_rects.append(tile_rect.copy())
+            elif tile == "3":
+                window.blit(scaled_airport_ground, (x * tile_rect.width, y * tile_rect.height))
                 if first:
                     if not duplicate:
                         tile_rects.append(tile_rect.copy())
@@ -408,8 +413,8 @@ def main_menu():
     pygame.quit()
 
 def level_menu():
-    level_1_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.33, 200, 100, "level_1.png", "Level 1")
-    level_2_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.33, 200, 100, "level_2.png", "Level 2")
+    level_1_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.33,"Level 1", 100, 100, font_size=30, border_radius=20)
+    level_2_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.33, "Level 2", 100, 100, font_size=30, border_radius=20)
 
     pygame.display.set_caption("Level Menu")
     window.fill((90, 80, 40))
@@ -430,10 +435,10 @@ def level_menu():
                                     SCREEN_HEIGHT - level_one_coordinates[i][1],
                                     40, 40, window)
 
-                    level_play(window, airport_background, map_1, 40, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - (0.75 * PJ_S) - 120)])
+                    level_play(window, airport_background, map_1, 40, [0, (SCREEN_HEIGHT - 120)])
 
                 elif event.button == 1 and level_2_button.is_pressed():
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - (0.75 * PJ_S) - 60)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
         pygame.display.update()
     pygame.quit()
 
