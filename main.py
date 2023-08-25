@@ -195,21 +195,23 @@ class Projectile:
     @property
     def projectile_rect(self):
         return self._projectile_rect
-   
+
     def change_angle(self, change_in_angle):
-        self._angle += change_in_angle if 0 <= self._angle + change_in_angle <= 90 else 0
-        pygame.display.set_caption(f"Angle: {self._angle} Speed: {self._speed}")
+        self._angle = change_in_angle
+        # self._angle += change_in_angle if 0 <= self._angle + change_in_angle <= 90 else 0
+        # pygame.display.set_caption(f"Angle: {self._angle} Speed: {self._speed}")
 
     def change_speed(self, change_in_speed):
-        self._speed += change_in_speed if 0 <= self._speed + change_in_speed <= 150 else 0
-        pygame.display.set_caption(f"Angle: {self._angle} Speed: {self._speed}")
+        self._speed = change_in_speed
+        # self._speed += change_in_speed if 0 <= self._speed + change_in_speed <= 150 else 0
+        # pygame.display.set_caption(f"Angle: {self._angle} Speed: {self._speed}")
 
     def draw_starting_point(self):
         self.projectile_rect.x = self._start_x
         self.projectile_rect.y = self._start_y
         self.screen.blit(self.image, (self._start_x, self._start_y))
         pygame.display.update()
-
+ 
     def trajectory(self, change_in_time, start_x, start_y, angle, speed):
         coordinates = []
         launch_time = 0
@@ -316,8 +318,59 @@ def draw_enemies(enemy_level_list):
     for i in range(len(level_one_enemies)):
         level_one_enemies[i].draw()
 
+def shoot_display(starting_coords, min_angle, max_angle):
+    x_centre_s = starting_coords[0] + 0.5 * PJ_S
+    y_centre_s = starting_coords[1] + 0.5 * PJ_S
+    angles = [max_angle, min_angle]
+    draw = True
 
-def level_play(screen, map_background, map_tiles, tile_size, projectile_starting_coords):
+    pos = pygame.mouse.get_pos()
+
+    ARC_WIDTH = 100
+    arc_rect = pygame.Rect(0, 0, ARC_WIDTH, ARC_WIDTH)
+    arc_rect.center = (x_centre_s, y_centre_s)
+
+    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 20)
+    angle_text = font.render("0°", True, "Green")
+    speed_text = font.render("0 px/s", True, "Red")
+
+    angle = math.atan2(SCREEN_HEIGHT - pos[1] - (SCREEN_HEIGHT - y_centre_s), pos[0] - (x_centre_s))
+    angle += 2 * math.pi if angle < 0 else 0
+    
+    if min_angle == 0:
+        if pos[1] > y_centre_s:
+            draw = False
+            angle = min_angle
+    
+    if max_angle == 90:
+        if pos[0] < x_centre_s:
+            draw = False
+            angle = math.radians(max_angle)
+            if pos[1] < y_centre_s:
+                pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (x_centre_s, pos[1]), 2)
+
+    if angle > min_angle and angle < max_angle and draw:
+        pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), pos, 2)
+
+    if pos[0] >= x_centre_s + ARC_WIDTH / 2:
+        pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (pos[0], y_centre_s), 2)
+    else:
+        pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (x_centre_s + ARC_WIDTH / 2, y_centre_s), 2)
+
+    angle_text = font.render(f"{round(math.degrees(angle), 1)}°", True, "Green")
+    window.blit(angle_text, ((x_centre_s + 10 + ARC_WIDTH / 2), y_centre_s - 20))
+
+    pygame.draw.arc(window, ((0, 0, 0)), arc_rect, 0, angle, 10)
+    # https://stackoverflow.com/questions/12141150/from-list-of-integers-get-number-closest-to-a-given-value
+    closest_angle = min(angles, key=lambda x:abs(x-math.degrees(angle)))
+    speed = pos[0] / 5 if closest_angle == 0 else (y_centre_s - pos[1]) / 5
+    speed = 0 if speed < 0 else speed
+    speed_text = font.render(f"{speed} px/s", True, "Green")
+    window.blit(speed_text, ((x_centre_s + 10 + ARC_WIDTH), y_centre_s - 20))
+
+    return [speed, math.degrees(angle)]
+
+def level_play(screen, map_background, map_tiles, tile_size, projectile_starting_coords, min_angle, max_angle):
     clock = pygame.time.Clock()
     current = True
     shoot = False
@@ -329,13 +382,6 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     projectile.draw_starting_point()
     draw_enemies(level_one_enemies)
 
-    x_centre_s = projectile_starting_coords[0] + 0.5 * PJ_S
-    y_centre_s = projectile_starting_coords[1] + 0.5 * PJ_S
-    ARC_WIDTH = 200
-    arc_rect = pygame.Rect(0, 0, ARC_WIDTH, ARC_WIDTH)
-    arc_rect.center = (x_centre_s, y_centre_s)
-    angle_font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 20)
-    angle_text = angle_font.render("0°", True, "Green")
     run = True
     while run:
         clock.tick(30)
@@ -345,36 +391,32 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
             elif event.type == pygame.KEYDOWN:
                 if event.__dict__["key"] == pygame.K_q:
                     current = False if current else True
-                if event.__dict__["key"] == pygame.K_SPACE:
+                # if event.__dict__["key"] == pygame.K_SPACE:
+                #     shoot = True
+                #     break
+            elif event.type == pygame.MOUSEBUTTONDOWN and not shoot:
+                if event.button == 1:
                     shoot = True
                     break
-            elif event.type == pygame.MOUSEBUTTONDOWN and not shoot:
-                if event.button == 4 and current:
-                    projectile.change_angle(5)
-                elif event.button == 5 and current:
-                    projectile.change_angle(-5)
-                elif event.button == 4 and not current:
-                    projectile.change_speed(5)
-                elif event.button == 5 and not current:
-                    projectile.change_speed(-5)
+                # if event.button == 4 and current:
+                #     projectile.change_angle(5)
+                # elif event.button == 5 and current:
+                #     projectile.change_angle(-5)
+                # elif event.button == 4 and not current:
+                #     projectile.change_speed(5)
+                # elif event.button == 5 and not current:
+                #     projectile.change_speed(-5)
                 
 
         screen.blit(map_background, (0, 0))
         draw_tiles(map_tiles, tile_size)
         draw_enemies(level_one_enemies)
         projectile.draw_starting_point()
-        angle = math.atan2(SCREEN_HEIGHT - pygame.mouse.get_pos()[1] - (SCREEN_HEIGHT - y_centre_s), pygame.mouse.get_pos()[0] - (x_centre_s))
-        pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), pygame.mouse.get_pos(), 2)
-        if pygame.mouse.get_pos()[0] >= x_centre_s + ARC_WIDTH / 2:
-            pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (pygame.mouse.get_pos()[0], y_centre_s), 2)
-        else:
-            pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (x_centre_s + ARC_WIDTH / 2, y_centre_s), 2)
-        angle_text = angle_font.render(f"{round(math.degrees(angle), 1)}°", True, "Green")
-        window.blit(angle_text, ((x_centre_s + ARC_WIDTH), y_centre_s - 20))
-        pygame.draw.arc(window, ((0, 0, 0)), arc_rect, 0, angle, 10)
-
+        returned = shoot_display(projectile_starting_coords, min_angle, max_angle)
 
         if shoot:
+            projectile.change_speed(returned[0])
+            projectile.change_angle(returned[1])
             projectile.draw_trajectory()
             projectile.draw_starting_point()
             shoot = False
@@ -524,43 +566,43 @@ def level_menu():
                                     SCREEN_HEIGHT - level_one_coordinates[i][1],
                                     40, 40, window)
 
-                    level_play(window, airport_background, map_1, 40, [0, (SCREEN_HEIGHT - 120)])
+                    level_play(window, airport_background, map_1, 40, [0, (SCREEN_HEIGHT - 120)], 0, 90)
 
                 elif event.button == 1 and level_2_button.is_pressed():
                     pygame.display.set_caption("Level 2")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_3_button.is_pressed():
                     pygame.display.set_caption("Level 3")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_4_button.is_pressed():
                     pygame.display.set_caption("Level 4")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_5_button.is_pressed():
                     pygame.display.set_caption("Level 5")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_6_button.is_pressed():
                     pygame.display.set_caption("Level 6")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_7_button.is_pressed():
                     pygame.display.set_caption("Level 7")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_8_button.is_pressed():
                     pygame.display.set_caption("Level 8")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_9_button.is_pressed():
                     pygame.display.set_caption("Level 9")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_10_button.is_pressed():
                     pygame.display.set_caption("Level 10")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)])
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
                 
                 elif event.button == 1 and back_button.is_pressed():
                     main_menu()
