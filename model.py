@@ -9,7 +9,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def __init__(self, name: str, health: int, shield: int,
                  damage: int, x: int, y: int, width: int, height: int,
-                 screen):
+                 screen, angle: int, speed: int):
         """Enemy variables."""
         super().__init__()
         self.image = pygame.image.load('enemy.png').convert_alpha()
@@ -25,6 +25,8 @@ class Enemy(pygame.sprite.Sprite):
         self._width: int = width
         self._height: int = height
         self.screen = screen
+        self.angle = angle
+        self.speed = speed
 
     # @property
     # def name(self) -> str:

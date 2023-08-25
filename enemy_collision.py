@@ -71,6 +71,10 @@ map_2 = """
 
 level_one_enemies = {}
 level_one_coordinates = [[40 * 17, 40 * 6], [40 * 21, 40 * 16]]
+level_one_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[0][1] + 20],
+                   [160, 75, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[1][1]]]
 
 airport_background = pygame.image.load("airport_background.png")
 airport_background = pygame.transform.scale(airport_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -91,10 +95,8 @@ projectile_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 
 
-
 jamal = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0)
 player_group.add(jamal)
-
 
 
 class Projectile(pygame.sprite.Sprite):
@@ -198,13 +200,15 @@ class Projectile(pygame.sprite.Sprite):
 
 
 class Enemy_Projectile(pygame.sprite.Sprite):
-    def __init__(self, start_x, start_y, image, size, background, map, screen, tile_size) -> None:
+    def __init__(self, start_x, start_y, image, size, background, map, screen,
+                 tile_size, angle, speed) -> None:
         super().__init__()
         self.start_x = start_x
         self.start_y = start_y
         self.size = size
         self.image = pygame.image.load(image).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (self.size * 0.5, self.size * 0.5))
+        self.image = pygame.transform.scale(self.image, (self.size * 0.5,
+                                                         self.size * 0.5))
         self._rect = self.image.get_rect()
         self.image_mask = pygame.mask.from_surface(self.image)
 
@@ -215,8 +219,8 @@ class Enemy_Projectile(pygame.sprite.Sprite):
 
         self.gravity = -9.81
         self._shoot = False
-        self._angle = 130
-        self._speed = 40
+        self._angle = angle
+        self._speed = speed
 
     @property
     def shoot(self):
@@ -284,7 +288,6 @@ class Enemy_Projectile(pygame.sprite.Sprite):
             #     time.sleep(0.5)
             #     deduct_health(enemy)
             #     return False
-
 
 
 def deduct_health(enemy_hit):
@@ -363,16 +366,21 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
 
     projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], "test.png", PJ_S, map_background, map_tiles, screen, tile_size)
     projectile_group.add(projectile)
-    enemy_projectile = Enemy_Projectile(500, 200, "test.png", PJ_S, map_background, map_tiles, screen, tile_size)
-    enemy_projectile.start_x = level_one_coordinates[0][0] + 80
-    enemy_projectile.start_y = SCREEN_HEIGHT - level_one_coordinates[0][1] + 20
+    enemy_projectile = Enemy_Projectile(0, 0, "test.png", PJ_S, map_background, map_tiles, screen, tile_size, 0, 0)
     projectile_group.add(enemy_projectile)
 
     screen.blit(map_background, (0, 0))
     draw_tiles(map_tiles, tile_size, True)
     projectile.draw_starting_point()
-    enemy_projectile.draw_starting_point()
-    enemy_projectile.draw_trajectory()
+
+    for enemy in enemy_group:
+        enemy_projectile.start_x = enemy.rect.topleft[0] + 80
+        enemy_projectile.start_y = enemy.rect.topleft[1] + 20
+        enemy_projectile._angle = enemy.angle
+        enemy_projectile._speed = enemy.speed
+        enemy_projectile.draw_starting_point()
+        enemy_projectile.draw_trajectory()
+
     screen.blit(jamal.image, jamal.rect)
     # draw_enemies(level_one_enemies)
     enemy_group.draw(screen)
@@ -449,7 +457,8 @@ def level_menu():
                         level_one_enemies[i] = Enemy(f"Enemy {2}", 100, 100, 25,
                                     level_one_coordinates[i][0],
                                     SCREEN_HEIGHT - level_one_coordinates[i][1],
-                                    40, 40, window)
+                                    40, 40, window, level_one_enemy[i][0],
+                                    level_one_enemy[i][1])
                         enemy_group.add(level_one_enemies[i])
 
                     level_play(window, airport_background, map_1, 40, [(0 - (0.25 * PJ_S) + 90), (SCREEN_HEIGHT - (0.75 * PJ_S) - 120 - 30)])
