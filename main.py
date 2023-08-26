@@ -4,7 +4,7 @@ import math
 import time
 from button import Button
 from model import Enemy
-from random import randint
+from random import randint, choice
 
 pygame.init()
 
@@ -88,15 +88,15 @@ tile_rects = []
 PJ_S = 40
 
 class Main_Menu_Projectile:
-    def __init__(self, image="test.png") -> None:
+    def __init__(self, image="test.png", possible_speeds = [-8, -7, -6, -5, -4, -3, 3, 4, 5, 6, 7, 8]) -> None:
         self._image = pygame.image.load(image)
-        size = randint(30, 40)
+        size = randint(30, 50)
         self._image = pygame.transform.scale(self._image, (size, size))
         self._rect = self._image.get_rect()
-        self._rect.x = randint(50, 300)
+        self._rect.x = randint(50, 300) if randint(1, 2) == 1 else randint(SCREEN_WIDTH - 300, SCREEN_WIDTH - 50)
         self._rect.y = randint(50, SCREEN_HEIGHT - 50)
-        self._dx = randint(3, 8)
-        self._dy = randint(3, 8)
+        self._dx = choice(possible_speeds)
+        self._dy = choice(possible_speeds)
 
     @property
     def image(self):
@@ -160,7 +160,7 @@ class Projectile:
         self._start_y = start_y
         self.size = size
         self.image = pygame.transform.scale(image, (self.size, self.size))
-        self._projectile_rect = pygame.Rect(0, 0, self.size, self.size)
+        self._projectile_rect = self.image.get_rect()
         self.background = background
         self.map = map
         self.screen = screen
@@ -207,9 +207,9 @@ class Projectile:
         # pygame.display.set_caption(f"Angle: {self._angle} Speed: {self._speed}")
 
     def draw_starting_point(self):
-        self.projectile_rect.x = self._start_x
-        self.projectile_rect.y = self._start_y
-        self.screen.blit(self.image, (self._start_x, self._start_y))
+        self.projectile_rect.centerx = self._start_x
+        self.projectile_rect.centery = self._start_y
+        self.screen.blit(self.image, (self._projectile_rect.x, self._projectile_rect.y))
         pygame.display.update()
  
     def trajectory(self, change_in_time, start_x, start_y, angle, speed):
@@ -235,9 +235,9 @@ class Projectile:
                 self.screen.blit(self.background, (0, 0))
                 draw_tiles(self.map, self.tile_size)
                 draw_enemies(level_one_enemies)
-                self.screen.blit(self.image, (x, y))
-                self.projectile_rect.x = x
-                self.projectile_rect.y = y
+                self.projectile_rect.centerx = x
+                self.projectile_rect.centery = y
+                self.screen.blit(self.image, (self.projectile_rect.x, self.projectile_rect.y))
                 pygame.display.update()
 
                 for tile in tile_rects:
@@ -319,8 +319,8 @@ def draw_enemies(enemy_level_list):
         level_one_enemies[i].draw()
 
 def shoot_display(starting_coords, min_angle, max_angle):
-    x_centre_s = starting_coords[0] + 0.5 * PJ_S
-    y_centre_s = starting_coords[1] + 0.5 * PJ_S
+    x_centre_s = starting_coords[0]
+    y_centre_s = starting_coords[1]
     angles = [max_angle, min_angle]
     draw = True
 
@@ -330,9 +330,9 @@ def shoot_display(starting_coords, min_angle, max_angle):
     arc_rect = pygame.Rect(0, 0, ARC_WIDTH, ARC_WIDTH)
     arc_rect.center = (x_centre_s, y_centre_s)
 
-    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 20)
-    angle_text = font.render("0°", True, "Green")
-    speed_text = font.render("0 px/s", True, "Red")
+    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 50)
+    angle_text = font.render("0°", True, "white")
+    speed_text = font.render("0 px/s", True, "white")
 
     angle = math.atan2(SCREEN_HEIGHT - pos[1] - (SCREEN_HEIGHT - y_centre_s), pos[0] - (x_centre_s))
     angle += 2 * math.pi if angle < 0 else 0
@@ -340,37 +340,39 @@ def shoot_display(starting_coords, min_angle, max_angle):
     if min_angle == 0:
         if pos[1] > y_centre_s:
             draw = False
-            angle = min_angle
+            angle = math.radians(min_angle)
     
     if max_angle == 90:
         if pos[0] < x_centre_s:
             draw = False
             angle = math.radians(max_angle)
-            if pos[1] < y_centre_s:
-                pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (x_centre_s, pos[1]), 2)
+    #         if pos[1] < y_centre_s:
+    #             pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (x_centre_s, pos[1]), 2)
 
-    if angle > min_angle and angle < max_angle and draw:
-        pygame.draw.line(window, ((255, 255, 255,)), (x_centre_s, y_centre_s), pos, 2)
 
-    if pos[0] >= x_centre_s + ARC_WIDTH / 2:
-        pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (pos[0], y_centre_s), 2)
-    else:
-        pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (x_centre_s + ARC_WIDTH / 2, y_centre_s), 2)
+    # if angle > min_angle and angle < max_angle and draw:
+    #     pygame.draw.line(window, ((255, 255, 255,)), (x_centre_s, y_centre_s), pos, 2)
 
-    angle_text = font.render(f"{round(math.degrees(angle), 1)}°", True, "Green")
-    window.blit(angle_text, ((x_centre_s + 10 + ARC_WIDTH / 2), y_centre_s - 20))
+    # if pos[0] >= x_centre_s + ARC_WIDTH / 2:
+    #     pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (pos[0], y_centre_s), 2)
+    # else:
+    #     pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (x_centre_s + ARC_WIDTH / 2, y_centre_s), 2)
 
-    pygame.draw.arc(window, ((0, 0, 0)), arc_rect, 0, angle, 10)
+    angle_text = font.render(f"{round(math.degrees(angle), 1)}°,", True, "white")
+    window.blit(angle_text, (10, SCREEN_HEIGHT - 50))
+
+    # pygame.draw.arc(window, ((0, 0, 0)), arc_rect, 0, angle, 10)
     # https://stackoverflow.com/questions/12141150/from-list-of-integers-get-number-closest-to-a-given-value
     closest_angle = min(angles, key=lambda x:abs(x-math.degrees(angle)))
     speed = pos[0] / 5 if closest_angle == 0 else (y_centre_s - pos[1]) / 5
     speed = 0 if speed < 0 else speed
-    speed_text = font.render(f"{speed} px/s", True, "Green")
-    window.blit(speed_text, ((x_centre_s + 10 + ARC_WIDTH), y_centre_s - 20))
+    speed_text = font.render(f"{speed} px/s", True, "white")
+    window.blit(speed_text, (120, SCREEN_HEIGHT - 50))
 
     return [speed, math.degrees(angle)]
 
 def level_play(screen, map_background, map_tiles, tile_size, projectile_starting_coords, min_angle, max_angle):
+    dot_distance = 6
     clock = pygame.time.Clock()
     current = True
     shoot = False
@@ -413,7 +415,11 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         draw_enemies(level_one_enemies)
         projectile.draw_starting_point()
         returned = shoot_display(projectile_starting_coords, min_angle, max_angle)
-
+        coords = projectile.trajectory(1 / 3, projectile_starting_coords[0], projectile_starting_coords[1], returned[1], returned[0])
+        for i in coords[:10]:
+            if i[0] < SCREEN_WIDTH / dot_distance:
+                pygame.draw.circle(window, "yellow", (i), 10)
+        
         if shoot:
             projectile.change_speed(returned[0])
             projectile.change_angle(returned[1])
@@ -425,7 +431,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     pygame.quit()
 
 
-projectile_rects = [Main_Menu_Projectile() for x in range(10)]
+projectile_rects = [Main_Menu_Projectile() for x in range(100)]
 
 def main_menu():
     TOLERANCE = 10
@@ -493,9 +499,6 @@ def main_menu():
 
     pygame.quit()
 
-default_controls = {
-
-}
 
 def controls_menu():
     pygame.display.set_caption("Controls Menu")
@@ -574,7 +577,7 @@ def level_menu():
                                     SCREEN_HEIGHT - level_one_coordinates[i][1],
                                     40, 40, window)
 
-                    level_play(window, airport_background, map_1, 40, [0, (SCREEN_HEIGHT - 120)], 0, 90)
+                    level_play(window, airport_background, map_1, 40, [20, (SCREEN_HEIGHT - 120)], 0, 90)
 
                 elif event.button == 1 and level_2_button.is_pressed():
                     pygame.display.set_caption("Level 2")
