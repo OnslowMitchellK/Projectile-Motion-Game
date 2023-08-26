@@ -41,6 +41,7 @@ class Test_Character(pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.level_points = 0
         self.super_points = 0
+        self.health = 100
 
         
 
@@ -63,8 +64,11 @@ class Test_Character(pygame.sprite.Sprite):
         self.rect.x += dx
         self.rect.y += dy
 
-    def draw(self):
-        screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+    # def draw(self):
+    #     screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+
+    def die(self):
+        self.kill()
 
 
 # class Upgrade(pygame.sprite.Sprite):

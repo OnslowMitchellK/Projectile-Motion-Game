@@ -92,6 +92,7 @@ PJ_S = 80
 
 enemy_group = pygame.sprite.Group()
 projectile_group = pygame.sprite.Group()
+enemy_projectile_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 
 
@@ -174,7 +175,8 @@ class Projectile(pygame.sprite.Sprite):
             draw_tiles(self.map, self.tile_size)
             # draw_enemies(level_one_enemies)
             # pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
-            self.screen.blit(jamal.image, jamal.rect)
+            # self.screen.blit(jamal.image, jamal.rect)
+            player_group.draw(self.screen)
             enemy_group.draw(self.screen)
 
             self.screen.blit(self.image, (x, y))
@@ -195,7 +197,7 @@ class Projectile(pygame.sprite.Sprite):
             for enemy, projectiles in collisions.items():
                 print("Character hit by projectiles:", len(projectiles))
                 time.sleep(0.5)
-                deduct_health(enemy)
+                deduct_enemy_health(enemy)
                 return False
 
 
@@ -265,7 +267,8 @@ class Enemy_Projectile(pygame.sprite.Sprite):
 
             self.screen.blit(self.background, (0, 0))
             draw_tiles(self.map, self.tile_size)
-            self.screen.blit(jamal.image, jamal.rect)
+            # self.screen.blit(jamal.image, jamal.rect)
+            player_group.draw(self.screen)
             enemy_group.draw(self.screen)
 
             self.screen.blit(self.image, (x, y))
@@ -279,18 +282,32 @@ class Enemy_Projectile(pygame.sprite.Sprite):
                     print("HIT")
                     return False
             # Use groupcollide() to detect collisions
-            # dead = False
-            # collisions = pygame.sprite.groupcollide(enemy_group, projectile_group, False, dead, pygame.sprite.collide_mask)
+            dead = False
+            collisions = pygame.sprite.groupcollide(player_group, enemy_projectile_group,
+                                                    False, dead, pygame.sprite.collide_mask)
 
             # Handle collisions
-            # for enemy, projectiles in collisions.items():
-            #     print("Character hit by projectiles:", len(projectiles))
-            #     time.sleep(0.5)
-            #     deduct_health(enemy)
-            #     return False
+            for player, projectiles in collisions.items():
+                print("Character hit by projectiles:", len(projectiles))
+                time.sleep(0.5)
+                deduct_player_health(player)
+                return False
 
 
-def deduct_health(enemy_hit):
+def deduct_player_health(player):
+    global player_group
+    damage = randint(50, 90)
+    player.health -= damage
+
+    print("health: ", player.health)
+
+    if player.health <= 0:
+        print("RIP")
+        player.die()
+        player_dead()
+
+
+def deduct_enemy_health(enemy_hit):
     global enemy_group
     damage = randint(30, 90)
     old_shield = enemy_hit.shield
@@ -303,20 +320,18 @@ def deduct_health(enemy_hit):
 
     if enemy_hit.health <= 0:
         print("RIP")
-        enemy_hit.image = pygame.image.load("real_chicken_dog.png")
         enemy_hit.die()
-        dead_check()
-        # for i in range(250, -50, -50):
-        #     enemy_hit.image.set_alpha(i)
-    #     return True
-    # else:
-    #     return False
+        enemy_dead_check()
 
 
-def dead_check():
+def enemy_dead_check():
     if len(enemy_group) == 0:
         jamal.level_points += 1
         print(jamal.level_points)
+
+
+def player_dead():
+    print("PLAYER IS DEAD")
 
 
 def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
@@ -367,7 +382,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], "test.png", PJ_S, map_background, map_tiles, screen, tile_size)
     projectile_group.add(projectile)
     enemy_projectile = Enemy_Projectile(0, 0, "test.png", PJ_S, map_background, map_tiles, screen, tile_size, 0, 0)
-    projectile_group.add(enemy_projectile)
+    enemy_projectile_group.add(enemy_projectile)
 
     screen.blit(map_background, (0, 0))
     draw_tiles(map_tiles, tile_size, True)
@@ -381,7 +396,8 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         enemy_projectile.draw_starting_point()
         enemy_projectile.draw_trajectory()
 
-    screen.blit(jamal.image, jamal.rect)
+    # screen.blit(jamal.image, jamal.rect)
+    player_group.draw(screen)
     # draw_enemies(level_one_enemies)
     enemy_group.draw(screen)
 
@@ -413,7 +429,8 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
             draw_tiles(map_tiles, tile_size)
             projectile.draw_starting_point()
             enemy_projectile.draw_starting_point()
-            screen.blit(jamal.image, jamal.rect)
+            # screen.blit(jamal.image, jamal.rect)
+            player_group.draw(screen)
             # draw_enemies(level_one_enemies)
             enemy_group.draw(screen)
 
