@@ -350,7 +350,7 @@ def shoot_display(starting_coords, min_angle, max_angle):
                 pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (x_centre_s, pos[1]), 2)
 
     if angle > min_angle and angle < max_angle and draw:
-        pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), pos, 2)
+        pygame.draw.line(window, ((255, 255, 255,)), (x_centre_s, y_centre_s), pos, 2)
 
     if pos[0] >= x_centre_s + ARC_WIDTH / 2:
         pygame.draw.line(window, ((255, 255, 255)), (x_centre_s, y_centre_s), (pos[0], y_centre_s), 2)
@@ -425,7 +425,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     pygame.quit()
 
 
-projectile_rects = [Main_Menu_Projectile() for x in range(20)]
+projectile_rects = [Main_Menu_Projectile() for x in range(10)]
 
 def main_menu():
     TOLERANCE = 10
@@ -533,24 +533,32 @@ def options_menu():
     pygame.quit()
 
 def level_menu():
-    level_1_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.25,"Level 1", 100, 100, font_size=30, border_radius=20)
-    level_2_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.25, "Level 2", 100, 100, font_size=30, border_radius=20)
-    level_3_button = Button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.25,"Level 3", 100, 100, font_size=30, border_radius=20)
-    level_4_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.25, "Level 4", 100, 100, font_size=30, border_radius=20)
-    level_5_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.5,"Level 5", 100, 100, font_size=30, border_radius=20)
-    level_6_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.5, "Level 6", 100, 100, font_size=30, border_radius=20)
-    level_7_button = Button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.5,"Level 7", 100, 100, font_size=30, border_radius=20)
-    level_8_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.5, "Level 8", 100, 100, font_size=30, border_radius=20)
-    level_9_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.75,"Level 9", 100, 100, font_size=30, border_radius=20)
-    level_10_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.75, "Level 10", 100, 100, font_size=30, border_radius=20)
-    back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Back", 350, 100, font_size=50, border_radius=20)
-    buttons = [level_1_button, level_2_button, level_3_button, level_4_button, level_5_button, level_6_button, level_7_button,
-               level_8_button, level_9_button, level_10_button, back_button]
+    level_1_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.25,"Level 1", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_2_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.25, "Level 2", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_3_button = Button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.25,"Level 3", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_4_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.25, "Level 4", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_5_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.5,"Level 5", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_6_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.5, "Level 6", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_7_button = Button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.5,"Level 7", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_8_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.5, "Level 8", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_9_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.75,"Level 9", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_10_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.75, "Level 10", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Back", 350, 100, font_size=50, border_radius=20, background_colour=(190, 10, 180))
+    level_buttons = [level_1_button, level_2_button, level_3_button, level_4_button, level_5_button, level_6_button, level_7_button,
+               level_8_button, level_9_button, level_10_button]
+    
+
     pygame.display.set_caption("Level Menu")
     window.fill((90, 80, 40))
     
-    for button in buttons:
+    for button in level_buttons:
         button.draw(window)
+        button.lock_button(window, "lock.png")
+        button.toggle_clickable()
+
+    level_1_button.draw(window)
+    level_1_button.toggle_clickable()
+    back_button.draw(window)
 
     run = True
     while run:
