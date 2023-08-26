@@ -1,19 +1,25 @@
 """This is a file containing all the upgrades name, description and price."""
 
 import pygame
+COST = 1
 
 
 class Upgrades:
     """
+    This class holds all the data for the basic upgrades.
+
     In this class, all the basic upgrades data will be
     stored in this class. This will include the upgrades
-    for the heroine/enemies e.g. increased player damage dealt,
+    for the player/enemies e.g. increased player damage dealt,
     increased player health, decreased enemy shield, ect
     """
-    def __init__(self, name, description, price):
+
+    def __init__(self, name, description, price) -> None:
         """
+        Set the variables.
+
         This function is for each upgrade, it uses
-        arguments to put data in each upgrade.
+        arguments to put data in each player upgrade.
         """
         self.name = name
         self.description = description
@@ -22,30 +28,27 @@ class Upgrades:
 
 class SuperUpgrades:
     """
-    Summary.
-
     This class holds all the data for each super upgrade.
 
-    Description.
-
     In this class, all the super upgrades data will be
-    stored in this class. This will include the the
-    upgrades for the projectile e.g. projectile hitbox,
-    different projectiles, ect.
+    stored in this class. This will include the upgrades
+    for the projectile e.g. projectile hitbox, different
+    projectiles, ect.
     """
 
-    def __init__(self, name, description, price):
+    def __init__(self, name, description, price) -> None:
         """
+        Set the variables.
+
         This function is for each super upgrade, it uses
-        arguments to put data in each super upgrade.
+        arguments to put data in each projectile upgrade.
         """
         self.name = name
         self.description = description
         self.price = price
 
 
-#Tough Gunk": "moreh eath",
-proj_hitbox_upgrade = SuperUpgrades(
+bigger_proj_upgrade = SuperUpgrades(
                                     "Super Slime Shooter",
                                     """
                                     With the Super Slime Shot ability, your
@@ -55,8 +58,64 @@ proj_hitbox_upgrade = SuperUpgrades(
                                     expands, packing more squishy wallop
                                     into each shot.
                                     """,
-                                    #price
+                                    COST
                                     )
+arrow_proj_upgrade = SuperUpgrades(
+                                    "Slobin Hood",
+                                    """
+                                    Drawing power from the legendary archer
+                                    'Robin Hood', witness the mesmerizing
+                                    metamorphosis as your slimeball evolves
+                                    into a swift and lethal arrow. This
+                                    significantly amplifies the damage dealt
+                                    to enimies, turning your attacks into
+                                    devastating blows that send foes reeling.
+                                    """,
+                                    COST
+                                    )
+cannon_proj_upgrade = SuperUpgrades(
+                                    "Steel Slime",
+                                    """
+                                    Prepare to witness the awe-inspiring
+                                    transformation of your slimeball as it
+                                    evolves into a mighty cannonball, only to
+                                    be coated in a layer of viscous, sticky
+                                    slime. Engage in this thrilling upgrade
+                                    and establish yourself as a force to be
+                                    reckoned with, leaving behind a trail of
+                                    astonished enemies struggling to break
+                                    free.
+                                    """,
+                                    COST
+                                    )
+increase_hp_upgrade = Upgrades("Tough Gunk",
+                               """
+                               No longer a mere puddle of gelatinous
+                               substance, you now possess a formidable
+                               and robust constitution. This upgraded
+                               toughness empowers you to withstand even
+                               the most ferocious of attacks, shrugging
+                               off blows that once would have brought you
+                               to your metaphorical knees. Your enemies
+                               will be astonished as they struggle to deal
+                               with your newfound endurance.
+                               """,
+                               COST
+                               )
+increase_luck_upgrade = Upgrades("Blessing of the Slime God",
+                                 """
+                                 As you receive the Blessing of the Slime God,
+                                 an aura of fortunate energy envelops you,
+                                 guiding your steps and steering fate in your
+                                 favor. Embrace this divine gift and watch as
+                                 your enemies' frustration grows with each near
+                                 miss. Engage in battles with newfound
+                                 confidence, knowing that the Blessing of the
+                                 Slime God has your back, turning once perilous
+                                 encounters into triumphs of improbable odds.
+                                 """,
+                                 COST
+                                 )
 def_lower_upgrade = Upgrades("Slime Intimidation",
                              """
                              Slime intimidation, a fearsome ability that
@@ -66,6 +125,20 @@ def_lower_upgrade = Upgrades("Slime Intimidation",
                              of your enemies weaken, leaving them vulnerable
                              and exposed. Your commanding presence and primal
                              power strike at the heart of their confidence.
+                             """,
+                             COST
+                             )
+atk_lower_upgrade = Upgrades("Slimy Solution",
                              """
-                             #price
+                             Prepare to wield the power of gooey innovation
+                             as you coat your adversaries in a specialized
+                             slime solution, drastically reducing their
+                             ability to launch fierce attacks. Embrace the
+                             tactical prowess of the slimy solution as you
+                             witness enemies struggle against the restraints
+                             of the slime solution. Engage with newfound
+                             confidence, knowing that you've turned their
+                             offensive might into a controllable force.
+                             """,
+                             COST
                              )
