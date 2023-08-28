@@ -175,7 +175,7 @@ class Projectile(pygame.sprite.Sprite):
         self._start_y = start_y
         self.size = size
         self.image = pygame.transform.scale(image, (self.size, self.size))
-        self._projectile_rect = self.image.get_rect()
+        # self._rect = self.image.get_rect()
         self.rect = self.image.get_rect()
         self.image_mask = pygame.mask.from_surface(self.image)
         self.background = background
@@ -209,9 +209,9 @@ class Projectile(pygame.sprite.Sprite):
     def speed(self):
         return self._speed
 
-    @property
-    def projectile_rect(self):
-        return self._projectile_rect
+    # @property
+    # def rect(self):
+    #     return self._rect
 
     def change_angle(self, change_in_angle):
         self._angle = change_in_angle
@@ -224,9 +224,9 @@ class Projectile(pygame.sprite.Sprite):
         # pygame.display.set_caption(f"Angle: {self._angle} Speed: {self._speed}")
 
     def draw_starting_point(self):
-        self.projectile_rect.centerx = self._start_x
-        self.projectile_rect.centery = self._start_y
-        self.screen.blit(self.image, (self._projectile_rect.x, self._projectile_rect.y))
+        self.rect.centerx = self._start_x
+        self.rect.centery = self._start_y
+        self.screen.blit(self.image, (self.rect.x, self.rect.y))
         pygame.display.update()
  
     def trajectory(self, change_in_time, start_x, start_y, angle, speed):
@@ -253,13 +253,13 @@ class Projectile(pygame.sprite.Sprite):
                 draw_tiles(self.map, self.tile_size)
                 player_group.draw(self.screen)
                 enemy_group.draw(self.screen)
-                self.projectile_rect.centerx = x
-                self.projectile_rect.centery = y
-                self.screen.blit(self.image, (self.projectile_rect.x, self.projectile_rect.y))
+                self.rect.centerx = x
+                self.rect.centery = y
+                self.screen.blit(self.image, (self.rect.x, self.rect.y))
                 pygame.display.update()
 
                 for tile in tile_rects:
-                    if self.projectile_rect.colliderect(tile):
+                    if self.rect.colliderect(tile):
                         time.sleep(0.5)
                         run = False
                         break
@@ -366,7 +366,7 @@ class Enemy_Projectile(pygame.sprite.Sprite):
 
             # Handle collisions
             for player, projectiles in collisions.items():
-                print("Character hit by projectiles:", len(projectiles))
+                # print("Character hit by projectiles:", len(projectiles))
                 time.sleep(0.5)
                 deduct_player_health(player)
                 return False
@@ -591,7 +591,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     pygame.quit()
 
 
-projectile_rects = [Main_Menu_Projectile() for x in range(100)]
+rects = [Main_Menu_Projectile() for x in range(100)]
 
 def main_menu():
     TOLERANCE = 10
@@ -622,7 +622,7 @@ def main_menu():
                 elif event.button == 1 and quit_button.is_pressed():
                     pygame.quit()
         window.fill((19, 50, 143))
-        for proj in projectile_rects:
+        for proj in rects:
             proj.plus_x()
             proj.plus_y()
             if proj.rect_right >= SCREEN_WIDTH and proj.dx > 0:
