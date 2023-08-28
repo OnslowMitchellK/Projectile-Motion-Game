@@ -269,10 +269,10 @@ class Projectile(pygame.sprite.Sprite):
                                                         False, False, pygame.sprite.collide_mask)
 
                 # Handle collisions
-                for player, projectiles in collisions.items():
+                for enemy, projectiles in collisions.items():
                     print("Character hit by projectiles:", len(projectiles))
                     time.sleep(0.5)
-                    deduct_enemy_health(player)
+                    deduct_enemy_health(enemy)
                     return False
                 if not run:
                     break
