@@ -108,7 +108,7 @@ class Projectile(pygame.sprite.Sprite):
         self.size = size
         self.image = pygame.image.load(image).convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.size * 0.5, self.size * 0.5))
-        self._rect = self.image.get_rect()
+        self.rect = self.image.get_rect()
         # self.rect.topleft = (start_x - self.image.get_width(), start_y - self.image.get_height())
         self.image_mask = pygame.mask.from_surface(self.image)
 
@@ -134,9 +134,9 @@ class Projectile(pygame.sprite.Sprite):
     def speed(self):
         return self._speed
 
-    @property
-    def rect(self):
-        return self._rect
+    # @property
+    # def rect(self):
+    #     return self._rect
 
     def change_angle(self, change_in_angle):
         self._angle += change_in_angle if 0 <= self._angle + change_in_angle <= 90 else 0
@@ -282,9 +282,8 @@ class Enemy_Projectile(pygame.sprite.Sprite):
                     print("HIT")
                     return False
             # Use groupcollide() to detect collisions
-            dead = False
             collisions = pygame.sprite.groupcollide(player_group, enemy_projectile_group,
-                                                    False, dead, pygame.sprite.collide_mask)
+                                                    False, False, pygame.sprite.collide_mask)
 
             # Handle collisions
             for player, projectiles in collisions.items():
