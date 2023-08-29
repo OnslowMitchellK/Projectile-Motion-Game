@@ -511,6 +511,16 @@ def shoot_display(starting_coords, min_angle, max_angle):
 
     return [speed, math.degrees(angle)]
 
+
+def enemy_shoot(enemy_projectile):
+    for enemy in enemy_group:
+        enemy_projectile.start_x = enemy.rect.topleft[0] + 80
+        enemy_projectile.start_y = enemy.rect.topleft[1] + 20
+        enemy_projectile._angle = enemy.angle
+        enemy_projectile._speed = enemy.speed
+        enemy_projectile.draw_starting_point()
+        enemy_projectile.draw_trajectory()
+
 def level_play(screen, map_background, map_tiles, tile_size, projectile_starting_coords, min_angle, max_angle):
     dot_distance = 6
     clock = pygame.time.Clock()
@@ -533,15 +543,6 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     print("e projectile group:", enemy_projectile_group)
     print("player group:", player_group)
 
-
-
-    for enemy in enemy_group:
-        enemy_projectile.start_x = enemy.rect.topleft[0] + 80
-        enemy_projectile.start_y = enemy.rect.topleft[1] + 20
-        enemy_projectile._angle = enemy.angle
-        enemy_projectile._speed = enemy.speed
-        enemy_projectile.draw_starting_point()
-        enemy_projectile.draw_trajectory()
 
     run = True
     while run:
@@ -586,6 +587,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
             projectile.draw_trajectory()
             projectile.draw_starting_point()
             shoot = False
+            enemy_shoot(enemy_projectile)
         
         pygame.display.update()
     pygame.quit()
