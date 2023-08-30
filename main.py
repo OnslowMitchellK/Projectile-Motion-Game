@@ -74,7 +74,7 @@ level_one_enemies = {}
 level_one_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
 level_one_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[0][1] + 20],
-                   [160, 75, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[1][1]]]
 
 airport_background = pygame.image.load("completed_airport_background.png")
@@ -513,11 +513,14 @@ def shoot_display(starting_coords, min_angle, max_angle):
 
 
 def enemy_shoot(enemy_projectile):
+    rand_list = [0, randint(-20, 20)]
     for enemy in enemy_group:
         enemy_projectile.start_x = enemy.rect.topleft[0] + 80
         enemy_projectile.start_y = enemy.rect.topleft[1] + 20
+        # enemy_projectile._angle = enemy.angle + rand_list[randint(0, 1)]
+        enemy_projectile._speed = enemy.speed + rand_list[randint(0, 1)]
         enemy_projectile._angle = enemy.angle
-        enemy_projectile._speed = enemy.speed
+        # enemy_projectile._speed = enemy.speed
         enemy_projectile.draw_starting_point()
         enemy_projectile.draw_trajectory()
 
