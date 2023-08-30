@@ -61,18 +61,18 @@ bigger_proj_upgrade = SuperUpgrades(
                                     COST
                                     )
 arrow_proj_upgrade = SuperUpgrades(
-                                    "Slobin Hood",
-                                    """
-                                    Drawing power from the legendary archer
-                                    'Robin Hood', witness the mesmerizing
-                                    metamorphosis as your slimeball evolves
-                                    into a swift and lethal arrow. This
-                                    significantly amplifies the damage dealt
-                                    to enimies, turning your attacks into
-                                    devastating blows that send foes reeling.
-                                    """,
-                                    COST
-                                    )
+                                   "Slobin Hood",
+                                   """
+                                   Drawing power from the legendary archer
+                                   'Robin Hood', witness the mesmerizing
+                                   metamorphosis as your slimeball evolves
+                                   into a swift and lethal arrow. This
+                                   significantly amplifies the damage dealt
+                                   to enimies, turning your attacks into
+                                   devastating blows that send foes reeling.
+                                   """,
+                                   COST
+                                   )
 cannon_proj_upgrade = SuperUpgrades(
                                     "Steel Slime",
                                     """
@@ -88,7 +88,8 @@ cannon_proj_upgrade = SuperUpgrades(
                                     """,
                                     COST
                                     )
-increase_hp_upgrade = Upgrades("Tough Gunk",
+increase_hp_upgrade = Upgrades(
+                               "Tough Gunk",
                                """
                                No longer a mere puddle of gelatinous
                                substance, you now possess a formidable
@@ -102,7 +103,22 @@ increase_hp_upgrade = Upgrades("Tough Gunk",
                                """,
                                COST
                                )
-increase_luck_upgrade = Upgrades("Blessing of the Slime God",
+decrease_hp_upgrade = Upgrades(
+                               "Sticky Sickness",
+                               """
+                               Plunge your foes into a world of discomfort
+                               with the 'Sticky Sickness' ability. Upon
+                               purchasing, a malevolent aura engulfs your
+                               enemies, afflicting them with an insidious
+                               ailment that gradually saps their health.
+                               As the name suggests, this affliction clings
+                               to them like an inescapable mire, leaving
+                               them weakened and vulnerable.
+                               """,
+                               COST
+                               )
+increase_luck_upgrade = Upgrades(
+                                 "Blessing of the Slime God",
                                  """
                                  As you receive the Blessing of the Slime God,
                                  an aura of fortunate energy envelops you,
@@ -116,7 +132,8 @@ increase_luck_upgrade = Upgrades("Blessing of the Slime God",
                                  """,
                                  COST
                                  )
-def_lower_upgrade = Upgrades("Slime Intimidation",
+def_lower_upgrade = Upgrades(
+                             "Slime Intimidation",
                              """
                              Slime intimidation, a fearsome ability that
                              empowers you to unleash a monstrous roar,
@@ -128,7 +145,8 @@ def_lower_upgrade = Upgrades("Slime Intimidation",
                              """,
                              COST
                              )
-atk_lower_upgrade = Upgrades("Slimy Solution",
+atk_lower_upgrade = Upgrades(
+                             "Slimy Solution",
                              """
                              Prepare to wield the power of gooey innovation
                              as you coat your adversaries in a specialized
@@ -142,3 +160,15 @@ atk_lower_upgrade = Upgrades("Slimy Solution",
                              """,
                              COST
                              )
+small_char_upgrade = Upgrades(
+                              "Slime Splitter",
+                              """
+                              When confronted with adversaries, a slime can
+                              cleverly divide itself into multiple smaller
+                              entities. This ingenious maneuver not only
+                              bewilders opponents but also significantly
+                              shrinks the slime's hitbox, rendering it a
+                              much more challenging target to strike.
+                              """,
+                              COST
+                              )
