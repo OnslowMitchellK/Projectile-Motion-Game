@@ -381,7 +381,7 @@ def deduct_player_health(player):
     damage = randint(50, 90)
     player.health -= damage
 
-    print("health: ", player.health)
+    print(" P health: ", player.health)
 
     if player.health <= 0:
         print("RIP")

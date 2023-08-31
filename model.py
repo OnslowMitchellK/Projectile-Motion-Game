@@ -74,8 +74,9 @@ class Enemy(pygame.sprite.Sprite):
         self.kill()
 
     def draw_health(self):
-        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), 100, 10))
-        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), 100, 10))
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), 100, 5))
+        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), self.health, 5))
+        pygame.draw.rect(self.screen, (0, 0, 255), pygame.Rect(self.x, self.y - (0.175 * self.image.get_height()), self.shield, 5))
 # print("Name: ", level_one_enemies[1].name)
 # print("Health: ", level_one_enemies[1].health)
 # print("Damage: ", level_one_enemies[1].damage)
