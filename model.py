@@ -9,7 +9,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def __init__(self, name: str, health: int, shield: int,
                  damage: int, x: int, y: int, width: int, height: int,
-                 screen, angle: int, speed: int):
+                 screen, angle: int, speed: int, level: int):
         """Enemy variables."""
         super().__init__()
         self.image = pygame.image.load('enemy.png').convert_alpha()
@@ -21,7 +21,9 @@ class Enemy(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self._name: str = name
-        self._health: int = health
+        self.level = level - 1
+        self.max_health = health * (1 + (self.level ** 2) * 0.02)
+        self._health: int = health * (1 + (self.level ** 2) * 0.02)
         self._shield: int = shield
         self._damage: int = damage
         self._width: int = width
@@ -75,7 +77,8 @@ class Enemy(pygame.sprite.Sprite):
 
     def draw_health(self):
         pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), 100, 5))
-        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), self.health, 5))
+        green_percent = int(self.health / (self.max_health / 100))
+        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), green_percent, 5))
         pygame.draw.rect(self.screen, (0, 0, 255), pygame.Rect(self.x, self.y - (0.175 * self.image.get_height()), self.shield, 5))
 # print("Name: ", level_one_enemies[1].name)
 # print("Health: ", level_one_enemies[1].health)

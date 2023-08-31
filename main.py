@@ -749,7 +749,7 @@ def level_menu():
                                     level_one_coordinates[i][0],
                                     SCREEN_HEIGHT - level_one_coordinates[i][1],
                                     40, 40, window, level_one_enemy[i][0],
-                                    level_one_enemy[i][1])
+                                    level_one_enemy[i][1], 6)
                         enemy_group.add(level_one_enemies[i])
 
                     level_play(window, airport_background, map_1, 40, [20, (SCREEN_HEIGHT - 120)], 0, 90)
