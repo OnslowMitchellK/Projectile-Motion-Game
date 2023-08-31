@@ -98,9 +98,6 @@ enemy_projectile_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 
 
-jamal = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0)
-player_group.add(jamal)
-
 class Main_Menu_Projectile:
     def __init__(self, image="test.png", possible_speeds = [-8, -7, -6, -5, -4, -3, 3, 4, 5, 6, 7, 8]) -> None:
         self._image = pygame.image.load(image)
@@ -258,6 +255,7 @@ class Projectile(pygame.sprite.Sprite):
                 self.screen.blit(self.image, (self.rect.x, self.rect.y))
                 for enemy in enemy_group:
                     enemy.draw_health()
+                current_player.draw_health()
                 pygame.display.update()
 
                 for tile in tile_rects:
@@ -348,11 +346,12 @@ class Enemy_Projectile(pygame.sprite.Sprite):
 
             self.screen.blit(self.background, (0, 0))
             draw_tiles(self.map, self.tile_size)
-            # self.screen.blit(jamal.image, jamal.rect)
+            # self.screen.blit(current_player.image, current_player.rect)
             player_group.draw(self.screen)
             enemy_group.draw(self.screen)
             for enemy in enemy_group:
                 enemy.draw_health()
+            current_player.draw_health()
 
             self.screen.blit(self.image, (x, y))
             self.rect.x = x
@@ -408,8 +407,8 @@ def deduct_enemy_health(enemy_hit):
 
 def enemy_dead_check():
     if len(enemy_group) == 0:
-        jamal.level_points += 1
-        print(jamal.level_points)
+        current_player.level_points += 1
+        print(current_player.level_points)
 
 
 def player_dead():
@@ -545,6 +544,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     player_group.draw(screen)
     for enemy in enemy_group:
         enemy.draw_health()
+    current_player.draw_health()
 
     print("enemy group:", enemy_group)
     print("p projectile group:", projectile_group)
@@ -584,6 +584,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         enemy_group.draw(screen)
         for enemy in enemy_group:
             enemy.draw_health()
+        current_player.draw_health()
         projectile.draw_starting_point()
         returned = shoot_display(projectile_starting_coords, min_angle, max_angle)
         coords = projectile.trajectory(1 / 3, projectile_starting_coords[0], projectile_starting_coords[1], returned[1], returned[0])
@@ -797,6 +798,7 @@ def level_menu():
 
 
 window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
-
+current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
+player_group.add(current_player)
 
 main_menu()

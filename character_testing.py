@@ -29,7 +29,7 @@ def draw_bg():
 
 
 class Test_Character(pygame.sprite.Sprite):
-    def __init__(self, x, y, scale, speed):
+    def __init__(self, x, y, scale, speed, screen):
         pygame.sprite.Sprite.__init__(self)
         self.speed = speed
         self.direction = 1
@@ -39,9 +39,12 @@ class Test_Character(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.x = x
+        self.y = y
         self.level_points = 0
         self.super_points = 0
         self.health = 100
+        self.screen = screen
 
         
 
@@ -69,6 +72,10 @@ class Test_Character(pygame.sprite.Sprite):
 
     def die(self):
         self.kill()
+
+    def draw_health(self):
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.5 * self.image.get_height()), 100, 5))
+        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.5 * self.image.get_height()), self.health, 5))
 
 
 # class Upgrade(pygame.sprite.Sprite):
