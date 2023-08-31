@@ -256,6 +256,8 @@ class Projectile(pygame.sprite.Sprite):
                 self.rect.centerx = x
                 self.rect.centery = y
                 self.screen.blit(self.image, (self.rect.x, self.rect.y))
+                for enemy in enemy_group:
+                    enemy.draw_health()
                 pygame.display.update()
 
                 for tile in tile_rects:
@@ -349,6 +351,8 @@ class Enemy_Projectile(pygame.sprite.Sprite):
             # self.screen.blit(jamal.image, jamal.rect)
             player_group.draw(self.screen)
             enemy_group.draw(self.screen)
+            for enemy in enemy_group:
+                enemy.draw_health()
 
             self.screen.blit(self.image, (x, y))
             self.rect.x = x
@@ -539,7 +543,8 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     draw_tiles(map_tiles, tile_size, True)
     projectile.draw_starting_point()
     player_group.draw(screen)
-    enemy_group.draw(screen)
+    for enemy in enemy_group:
+        enemy.draw_health()
 
     print("enemy group:", enemy_group)
     print("p projectile group:", projectile_group)
@@ -577,6 +582,8 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         draw_tiles(map_tiles, tile_size)
         player_group.draw(screen)
         enemy_group.draw(screen)
+        for enemy in enemy_group:
+            enemy.draw_health()
         projectile.draw_starting_point()
         returned = shoot_display(projectile_starting_coords, min_angle, max_angle)
         coords = projectile.trajectory(1 / 3, projectile_starting_coords[0], projectile_starting_coords[1], returned[1], returned[0])

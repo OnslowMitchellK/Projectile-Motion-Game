@@ -18,6 +18,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.topleft = (x, y)
         self.image_mask = pygame.mask.from_surface(self.image)
 
+        self.x = x
+        self.y = y
         self._name: str = name
         self._health: int = health
         self._shield: int = shield
@@ -70,6 +72,10 @@ class Enemy(pygame.sprite.Sprite):
 
     def die(self):
         self.kill()
+
+    def draw_health(self):
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), 100, 10))
+        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), 100, 10))
 # print("Name: ", level_one_enemies[1].name)
 # print("Health: ", level_one_enemies[1].health)
 # print("Damage: ", level_one_enemies[1].damage)
