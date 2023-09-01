@@ -390,7 +390,8 @@ def deduct_player_health(player):
 
 def deduct_enemy_health(enemy_hit):
     global enemy_group
-    damage = randint(30, 90)
+    # damage = randint(30, 90)
+    damage = 1000000
     old_shield = enemy_hit.shield
     enemy_hit.shield -= damage
     if enemy_hit.shield == 0:
@@ -402,7 +403,7 @@ def deduct_enemy_health(enemy_hit):
     if enemy_hit.health <= 0:
         print("RIP")
         enemy_hit.die()
-        enemy_dead_check(enemy_hit.level + 1)
+        enemy_dead_check(enemy_hit.level + 2)
 
 locked_levels = [2, 3, 4, 5, 6, 7, 8, 9, 10]
 def enemy_dead_check(level):
@@ -410,9 +411,9 @@ def enemy_dead_check(level):
         current_player.level_points += 1
         try:
             locked_levels.remove(level)
-            level_menu()
         except Exception:
             pass
+        level_menu()
         print(current_player.level_points)
 
 
@@ -756,7 +757,7 @@ def level_menu():
                                     level_one_coordinates[i][0],
                                     SCREEN_HEIGHT - level_one_coordinates[i][1],
                                     40, 40, window, level_one_enemy[i][0],
-                                    level_one_enemy[i][1], 6)
+                                    level_one_enemy[i][1], 1)
                         enemy_group.add(level_one_enemies[i])
 
                     level_play(window, airport_background, map_1, 40, [20, (SCREEN_HEIGHT - 120)], 0, 90)
