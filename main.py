@@ -80,8 +80,8 @@ level_one_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
 airport_background = pygame.image.load("completed_airport_background.png")
 airport_background = pygame.transform.scale(airport_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-map_2_background = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-map_2_background.fill((200, 30, 20))
+map_2_background = pygame.image.load("map2.png")
+map_2_background = pygame.transform.scale(map_2_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
 img_1 = pygame.image.load("tile1.png")
@@ -764,7 +764,7 @@ def level_menu():
 
                 elif event.button == 1 and level_2_button.is_pressed():
                     pygame.display.set_caption("Level 2")
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
+                    level_play(window, map_2_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_3_button.is_pressed():
                     pygame.display.set_caption("Level 3")
