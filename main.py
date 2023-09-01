@@ -402,12 +402,17 @@ def deduct_enemy_health(enemy_hit):
     if enemy_hit.health <= 0:
         print("RIP")
         enemy_hit.die()
-        enemy_dead_check()
+        enemy_dead_check(enemy_hit.level + 1)
 
-
-def enemy_dead_check():
+locked_levels = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+def enemy_dead_check(level):
     if len(enemy_group) == 0:
         current_player.level_points += 1
+        try:
+            locked_levels.remove(level)
+            level_menu()
+        except Exception:
+            pass
         print(current_player.level_points)
 
 
@@ -720,20 +725,22 @@ def level_menu():
     level_9_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.75,"Level 9", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     level_10_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.75, "Level 10", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Back", 350, 100, font_size=50, border_radius=20, background_colour=(190, 10, 180))
-    level_buttons = [level_1_button, level_2_button, level_3_button, level_4_button, level_5_button, level_6_button, level_7_button,
-               level_8_button, level_9_button, level_10_button]
+    level_buttons = {1 : level_1_button, 2 : level_2_button, 3 : level_3_button,
+                     4 : level_4_button, 5 : level_5_button, 6 : level_6_button,
+                     7 : level_7_button, 8 : level_8_button, 9 : level_9_button, 
+                     10 : level_10_button}
     
 
     pygame.display.set_caption("Level Menu")
     window.fill((90, 80, 40))
-    
-    for button in level_buttons:
-        button.draw(window)
-        button.lock_button(window, "lock.png")
-        button.toggle_clickable()
 
-    level_1_button.draw(window)
-    level_1_button.toggle_clickable()
+
+    for button in level_buttons.items():
+        button[1].draw(window)
+        if button[0] in locked_levels:
+            button[1].lock_button(window, "lock.png")
+            button[1].toggle_clickable()
+
     back_button.draw(window)
 
     run = True
