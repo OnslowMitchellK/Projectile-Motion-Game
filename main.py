@@ -390,8 +390,8 @@ def deduct_player_health(player):
 
 def deduct_enemy_health(enemy_hit):
     global enemy_group
-    # damage = randint(30, 90)
-    damage = 1000000
+    damage = randint(30, 90)
+    # damage = 1000000
     old_shield = enemy_hit.shield
     enemy_hit.shield -= damage
     if enemy_hit.shield == 0:
