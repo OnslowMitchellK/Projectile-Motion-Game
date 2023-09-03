@@ -377,7 +377,7 @@ class Enemy_Projectile(pygame.sprite.Sprite):
 
 def deduct_player_health(player):
     global player_group
-    damage = randint(50, 90)
+    damage = randint(6, 8)
     player.health -= damage
 
     print(" P health: ", player.health)
@@ -522,8 +522,8 @@ def shoot_display(starting_coords, min_angle, max_angle):
 
 
 def enemy_shoot(enemy_projectile):
-    rand_list = [0, randint(-20, 20)]
     for enemy in enemy_group:
+        rand_list = [0, randint(-80, 80)]
         enemy_projectile.start_x = enemy.rect.topleft[0] + 80
         enemy_projectile.start_y = enemy.rect.topleft[1] + 20
         # enemy_projectile._angle = enemy.angle + rand_list[randint(0, 1)]
