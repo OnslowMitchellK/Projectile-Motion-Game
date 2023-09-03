@@ -753,7 +753,7 @@ def level_menu():
                 if event.button == 1 and level_1_button.is_pressed():
                     pygame.display.set_caption("Level 1")
                     for i in range(len(level_one_coordinates)):
-                        level_one_enemies[i] = Enemy(f"Enemy {2}", 100, 100, 25,
+                        level_one_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
                                     level_one_coordinates[i][0],
                                     SCREEN_HEIGHT - level_one_coordinates[i][1],
                                     40, 40, window, level_one_enemy[i][0],

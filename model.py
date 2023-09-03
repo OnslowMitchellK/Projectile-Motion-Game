@@ -8,7 +8,7 @@ class Enemy(pygame.sprite.Sprite):
     """Enemy Class."""
 
     def __init__(self, name: str, health: int, shield: int,
-                 damage: int, x: int, y: int, width: int, height: int,
+                 x: int, y: int, width: int, height: int,
                  screen, angle: int, speed: int, level: int):
         """Enemy variables."""
         super().__init__()
@@ -25,7 +25,7 @@ class Enemy(pygame.sprite.Sprite):
         self.max_health = health * (1 + (self.level ** 2) * 0.02)
         self._health: int = health * (1 + (self.level ** 2) * 0.02)
         self._shield: int = shield
-        self._damage: int = damage
+        self._damage: int = 5 + self.level
         self._width: int = width
         self._height: int = height
         self.screen = screen
