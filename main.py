@@ -6,6 +6,7 @@ from button import Button
 from model import Enemy
 from random import randint, choice
 from character_testing import Test_Character
+from pygame_functions import *
 
 pygame.init()
 
@@ -253,6 +254,7 @@ class Projectile(pygame.sprite.Sprite):
                 self.rect.centerx = x
                 self.rect.centery = y
                 self.screen.blit(self.image, (self.rect.x, self.rect.y))
+                scrollBackground(-5, 0)
                 for enemy in enemy_group:
                     enemy.draw_health()
                 current_player.draw_health()
@@ -263,6 +265,10 @@ class Projectile(pygame.sprite.Sprite):
                         time.sleep(0.5)
                         run = False
                         break
+                if (self.rect.centerx > SCREEN_WIDTH + 200 or
+                    self.rect.centery > SCREEN_HEIGHT + 200):
+                    run = False
+                    break
 
                 # Use groupcollide() to detect collisions
                 collisions = pygame.sprite.groupcollide(enemy_group, projectile_group,
