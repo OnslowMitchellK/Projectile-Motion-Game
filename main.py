@@ -254,7 +254,6 @@ class Projectile(pygame.sprite.Sprite):
                 self.rect.centerx = x
                 self.rect.centery = y
                 self.screen.blit(self.image, (self.rect.x, self.rect.y))
-                scrollBackground(-5, 0)
                 for enemy in enemy_group:
                     enemy.draw_health()
                 current_player.draw_health()
@@ -267,6 +266,7 @@ class Projectile(pygame.sprite.Sprite):
                         break
                 if (self.rect.centerx > SCREEN_WIDTH + 200 or
                     self.rect.centery > SCREEN_HEIGHT + 200):
+                    time.sleep(0.5)
                     run = False
                     break
 
