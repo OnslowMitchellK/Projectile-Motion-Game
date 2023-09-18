@@ -83,6 +83,54 @@ level_two_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[0][1] + 20],
                    [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[1][1]]]
+level_three_enemies = {}
+level_three_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_three_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[0][1] + 20],
+                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[1][1]]]
+level_four_enemies = {}
+level_four_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_four_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[0][1] + 20],
+                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[1][1]]]
+level_five_enemies = {}
+level_five_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_five_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[0][1] + 20],
+                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[1][1]]]
+level_six_enemies = {}
+level_six_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_six_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[0][1] + 20],
+                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[1][1]]]
+level_seven_enemies = {}
+level_seven_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_seven_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[0][1] + 20],
+                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[1][1]]]
+level_eight_enemies = {}
+level_eight_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_eight_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[0][1] + 20],
+                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[1][1]]]
+level_nine_enemies = {}
+level_nine_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_nine_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[0][1] + 20],
+                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[1][1]]]
+level_ten_enemies = {}
+level_ten_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_ten_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[0][1] + 20],
+                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_one_coordinates[1][1]]]
 
 airport_background = pygame.image.load("completed_airport_background.png")
 airport_background = pygame.transform.scale(airport_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -778,7 +826,7 @@ def level_menu():
                     pygame.display.set_caption("Level 2")
                     for i in range(len(level_two_coordinates)):
                         level_two_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
-                                    level_one_coordinates[i][0],
+                                    level_two_coordinates[i][0],
                                     SCREEN_HEIGHT - level_two_coordinates[i][1],
                                     40, 40, window, level_two_enemy[i][0],
                                     level_two_enemy[i][1], 1)
@@ -787,36 +835,92 @@ def level_menu():
 
                 elif event.button == 1 and level_3_button.is_pressed():
                     pygame.display.set_caption("Level 3")
+                    for i in range(len(level_three_coordinates)):
+                        level_three_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                                    level_three_coordinates[i][0],
+                                    SCREEN_HEIGHT - level_three_coordinates[i][1],
+                                    40, 40, window, level_three_enemy[i][0],
+                                    level_three_enemy[i][1], 1)
+                        enemy_group.add(level_three_enemies[i])
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_4_button.is_pressed():
                     pygame.display.set_caption("Level 4")
+                    for i in range(len(level_four_coordinates)):
+                        level_four_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                                    level_four_coordinates[i][0],
+                                    SCREEN_HEIGHT - level_four_coordinates[i][1],
+                                    40, 40, window, level_four_enemy[i][0],
+                                    level_four_enemy[i][1], 1)
+                        enemy_group.add(level_four_enemies[i])
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_5_button.is_pressed():
                     pygame.display.set_caption("Level 5")
+                    for i in range(len(level_five_coordinates)):
+                        level_five_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                                    level_five_coordinates[i][0],
+                                    SCREEN_HEIGHT - level_five_coordinates[i][1],
+                                    40, 40, window, level_five_enemy[i][0],
+                                    level_five_enemy[i][1], 1)
+                        enemy_group.add(level_five_enemies[i])
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_6_button.is_pressed():
                     pygame.display.set_caption("Level 6")
+                    for i in range(len(level_six_coordinates)):
+                        level_six_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                                    level_six_coordinates[i][0],
+                                    SCREEN_HEIGHT - level_six_coordinates[i][1],
+                                    40, 40, window, level_six_enemy[i][0],
+                                    level_six_enemy[i][1], 1)
+                        enemy_group.add(level_six_enemies[i])
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_7_button.is_pressed():
                     pygame.display.set_caption("Level 7")
+                    for i in range(len(level_seven_coordinates)):
+                        level_seven_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                                    level_seven_coordinates[i][0],
+                                    SCREEN_HEIGHT - level_seven_coordinates[i][1],
+                                    40, 40, window, level_seven_enemy[i][0],
+                                    level_seven_enemy[i][1], 1)
+                        enemy_group.add(level_seven_enemies[i])
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_8_button.is_pressed():
                     pygame.display.set_caption("Level 8")
+                    for i in range(len(level_eight_coordinates)):
+                        level_eight_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                                    level_eight_coordinates[i][0],
+                                    SCREEN_HEIGHT - level_eight_coordinates[i][1],
+                                    40, 40, window, level_eight_enemy[i][0],
+                                    level_eight_enemy[i][1], 1)
+                        enemy_group.add(level_eight_enemies[i])
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_9_button.is_pressed():
                     pygame.display.set_caption("Level 9")
+                    for i in range(len(level_nine_coordinates)):
+                        level_nine_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                                    level_nine_coordinates[i][0],
+                                    SCREEN_HEIGHT - level_nine_coordinates[i][1],
+                                    40, 40, window, level_nine_enemy[i][0],
+                                    level_nine_enemy[i][1], 1)
+                        enemy_group.add(level_nine_enemies[i])
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_10_button.is_pressed():
                     pygame.display.set_caption("Level 10")
+                    for i in range(len(level_ten_coordinates)):
+                        level_ten_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                                    level_ten_coordinates[i][0],
+                                    SCREEN_HEIGHT - level_ten_coordinates[i][1],
+                                    40, 40, window, level_ten_enemy[i][0],
+                                    level_ten_enemy[i][1], 1)
+                        enemy_group.add(level_ten_enemies[i])
                     level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
-                
+
                 elif event.button == 1 and back_button.is_pressed():
                     main_menu()
 
