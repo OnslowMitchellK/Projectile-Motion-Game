@@ -14,7 +14,7 @@ class Upgrades:
     increased player health, decreased enemy shield, ect
     """
 
-    def __init__(self, name, description, price) -> None:
+    def __init__(self, name, description, price, mini_description) -> None:
         """
         Set the variables.
 
@@ -24,9 +24,10 @@ class Upgrades:
         self.name = name
         self.description = description
         self.price = price
+        self.mini_description = mini_description
 
     def dict_return(self):
-        return {self.name: [self.description, self.price]}
+        return {self.name: [self.description, self.price, self.mini_description]}
 
 
 class SuperUpgrades:
@@ -39,7 +40,7 @@ class SuperUpgrades:
     projectiles, ect.
     """
 
-    def __init__(self, name, description, price) -> None:
+    def __init__(self, name, description, price, mini_description) -> None:
         """
         Set the variables.
 
@@ -49,9 +50,10 @@ class SuperUpgrades:
         self.name = name
         self.description = description
         self.price = price
+        self.mini_description = mini_description
     
     def dict_return(self):
-        return {self.name: [self.description, self.price]}
+        return {self.name: [self.description, self.price, self.mini_description]}
 
 
 bigger_proj_upgrade = SuperUpgrades(
@@ -64,7 +66,7 @@ bigger_proj_upgrade = SuperUpgrades(
                                     expands, packing more squishy wallop
                                     into each shot.
                                     """,
-                                    COST
+                                    COST, "Bigger Projectile"
                                     ).dict_return()
 arrow_proj_upgrade = SuperUpgrades(
                                    "Slobin Hood",
@@ -77,7 +79,7 @@ arrow_proj_upgrade = SuperUpgrades(
                                    to enimies, turning your attacks into
                                    devastating blows that send foes reeling.
                                    """,
-                                   COST
+                                   COST, "Arrow Projectile"
                                    ).dict_return()
 cannon_proj_upgrade = SuperUpgrades(
                                     "Steel Slime",
@@ -92,7 +94,7 @@ cannon_proj_upgrade = SuperUpgrades(
                                     astonished enemies struggling to break
                                     free.
                                     """,
-                                    COST
+                                    COST, "Cannon Projectile"
                                     ).dict_return()
 increase_hp_upgrade = Upgrades(
                                "Tough Gunk",
@@ -107,7 +109,7 @@ increase_hp_upgrade = Upgrades(
                                will be astonished as they struggle to deal
                                with your newfound endurance.
                                """,
-                               COST
+                               COST, "Increase Player Health"
                                ).dict_return()
 decrease_hp_upgrade = Upgrades(
                                "Sticky Sickness",
@@ -121,7 +123,7 @@ decrease_hp_upgrade = Upgrades(
                                to them like an inescapable mire, leaving
                                them weakened and vulnerable.
                                """,
-                               COST
+                               COST, "Decrease Enemy Health"
                                ).dict_return()
 increase_luck_upgrade = Upgrades(
                                  "Blessing of the Slime God",
@@ -136,7 +138,7 @@ increase_luck_upgrade = Upgrades(
                                  Slime God has your back, turning once perilous
                                  encounters into triumphs of improbable odds.
                                  """,
-                                 COST
+                                 COST, "Increase chance to not be hit"
                                  ).dict_return()
 def_lower_upgrade = Upgrades(
                              "Slime Intimidation",
@@ -149,7 +151,7 @@ def_lower_upgrade = Upgrades(
                              and exposed. Your commanding presence and primal
                              power strike at the heart of their confidence.
                              """,
-                             COST
+                             COST, "Lower Enemy Defense"
                              ).dict_return()
 atk_lower_upgrade = Upgrades(
                              "Slimy Solution",
@@ -164,7 +166,7 @@ atk_lower_upgrade = Upgrades(
                              confidence, knowing that you've turned their
                              offensive might into a controllable force.
                              """,
-                             COST
+                             COST, "Lower Enemy Attack"
                              ).dict_return()
 small_char_upgrade = Upgrades(
                               "Slime Splitter",
@@ -176,7 +178,7 @@ small_char_upgrade = Upgrades(
                               shrinks the slime's hitbox, rendering it a
                               much more challenging target to strike.
                               """,
-                              COST
+                              COST, "Smaller Character"
                               ).dict_return()
 
 upgrades = [increase_hp_upgrade, increase_luck_upgrade, def_lower_upgrade, atk_lower_upgrade, small_char_upgrade]

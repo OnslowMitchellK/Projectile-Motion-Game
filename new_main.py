@@ -931,16 +931,16 @@ def upgrades_menu():
     pygame.display.set_caption("Upgrades Menu")
     window.fill((80, 200, 90))
     
-    increase_hp_button = Upgrades_button(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, "lock.png", increase_hp_upgrade)
-    decrease_hp_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, "lock.png", decrease_hp_upgrade)
-    increase_luck_button = Upgrades_button(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.5, "lock.png", increase_luck_upgrade)
-    def_lower_button = Upgrades_button(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.75, "lock.png", def_lower_upgrade)
-    atk_lower_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "lock.png", atk_lower_upgrade)
-    small_char_button = Upgrades_button(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.75, "lock.png", small_char_upgrade)
+    increase_hp_button = Upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.5, "lock.png", increase_hp_upgrade, font_size=40, border_radius=200)
+    decrease_hp_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, "lock.png", decrease_hp_upgrade, font_size=40, border_radius=200)
+    increase_luck_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.5, "lock.png", increase_luck_upgrade, font_size=40, border_radius=200)
+    def_lower_button = Upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.75, "lock.png", def_lower_upgrade, font_size=40, border_radius=200)
+    atk_lower_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "lock.png", atk_lower_upgrade, font_size=40, border_radius=200)
+    small_char_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.75, "lock.png", small_char_upgrade, font_size=40, border_radius=200)
 
-    bigger_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.25, "lock.png", bigger_proj_upgrade)
-    arrow_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.25, "lock.png", arrow_proj_upgrade)
-    cannon_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.25, "lock.png", cannon_proj_upgrade)
+    bigger_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.25, "lock.png", bigger_proj_upgrade, font_size=40, border_radius=150)
+    arrow_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.25, "lock.png", arrow_proj_upgrade, font_size=40, border_radius=150)
+    cannon_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.25, "lock.png", cannon_proj_upgrade, font_size=40, border_radius=150)
 
     upgrades = [increase_hp_button, decrease_hp_button, increase_luck_button, def_lower_button, atk_lower_button, small_char_button]
     super_upgrades = [bigger_proj_button, arrow_proj_button, cannon_proj_button]
@@ -952,8 +952,15 @@ def upgrades_menu():
     run = True
     while run:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
+            for upgrade in all_upgrades:
+                if event.type == pygame.QUIT:
+                    run = False
+
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1 and upgrade.is_pressed:
+                        upgrade.display_further_details(window)
+        
+        
 
         pygame.display.update()
     pygame.quit()

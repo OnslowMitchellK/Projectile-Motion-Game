@@ -44,18 +44,33 @@ class Lockable_button(Button):
         screen.blit(transfromed_image, (image_rect.x, image_rect.y))
 
 class Upgrades_button(Button):
-    def __init__(self, x, y, upgrade_image, upgrade_dict, text=None, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+    def __init__(self, x, y, upgrade_image, upgrade_dict, text=None, width=400, height=150, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
         super().__init__(x, y, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
         self.image = pygame.image.load(upgrade_image)
         self.name = list(upgrade_dict.keys())[0]
+        self.font = pygame.font.SysFont(font, font_size)
+        self.text = self.font.render(self.name, True, font_colour)
         self.description = upgrade_dict[self.name][0]
         self.price = upgrade_dict[self.name][1]
+        self.mini_description = upgrade_dict[self.name][2]
+        self.mini_font = pygame.font.SysFont(font, int(font_size / 2))
+        self.mini_text = self.mini_font.render(self.mini_description, True, "red")
+        self.price_font = pygame.font.SysFont(font, int(font_size / 2))
+        self.price_text = self.price_font.render(f"${self.price}", True, "red")
+        
     
     def display(self, screen):
         pygame.draw.rect(screen, self.background_colour, self._rect, self.outline, border_radius=self.border_radius)
+        screen.blit(self.text, (self._rect.centerx - self.text.get_width() / 2, self._rect.centery - self.text.get_height() / 2))
+        screen.blit(self.mini_text, (self._rect.centerx - self.mini_text.get_width() / 2, self._rect.centery + self.mini_text.get_height() * 1.3))
+        screen.blit(self.price_text, (self._rect.centerx - self.price_text.get_width() / 2, self._rect.centery + self.price_text.get_height() * 3))
+    
+    def display_further_details(self, screen):
+        rect = pygame.Rect(640, 400, 300, 300)
+        pygame.draw.rect(screen, self.background_colour, rect, self.outline, border_radius=self.border_radius)
 
 class Super_upgrades_button(Upgrades_button):
-    def __init__(self, x, y, upgrade_image, upgrade_dict, text=None, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+    def __init__(self, x, y, upgrade_image, upgrade_dict, text=None, width=400, height=150, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
         super().__init__(x, y, upgrade_image, upgrade_dict, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
         pass
 
