@@ -27,6 +27,12 @@ class Button:
             pos = pygame.mouse.get_pos()
             return True if self._rect.collidepoint(pos[0], pos[1]) else False
 
+
+class Lockable_button(Button):
+    def __init__(self, x, y, text, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+        super().__init__(x, y, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
+        pass
+
     def toggle_clickable(self):
         self.is_clickable = False if self.is_clickable else True
     
@@ -36,7 +42,22 @@ class Button:
         image_rect = transfromed_image.get_rect()
         image_rect.center = (self._rect.centerx, self._rect.centery)
         screen.blit(transfromed_image, (image_rect.x, image_rect.y))
-        
+
+class Upgrades_button(Button):
+    def __init__(self, x, y, upgrade_image, upgrade_dict, text=None, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+        super().__init__(x, y, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
+        self.image = pygame.image.load(upgrade_image)
+        self.name = list(upgrade_dict.keys())[0]
+        self.description = upgrade_dict[self.name][0]
+        self.price = upgrade_dict[self.name][1]
+    
+    def display(self, screen):
+        pygame.draw.rect(screen, self.background_colour, self._rect, self.outline, border_radius=self.border_radius)
+
+class Super_upgrades_button(Upgrades_button):
+    def __init__(self, x, y, upgrade_image, upgrade_dict, text=None, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+        super().__init__(x, y, upgrade_image, upgrade_dict, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
+        pass
 
 # class Collision_Button(Button):
 #     def __init__(self, x, y, text, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
