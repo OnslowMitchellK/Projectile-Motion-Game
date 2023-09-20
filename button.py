@@ -29,6 +29,7 @@ class Button:
 
     def toggle_clickable(self):
         self.is_clickable = False if self.is_clickable else True
+<<<<<<< HEAD
     
     def lock_button(self, screen, image):
         loaded_image = pygame.image.load(image)
@@ -43,3 +44,18 @@ class Button:
 #         super().__init__(x, y, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
 #         pass
 
+=======
+
+    def lock_button(self, screen, image):
+        loaded_image = pygame.image.load(image)
+        transfromed_image = pygame.transform.scale(loaded_image, (self.width * 0.8, self.height * 0.8))
+        image_rect = transfromed_image.get_rect()
+        image_rect.center = (self._rect.centerx, self._rect.centery)
+        screen.blit(transfromed_image, (image_rect.x, image_rect.y))
+
+
+# class Collision_Button(Button):
+#     def __init__(self, x, y, text, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+#         super().__init__(x, y, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
+#         pass
+>>>>>>> origin/Ollie

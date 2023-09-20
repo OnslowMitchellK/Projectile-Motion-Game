@@ -1,5 +1,6 @@
 """This is a file containing all the upgrades name, description and price."""
 
+
 import pygame
 COST = 1
 
