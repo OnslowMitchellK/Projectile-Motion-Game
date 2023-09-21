@@ -7,6 +7,7 @@ from model import Enemy
 from random import randint, choice
 from character_testing import Test_Character
 from upgrades import *
+import sys
 
 pygame.init()
 
@@ -55,7 +56,7 @@ map_2 = """
                               1111111111111                    
                                 111111111                          
                                 111111111                
-                                111111111                     
+                                111111111                    
                                1111111111                      
                                1111111111                      
                                111111111                      
@@ -159,7 +160,7 @@ class Main_Menu_Projectile:
         size = randint(30, 50)
         self._image = pygame.transform.scale(self._image, (size, size))
         self._rect = self._image.get_rect()
-        self._rect.x = randint(50, 300) if randint(1, 2) == 1 else randint(SCREEN_WIDTH - 300, SCREEN_WIDTH - 50)
+        self._rect.x = randint(50, SCREEN_WIDTH - 50)
         self._rect.y = randint(50, SCREEN_HEIGHT - 50)
         self._dx = choice(possible_speeds)
         self._dy = choice(possible_speeds)
@@ -167,31 +168,31 @@ class Main_Menu_Projectile:
     @property
     def image(self):
         return self._image
-    
+   
     @property
     def dx(self):
         return self._dx
-    
+   
     @property
     def dy(self):
         return self._dy
-    
+   
     @property
     def rect_left(self) -> float:
         return self._rect.left
-    
+   
     @property
     def rect_right(self) -> float:
         return self._rect.right
-    
+   
     @property
     def rect_top(self) -> float:
         return self._rect.top
-    
+   
     @property
     def rect_bottom(self) -> float:
         return self._rect.bottom
-    
+   
     @property
     def rect(self):
         return self._rect
@@ -199,7 +200,7 @@ class Main_Menu_Projectile:
     @property
     def rect_x(self):
         return self._rect.x
-    
+   
     @property
     def rect_y(self):
         return self._rect.y
@@ -241,11 +242,11 @@ class Projectile(pygame.sprite.Sprite):
         self._angle = 0
         self._speed = 0
         self.speeds = []
-    
+   
     @property
     def start_x(self):
         return self._start_x
-    
+   
     @property
     def start_y(self):
         return self._start_y
@@ -546,12 +547,12 @@ def shoot_display(starting_coords, min_angle, max_angle):
 
     angle = math.atan2(SCREEN_HEIGHT - pos[1] - (SCREEN_HEIGHT - y_centre_s), pos[0] - (x_centre_s))
     angle += 2 * math.pi if angle < 0 else 0
-    
+   
     if min_angle == 0:
         if pos[1] > y_centre_s:
             draw = False
             angle = math.radians(min_angle)
-    
+   
     if max_angle == 90:
         if pos[0] < x_centre_s:
             draw = False
@@ -643,7 +644,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
                 #     projectile.change_speed(5)
                 # elif event.button == 5 and not current:
                 #     projectile.change_speed(-5)
-                
+               
 
         screen.blit(map_background, (0, 0))
         draw_tiles(map_tiles, tile_size)
@@ -658,7 +659,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         for i in coords[:10]:
             if i[0] < SCREEN_WIDTH / dot_distance:
                 pygame.draw.circle(window, "yellow", (i), 10)
-        
+       
         if shoot:
             projectile.change_speed(returned[0])
             projectile.change_angle(returned[1])
@@ -666,12 +667,28 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
             projectile.draw_starting_point()
             shoot = False
             enemy_shoot(enemy_projectile)
-        
+       
         pygame.display.update()
     pygame.quit()
 
 
 rects = [Main_Menu_Projectile() for x in range(100)]
+
+def instructions_menu():
+    pygame.display.set_caption("Instructions Menu")
+    window.fill((190, 50, 180))
+
+    instructions_text = """"""
+
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+
+        pygame.display.update()
+    pygame.quit()
 
 def main_menu():
     TOLERANCE = 10
@@ -679,14 +696,18 @@ def main_menu():
     window.fill((19, 50, 143))
     pygame.display.set_caption("Main Menu")
 
-    play_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, "Play")
-    options_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "Options")
-    quit_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.75, "Quit")
+    play_button = Button(SCREEN_WIDTH / 5 * 2.5, SCREEN_HEIGHT / 3, "Play")
+    instructions_button = Button(SCREEN_WIDTH / 5, SCREEN_HEIGHT / 3, "Instructions", font_size=60)
+    upgrades_button = Button(SCREEN_WIDTH / 5 * 4, SCREEN_HEIGHT / 3, "Upgrades", font_size=60)
+    options_button = Button(SCREEN_WIDTH / 5 * 1.75, SCREEN_HEIGHT / 3 * 2, "Options")
+    quit_button = Button(SCREEN_WIDTH / 5 * 3.25, SCREEN_HEIGHT / 3 * 2, "Quit")
 
     play_button.draw(window)
     options_button.draw(window)
+    instructions_button.draw(window)
+    upgrades_button.draw(window)
     quit_button.draw(window)
-    buttons = [play_button, options_button, quit_button]
+    buttons = [play_button, instructions_button, upgrades_button, options_button, quit_button]
 
     run = True
     while run:
@@ -697,6 +718,10 @@ def main_menu():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and play_button.is_pressed():
                     level_menu()
+                elif event.button == 1 and instructions_button.is_pressed():
+                    instructions_menu()
+                elif event.button == 1 and upgrades_button.is_pressed():
+                    upgrades_menu()
                 elif event.button == 1 and options_button.is_pressed():
                     options_menu()
                 elif event.button == 1 and quit_button.is_pressed():
@@ -728,11 +753,10 @@ def main_menu():
                         proj.multiply_x(-1)
                         break
             proj.draw(window)
-        
+       
 
-        play_button.draw(window)      
-        options_button.draw(window)  
-        quit_button.draw(window)
+        for button in buttons:
+            button.draw(window)
         pygame.display.update()
 
 
@@ -753,7 +777,7 @@ def controls_menu():
 
 def options_menu():
     controls_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, "Controls")
-    back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Back")
+    back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Main Menu", font_size=60)
 
     pygame.display.set_caption("Options Menu")
     window.fill((20, 90, 130))
@@ -785,12 +809,13 @@ def level_menu():
     level_8_button = Lockable_button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.5, "Level 8", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     level_9_button = Lockable_button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.75,"Level 9", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     level_10_button = Lockable_button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.75, "Level 10", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    back_button = Lockable_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Back", 350, 100, font_size=50, border_radius=20, background_colour=(190, 10, 180))
+    back_button = Lockable_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Main Menu", 350, 100, font_size=50, border_radius=20, background_colour=(190, 10, 180))
+   
     level_buttons = {1 : level_1_button, 2 : level_2_button, 3 : level_3_button,
                      4 : level_4_button, 5 : level_5_button, 6 : level_6_button,
-                     7 : level_7_button, 8 : level_8_button, 9 : level_9_button, 
+                     7 : level_7_button, 8 : level_8_button, 9 : level_9_button,
                      10 : level_10_button}
-    
+   
 
     pygame.display.set_caption("Level Menu")
     window.fill((90, 80, 40))
@@ -930,17 +955,24 @@ def level_menu():
 def upgrades_menu():
     pygame.display.set_caption("Upgrades Menu")
     window.fill((80, 200, 90))
-    
-    increase_hp_button = Upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.5, "lock.png", increase_hp_upgrade, font_size=40, border_radius=200)
-    decrease_hp_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, "lock.png", decrease_hp_upgrade, font_size=40, border_radius=200)
-    increase_luck_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.5, "lock.png", increase_luck_upgrade, font_size=40, border_radius=200)
-    def_lower_button = Upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.75, "lock.png", def_lower_upgrade, font_size=40, border_radius=200)
-    atk_lower_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "lock.png", atk_lower_upgrade, font_size=40, border_radius=200)
-    small_char_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.75, "lock.png", small_char_upgrade, font_size=40, border_radius=200)
 
-    bigger_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.25, "lock.png", bigger_proj_upgrade, font_size=40, border_radius=150)
-    arrow_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.25, "lock.png", arrow_proj_upgrade, font_size=40, border_radius=150)
-    cannon_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.25, "lock.png", cannon_proj_upgrade, font_size=40, border_radius=150)
+    upgrade_font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 80)
+    super_upgrade_text = upgrade_font.render("Super Upgrades", True, "white")
+    upgrade_text = upgrade_font.render("Upgrades", True, "white")
+
+    window.blit(super_upgrade_text, (25, 80))
+    window.blit(upgrade_text, (720, 80))
+   
+    increase_hp_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.35, "lock.png", increase_hp_upgrade, font_size=40, border_radius=200)
+    decrease_hp_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.6, "lock.png", decrease_hp_upgrade, font_size=40, border_radius=200)
+    increase_luck_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.6, "lock.png", increase_luck_upgrade, font_size=30, border_radius=200)
+    def_lower_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.85, "lock.png", def_lower_upgrade, font_size=40, border_radius=200)
+    atk_lower_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.85, "lock.png", atk_lower_upgrade, font_size=40, border_radius=200)
+    small_char_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.35, "lock.png", small_char_upgrade, font_size=40, border_radius=200)
+
+    bigger_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.35, "lock.png", bigger_proj_upgrade, font_size=40, border_radius=150)
+    arrow_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.6, "lock.png", arrow_proj_upgrade, font_size=40, border_radius=150)
+    cannon_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.85, "lock.png", cannon_proj_upgrade, font_size=40, border_radius=150)
 
     upgrades = [increase_hp_button, decrease_hp_button, increase_luck_button, def_lower_button, atk_lower_button, small_char_button]
     super_upgrades = [bigger_proj_button, arrow_proj_button, cannon_proj_button]
@@ -948,7 +980,9 @@ def upgrades_menu():
 
     for upgrade in all_upgrades:
         upgrade.display(window)
+
     
+   
     run = True
     while run:
         for event in pygame.event.get():
@@ -957,17 +991,16 @@ def upgrades_menu():
                     run = False
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1 and upgrade.is_pressed:
-                        upgrade.display_further_details(window)
-        
-        
+                    if event.button == 1 and upgrade.is_pressed():
+                        upgrade.confirm_purchase(window)
+                        upgrade.toggle_clickable()
+                        
+       
 
         pygame.display.update()
     pygame.quit()
 window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
 current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
 player_group.add(current_player)
-
-upgrades_menu()
 
 main_menu()
