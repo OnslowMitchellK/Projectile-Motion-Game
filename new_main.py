@@ -676,8 +676,39 @@ rects = [Main_Menu_Projectile() for x in range(100)]
 
 def upgrades_window():
     pygame.display.set_caption("Upgrades Window")
-    window = pygame.display.set_mode((500, 800))
+    window = pygame.display.set_mode((800, 800))
     window.fill((10, 80, 180))
+
+    upgrade_1 = Upgrade(window, 200, 100, "cannon.png", "Health", 5)
+    upgrade_1.display_upgrade()
+
+    upgrade_2 = Upgrade(window, 200, 250, "cannon.png", "Health", 5)
+    upgrade_2.display_upgrade()
+
+    upgrade_3 = Upgrade(window, 200, 400, "cannon.png", "Health", 5)
+    upgrade_3.display_upgrade()
+
+    upgrade_4 = Upgrade(window, 200, 550, "cannon.png", "Health", 5)
+    upgrade_4.display_upgrade()
+
+    upgrade_5 = Upgrade(window, 200, 700, "cannon.png", "Health", 5)
+    upgrade_5.display_upgrade()
+
+    upgrade_6 = Upgrade(window, 600, 100, "cannon.png", "Health", 5)
+    upgrade_6.display_upgrade()
+
+    upgrade_7 = Upgrade(window, 600, 250, "cannon.png", "Health", 5)
+    upgrade_7.display_upgrade()
+
+    upgrade_8 = Upgrade(window, 600, 400, "cannon.png", "Health", 5)
+    upgrade_8.display_upgrade()
+
+    upgrade_9 = Upgrade(window, 600, 550, "cannon.png", "Health", 5)
+    upgrade_9.display_upgrade()
+
+    upgrade_10 = Upgrade(window, 600, 700, "cannon.png", "Health", 5)
+    upgrade_10.display_upgrade()
+
     run = True
     while run:
         for event in pygame.event.get():

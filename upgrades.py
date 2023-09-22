@@ -1,19 +1,23 @@
 """This is a file containing all the upgrades name, description and price."""
 
 import pygame
+from button import Lockable_button
+
 COST = 1
 
 class Upgrade:
-    def __init__(self, screen, x, y, image, title, cost, levels=4, width=200, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
+    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, levels=4, width=300, height=100, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
         self.screen = screen
         self.rect = pygame.Rect(0, 0, width, height)
+        self.x = x
+        self.y = y
         self.rect.center = (x, y)
 
         self.width = width
         self.height = height
 
         self.image = pygame.image.load(image)
-        self.image = pygame.transform.scale(self.image, (width / 8, height / 8))
+        self.image = pygame.transform.scale(self.image, (50, 50))
         self.font = pygame.font.SysFont(font, font_size)
 
         self.tile = self.font.render(title, True, font_colour)
@@ -21,9 +25,23 @@ class Upgrade:
 
         self.levels = levels
         self.upgrade_circle = pygame.Rect(0, 0, 20, 20)
+
+        self.plus_button = Lockable_button(self.x + 100, self.y, "+", 50, 50, font_size=50, font_colour="white", background_colour= "orange", border_radius=20)
+        self.plus_button_outline = pygame.Rect(self.x + 100, self.y, 50, 50)
+
+
+
    
     def display_upgrade(self):
-        pygame.draw.rect(self.screen, "grey", self.upgrade_circle, )
+        pygame.draw.rect(self.screen, "black", self.rect, border_radius=30)
+        self.screen.blit(self.image, (self.x - 120, self.y - self.image.get_height() / 2))
+        for i in range(self.levels):
+            self.upgrade_circle.center = ((self.x - 40  + 25 * i), self.y)
+            pygame.draw.rect(self.screen, "grey", self.upgrade_circle, border_radius=10)
+            pygame.draw.circle(self.screen, "#474747", ((self.x - 40  + 25 * i), self.y), 10, width=2)
+        self.plus_button.draw(self.screen)
+        pygame.draw.rect(self.screen, "#474747", self.plus_button_outline, 48)
+        
 
 
 
