@@ -3,6 +3,64 @@
 import pygame
 COST = 1
 
+class Upgrade:
+    def __init__(self, screen, x, y, image, title, cost, levels=4, width=200, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
+        self.screen = screen
+        self.rect = pygame.Rect(0, 0, width, height)
+        self.rect.center = (x, y)
+
+        self.width = width
+        self.height = height
+
+        self.image = pygame.image.load(image)
+        self.image = pygame.transform.scale(self.image, (width / 8, height / 8))
+        self.font = pygame.font.SysFont(font, font_size)
+
+        self.tile = self.font.render(title, True, font_colour)
+        self.cost = cost
+
+        self.levels = levels
+        self.upgrade_circle = pygame.Rect(0, 0, 20, 20)
+   
+    def display_upgrade(self):
+        pygame.draw.rect(self.screen, "grey", self.upgrade_circle, )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Upgrades:
     """
@@ -51,7 +109,7 @@ class SuperUpgrades:
         self.description = description
         self.price = price
         self.mini_description = mini_description
-    
+   
     def dict_return(self):
         return {self.name: [self.description, self.price, self.mini_description]}
 

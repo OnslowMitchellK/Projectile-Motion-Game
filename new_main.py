@@ -674,6 +674,19 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
 
 rects = [Main_Menu_Projectile() for x in range(100)]
 
+def upgrades_window():
+    pygame.display.set_caption("Upgrades Window")
+    window = pygame.display.set_mode((500, 800))
+    window.fill((10, 80, 180))
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        pygame.display.update()
+    pygame.quit()
+
 def instructions_menu():
     pygame.display.set_caption("Instructions Menu")
     window.fill((190, 50, 180))
@@ -721,7 +734,8 @@ def main_menu():
                 elif event.button == 1 and instructions_button.is_pressed():
                     instructions_menu()
                 elif event.button == 1 and upgrades_button.is_pressed():
-                    upgrades_menu()
+                    #upgrades_menu()
+                    upgrades_window()
                 elif event.button == 1 and options_button.is_pressed():
                     options_menu()
                 elif event.button == 1 and quit_button.is_pressed():
@@ -981,7 +995,7 @@ def upgrades_menu():
     for upgrade in all_upgrades:
         upgrade.display(window)
 
-    
+   
    
     run = True
     while run:
@@ -994,7 +1008,7 @@ def upgrades_menu():
                     if event.button == 1 and upgrade.is_pressed():
                         upgrade.confirm_purchase(window)
                         upgrade.toggle_clickable()
-                        
+                       
        
 
         pygame.display.update()
