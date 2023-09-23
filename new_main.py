@@ -2,7 +2,7 @@
 import pygame
 import math
 import time
-from button import Button, Lockable_button, Upgrades_button, Super_upgrades_button
+from button import Button, Lockable_button, Upgrades_button
 from model import Enemy
 from random import randint, choice
 from character_testing import Test_Character
@@ -676,47 +676,64 @@ rects = [Main_Menu_Projectile() for x in range(100)]
 
 def upgrades_window():
     pygame.display.set_caption("Upgrades Window")
-    window = pygame.display.set_mode((800, 800))
+    UPGRADES_WIDTH = SCREEN_WIDTH
+    UPGRADES_HEIGHT = SCREEN_HEIGHT
+    window = pygame.display.set_mode((UPGRADES_WIDTH, UPGRADES_HEIGHT))
     window.fill((10, 80, 180))
 
-    upgrade_1 = Upgrade(window, 200, 100, "cannon.png", "Health", 5)
+    upgrade_1 = Upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5)
     upgrade_1.display_upgrade()
 
-    upgrade_2 = Upgrade(window, 200, 250, "cannon.png", "Health", 5)
+    upgrade_2 = Upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5)
     upgrade_2.display_upgrade()
 
-    upgrade_3 = Upgrade(window, 200, 400, "cannon.png", "Health", 5)
+    upgrade_3 = Upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase AOE", 5)
     upgrade_3.display_upgrade()
 
-    upgrade_4 = Upgrade(window, 200, 550, "cannon.png", "Health", 5)
+    upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 5)
     upgrade_4.display_upgrade()
 
-    upgrade_5 = Upgrade(window, 200, 700, "cannon.png", "Health", 5)
+    upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 5)
     upgrade_5.display_upgrade()
 
-    upgrade_6 = Upgrade(window, 600, 100, "cannon.png", "Health", 5)
+    upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase Shield", 5)
     upgrade_6.display_upgrade()
 
-    upgrade_7 = Upgrade(window, 600, 250, "cannon.png", "Health", 5)
+    upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Evasion", 5)
     upgrade_7.display_upgrade()
 
-    upgrade_8 = Upgrade(window, 600, 400, "cannon.png", "Health", 5)
+    upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Critical Hit Chance", 5)
     upgrade_8.display_upgrade()
 
-    upgrade_9 = Upgrade(window, 600, 550, "cannon.png", "Health", 5)
+    upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Upgrade Lifesteal", 5)
     upgrade_9.display_upgrade()
 
-    upgrade_10 = Upgrade(window, 600, 700, "cannon.png", "Health", 5)
-    upgrade_10.display_upgrade()
+    upgrades = [upgrade_1, upgrade_2, upgrade_3, upgrade_4, upgrade_5, upgrade_6, upgrade_7, upgrade_8, upgrade_9]
+
+    plus_buttons = [x.get_plus_button() for x in upgrades]
+
+    main_menu_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 70, "Main Menu", font_size=60)
+    main_menu_button.draw(window)
 
     run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                for plus in plus_buttons:
+                    if event.button == 1 and main_menu_button.is_pressed():
+                        main_menu()
+                    elif event.button == 1 and plus.is_pressed():
+                        index = plus_buttons.index(plus)
+                        plus.add_level()
+                        upgrades[index].display_dots()
+                       
+
 
         pygame.display.update()
     pygame.quit()
+
 
 def instructions_menu():
     pygame.display.set_caption("Instructions Menu")

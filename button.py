@@ -71,10 +71,26 @@ class Upgrades_button(Lockable_button):
         rect.center = (640, self.y)
         pygame.draw.rect(screen, "white", rect)
 
-class Super_upgrades_button(Upgrades_button):
-    def __init__(self, x, y, upgrade_image, upgrade_dict, text=None, width=300, height=150, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
-        super().__init__(x, y, upgrade_image, upgrade_dict, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
-        pass
+# class Super_upgrades_button(Upgrades_button):
+#     def __init__(self, x, y, upgrade_image, upgrade_dict, text=None, width=300, height=150, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+#         super().__init__(x, y, upgrade_image, upgrade_dict, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
+#         pass
+
+class Plus_button(Button):
+    def __init__(self, x, y, text, levels_list, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
+        super().__init__(x, y, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
+        self.levels_list = levels_list
+
+    def add_level(self):
+        count = 0
+        for i in self.levels_list:
+            if not i:
+                self.levels_list[count] = True
+                break
+            count += 1
+        return self.levels_list
+
+
 
 # class Collision_Button(Button):
 #     def __init__(self, x, y, text, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:
