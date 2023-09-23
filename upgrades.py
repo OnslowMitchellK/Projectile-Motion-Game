@@ -1,7 +1,7 @@
 """This is a file containing all the upgrades name, description and price."""
 
 import pygame
-from button import Plus_button
+from button import Plus_button, Info_button
 
 COST = 1
 
@@ -39,6 +39,8 @@ class Upgrade:
         self.plus_button_outline = pygame.Rect(0, 0, 50, 50)
         self.plus_button_outline.center = (self.x + self.width / 2.8, self.y)
 
+        self.info_button = Info_button(x + width / 1.8, y)
+
     
     def get_plus_button(self):
         return self.plus_button
@@ -50,6 +52,7 @@ class Upgrade:
         self.display_dots()
         self.plus_button.draw(self.screen)
         pygame.draw.rect(self.screen, "#474747", self.plus_button_outline, 3, border_radius=20)
+        self.info_button.draw(self.screen)
     
     def display_dots(self):
         count = 0
