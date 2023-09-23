@@ -30,6 +30,8 @@ class Upgrade:
         self.plus_button = Plus_button(self.x + self.width / 2.8, self.y, "+", self.levels_list, 50, 50, font_size=50, font_colour="white", background_colour= "orange", border_radius=20)
         self.plus_button_outline = pygame.Rect(0, 0, 50, 50)
         self.plus_button_outline.center = (self.x + self.width / 2.8, self.y)
+
+        self.
     
     def get_plus_button(self):
         return self.plus_button
