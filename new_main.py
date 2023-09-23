@@ -681,22 +681,22 @@ def upgrades_window():
     window = pygame.display.set_mode((UPGRADES_WIDTH, UPGRADES_HEIGHT))
     window.fill((10, 80, 180))
 
-    upgrade_1 = Upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5)
+    upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5)
     upgrade_1.display_upgrade()
 
-    upgrade_2 = Upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5)
+    upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5)
     upgrade_2.display_upgrade()
 
-    upgrade_3 = Upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase AOE", 5)
+    upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase AOE", 2)
     upgrade_3.display_upgrade()
 
-    upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 5)
+    upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3)
     upgrade_4.display_upgrade()
 
-    upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 5)
+    upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 4)
     upgrade_5.display_upgrade()
 
-    upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase Shield", 5)
+    upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase Shield", 1)
     upgrade_6.display_upgrade()
 
     upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Evasion", 5)
@@ -714,6 +714,27 @@ def upgrades_window():
 
     main_menu_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 70, "Main Menu", font_size=60)
     main_menu_button.draw(window)
+
+    for upgrade in upgrades:
+        upgrade.display_cost()
+    
+    diamond_amount = 0
+    coin_amount = 0
+
+    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 100)
+
+
+    diamond_text = font.render(f": {diamond_amount}", True, "white")
+    coin_text = font.render(f": {coin_amount}", True, "white")
+
+    big_diamond = pygame.transform.scale(diamond_image, (80, 80))
+    big_coin = pygame.transform.scale(coin_image, (80, 80))
+
+    window.blit(big_diamond, (40, 20))
+    window.blit(diamond_text, (120, 30))
+    window.blit(big_coin, (270, 20))
+    window.blit(coin_text, (350, 30))
+
 
     run = True
     while run:

@@ -5,6 +5,13 @@ from button import Plus_button
 
 COST = 1
 
+diamond_image = pygame.image.load("diamond.png")
+diamond_image = pygame.transform.scale(diamond_image, (20, 20))
+
+coin_image = pygame.image.load("coin.png")
+coin_image = pygame.transform.scale(coin_image, (20, 20))
+
+
 class Upgrade:
     def __init__(self, screen: pygame.Surface, x, y, image, title, cost, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
         self.screen = screen
@@ -22,6 +29,7 @@ class Upgrade:
 
         self.title = self.font.render(title, True, font_colour)
         self.cost = cost
+        self.cost_list = [0 for i in range(cost)]
 
         self.levels = levels
         self.levels_list = [False for i in range(levels)]
@@ -31,7 +39,6 @@ class Upgrade:
         self.plus_button_outline = pygame.Rect(0, 0, 50, 50)
         self.plus_button_outline.center = (self.x + self.width / 2.8, self.y)
 
-        self.
     
     def get_plus_button(self):
         return self.plus_button
@@ -51,6 +58,24 @@ class Upgrade:
             colour = "red" if i else "grey"
             pygame.draw.rect(self.screen, colour, self.upgrade_circle, border_radius=10)
             pygame.draw.circle(self.screen, "#474747", ((self.x - 40  + 25 * count), self.y), 10, width=2)
+            count += 1
+    
+    def display_cost(self):
+        count = 0
+        for i in self.cost_list:
+            self.screen.blit(coin_image, (self.x - 60  + 25 * count, self.y - 35))
+            count += 1
+
+class Super_upgrade(Upgrade):
+    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
+        super().__init__(screen, x, y, image, title, cost, levels, width, height, font_size, font, font_colour)
+        pass
+
+
+    def display_cost(self):
+        count = 0
+        for i in self.cost_list:
+            self.screen.blit(diamond_image, (self.x - 60  + 25 * count, self.y - 35))
             count += 1
     
 
