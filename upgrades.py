@@ -13,7 +13,7 @@ coin_image = pygame.transform.scale(coin_image, (20, 20))
 
 
 class Upgrade:
-    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
+    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
         self.screen = screen
         self.rect = pygame.Rect(0, 0, width, height)
         self.x = x
@@ -40,10 +40,21 @@ class Upgrade:
         self.plus_button_outline.center = (self.x + self.width / 2.8, self.y)
 
         self.info_button = Info_button(x + width / 1.8, y)
+        self.info_font = pygame.font.SysFont(font, 12)
+        self.info_text = self.info_font.render(info_text, True, "black")
+        self.info_rect = pygame.Rect(0, 0, 200, 200)
+        self.info_rect.center = (screen.get_width() / 2, screen.get_height() / 2)
 
-    
+
     def get_plus_button(self):
         return self.plus_button
+    
+    def get_info_button(self):
+        return self.info_button
+    
+    def display_info(self):
+        pygame.draw.rect(self.screen, "white", self.info_rect)
+        self.screen.blit(self.info_text, (self.screen.get_width() / 2, self.screen.get_height() / 2))
 
     def display_upgrade(self):
         self.screen.blit(self.title, (self.x - self.title.get_width() / 2, self.y - self.height * 0.8))
@@ -70,8 +81,8 @@ class Upgrade:
             count += 1
 
 class Super_upgrade(Upgrade):
-    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
-        super().__init__(screen, x, y, image, title, cost, levels, width, height, font_size, font, font_colour)
+    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
+        super().__init__(screen, x, y, image, title, cost, info_text, levels, width, height, font_size, font, font_colour)
         pass
 
 

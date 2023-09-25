@@ -437,6 +437,13 @@ class Enemy_Projectile(pygame.sprite.Sprite):
                 return False
 
 
+def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
+    win = pygame.display.set_mode((width, height))
+    pygame.display.set_caption(caption)
+    return win
+
+window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
+
 def deduct_player_health(player):
     global player_group
     damage = randint(6, 8)
@@ -482,11 +489,6 @@ def enemy_dead_check(level):
 def player_dead():
     print("PLAYER IS DEAD")
 
-
-def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
-    win = pygame.display.set_mode((width, height))
-    pygame.display.set_caption(caption)
-    return win
 
 
 def draw_tiles(map, tile_size, first = False):
@@ -674,43 +676,36 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
 
 rects = [Main_Menu_Projectile() for x in range(100)]
 
+UPGRADES_WIDTH = SCREEN_WIDTH
+UPGRADES_HEIGHT = SCREEN_HEIGHT
+
+upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5, "Info")
+
+upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5, "Info")
+
+upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase AOE", 2, "Info")
+
+upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3, "Info")
+
+upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 4, "Info")
+
+upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase Shield", 1, "Info")
+
+upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Evasion", 5, "Info")
+
+upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Critical Hit Chance", 5, "Info")
+
+upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Upgrade Lifesteal", 5, "Info")
+
+upgrades: list[Upgrade] = [upgrade_1, upgrade_2, upgrade_3, upgrade_4, upgrade_5, upgrade_6, upgrade_7, upgrade_8, upgrade_9]
+
 def upgrades_window():
     pygame.display.set_caption("Upgrades Window")
-    UPGRADES_WIDTH = SCREEN_WIDTH
-    UPGRADES_HEIGHT = SCREEN_HEIGHT
     window = pygame.display.set_mode((UPGRADES_WIDTH, UPGRADES_HEIGHT))
     window.fill((10, 80, 180))
 
-    upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5)
-    upgrade_1.display_upgrade()
-
-    upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5)
-    upgrade_2.display_upgrade()
-
-    upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase AOE", 2)
-    upgrade_3.display_upgrade()
-
-    upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3)
-    upgrade_4.display_upgrade()
-
-    upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 4)
-    upgrade_5.display_upgrade()
-
-    upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase Shield", 1)
-    upgrade_6.display_upgrade()
-
-    upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Evasion", 5)
-    upgrade_7.display_upgrade()
-
-    upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Critical Hit Chance", 5)
-    upgrade_8.display_upgrade()
-
-    upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Upgrade Lifesteal", 5)
-    upgrade_9.display_upgrade()
-
-    upgrades = [upgrade_1, upgrade_2, upgrade_3, upgrade_4, upgrade_5, upgrade_6, upgrade_7, upgrade_8, upgrade_9]
-
     plus_buttons = [x.get_plus_button() for x in upgrades]
+    info_buttons = [x.get_info_button() for x in upgrades]
 
     main_menu_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 70, "Main Menu", font_size=60)
     main_menu_button.draw(window)
@@ -730,11 +725,6 @@ def upgrades_window():
     big_diamond = pygame.transform.scale(diamond_image, (80, 80))
     big_coin = pygame.transform.scale(coin_image, (80, 80))
 
-    window.blit(big_diamond, (40, 20))
-    window.blit(diamond_text, (120, 30))
-    window.blit(big_coin, (270, 20))
-    window.blit(coin_text, (350, 30))
-
 
     run = True
     while run:
@@ -742,13 +732,26 @@ def upgrades_window():
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                for plus in plus_buttons:
-                    if event.button == 1 and main_menu_button.is_pressed():
+                if event.button == 1 and main_menu_button.is_pressed():
                         main_menu()
-                    elif event.button == 1 and plus.is_pressed():
+                for plus in plus_buttons:
+                    if event.button == 1 and plus.is_pressed():
                         index = plus_buttons.index(plus)
                         plus.add_level()
                         upgrades[index].display_dots()
+                for info in info_buttons:
+                    if event.button == 1 and info.is_pressed():
+                        index = info_buttons.index(info)
+                        upgrades[index].display_info()
+
+        window.blit(big_diamond, (40, 20))
+        window.blit(diamond_text, (120, 30))
+        window.blit(big_coin, (270, 20))
+        window.blit(coin_text, (350, 30))
+
+        for upgrade in upgrades:
+            upgrade.display_upgrade()
+            upgrade.display_dots()
                        
 
 
@@ -1082,7 +1085,7 @@ def upgrades_menu():
 
         pygame.display.update()
     pygame.quit()
-window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
+
 current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
 player_group.add(current_player)
 
