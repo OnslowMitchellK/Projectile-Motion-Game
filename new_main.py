@@ -8,6 +8,7 @@ from random import randint, choice
 from character_testing import Test_Character
 from upgrades import *
 import sys
+from instructions import text
 
 pygame.init()
 
@@ -758,12 +759,29 @@ def upgrades_window():
         pygame.display.update()
     pygame.quit()
 
+# https://stackoverflow.com/questions/42014195/rendering-text-with-multiple-lines-in-pygame
+def blit_text(surface:pygame.Surface, text, pos, font, color=pygame.Color('black')):
+    words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
+    space = font.size(' ')[0]  # The width of a space.
+    max_width, max_height = surface.get_size()
+    x, y = pos
+    for line in words:
+        for word in line:
+            word_surface = font.render(word, 0, color)
+            word_width, word_height = word_surface.get_size()
+            if x + word_width >= max_width:
+                x = pos[0]  # Reset the x.
+                y += word_height  # Start on new row.
+            surface.blit(word_surface, (x, y))
+            x += word_width + space
+        x = pos[0]  # Reset the x.
+        y += word_height  # Start on new row.
 
 def instructions_menu():
     pygame.display.set_caption("Instructions Menu")
     window.fill((190, 50, 180))
-
-    instructions_text = """"""
+    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 20)
+    blit_text(window, text, (0, 0), font)
 
     run = True
     while run:
