@@ -753,6 +753,7 @@ def upgrades_window():
         for upgrade in upgrades:
             upgrade.display_upgrade()
             upgrade.display_dots()
+            upgrade.display_cost()
                        
 
 
@@ -783,11 +784,17 @@ def instructions_menu():
     font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 20)
     blit_text(window, text, (0, 0), font)
 
+    back_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.5, "Main Menu", font_size=60)
+    back_button.draw(window)
+
     run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and back_button.is_pressed():
+                    main_menu()
 
 
         pygame.display.update()
