@@ -295,14 +295,27 @@ class Projectile(pygame.sprite.Sprite):
             coordinates.append([x, y])
         return coordinates
 
-    def draw_trajectory(self):
+    def draw_trajectory(self, stop_x=0, stop_y=0, stop_speed=0):
+        pressed = False
         coordinates = self.trajectory(1 / 10, self._start_x, self._start_y, self._angle, self._speed)
+        if upgrade_2.get_level() == 1 and stop_x != 0:
+            coordinates = self.trajectory(1 / 10, stop_x, stop_y, 0, 0)
+            pressed = True
+        elif upgrade_2.get_level() == 0:
+            pressed = True
         run = True
 
         while run:
             for coords in coordinates:
                 x = coords[0]
                 y = coords[1]
+
+                if not pressed:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.__dict__["key"] == pygame.K_SPACE:
+                                return [x, y, self._speed]
+                
 
                 self.screen.blit(self.background, (0, 0))
                 draw_tiles(self.map, self.tile_size)
@@ -401,7 +414,7 @@ class Enemy_Projectile(pygame.sprite.Sprite):
             coordinates.append([x, y])
         return coordinates
 
-    def draw_trajectory(self):
+    def draw_trajectory(self, ):
         coordinates = self.trajectory(1 / 10)
         for coords in coordinates:
             x = coords[0]
@@ -436,7 +449,7 @@ class Enemy_Projectile(pygame.sprite.Sprite):
                 time.sleep(0.5)
                 deduct_player_health(player)
                 return False
-
+    
 
 def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
     win = pygame.display.set_mode((width, height))
@@ -489,7 +502,6 @@ def enemy_dead_check(level):
 
 def player_dead():
     print("PLAYER IS DEAD")
-
 
 
 def draw_tiles(map, tile_size, first = False):
@@ -622,6 +634,8 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     print("e projectile group:", enemy_projectile_group)
     print("player group:", player_group)
 
+    trajectory_level = upgrade_1.get_level()
+    halt_level = upgrade_2.get_level()
 
     run = True
     while run:
@@ -659,18 +673,47 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         projectile.draw_starting_point()
         returned = shoot_display(projectile_starting_coords, min_angle, max_angle)
         coords = projectile.trajectory(1 / 3, projectile_starting_coords[0], projectile_starting_coords[1], returned[1], returned[0])
-        for i in coords[:10]:
-            if i[0] < SCREEN_WIDTH / dot_distance:
-                pygame.draw.circle(window, "yellow", (i), 10)
+        y_coords = [x[1] for x in coords]
+        y_max = min(y_coords)
+        max_coords = [coords[y_coords.index(y_max)][0], y_max]
+
+        match trajectory_level:
+            case 0:
+                """No trajectory display"""
+                pass
+            case 1:
+                """10 dots across a fifth of the screen"""
+                dot_distance = 5
+                for i in coords[:10]:
+                    if i[0] < SCREEN_WIDTH / dot_distance:
+                        pygame.draw.circle(window, "yellow", (i), 10)
+            case 2:
+                """20 dots across a quarter of the screen"""
+                dot_distance = 4
+                for i in coords[:20]:
+                    if i[0] < SCREEN_WIDTH / dot_distance:
+                        pygame.draw.circle(window, "yellow", (i), 10)
+            case 3:
+                """30 dots 1/3 across screen and shows max height"""
+                dot_distance = 3
+                for i in coords[:30]:
+                    if i[0] < SCREEN_WIDTH / dot_distance:
+                        pygame.draw.circle(window, "yellow", (i), 10)
+                pygame.draw.circle(window, "blue", (max_coords), 10)
        
         if shoot:
             projectile.change_speed(returned[0])
             projectile.change_angle(returned[1])
-            projectile.draw_trajectory()
+            stop_coords = projectile.draw_trajectory()
+            try:
+                projectile.draw_trajectory(stop_coords[0], stop_coords[1], stop_coords[2])
+            except:
+                pass
+
             projectile.draw_starting_point()
             shoot = False
             enemy_shoot(enemy_projectile)
-       
+                            
         pygame.display.update()
     pygame.quit()
 
@@ -680,9 +723,9 @@ rects = [Main_Menu_Projectile() for x in range(100)]
 UPGRADES_WIDTH = SCREEN_WIDTH
 UPGRADES_HEIGHT = SCREEN_HEIGHT
 
-upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5, "Info")
+upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5, "Info", 3)
 
-upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5, "Info")
+upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5, "Info", 1)
 
 upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase AOE", 2, "Info")
 

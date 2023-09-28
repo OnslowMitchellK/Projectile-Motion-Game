@@ -79,6 +79,9 @@ class Upgrade:
         for i in self.cost_list:
             self.screen.blit(coin_image, (self.x - 60  + 25 * count, self.y - 35))
             count += 1
+    
+    def get_level(self):
+        return self.levels_list.count(1)
 
 class Super_upgrade(Upgrade):
     def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
