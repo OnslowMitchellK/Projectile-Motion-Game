@@ -25,7 +25,7 @@ class Enemy(pygame.sprite.Sprite):
         self.max_health = health * (1 + (self.level ** 2) * 0.02)
         self._health: int = health * (1 + (self.level ** 2) * 0.02)
         self._shield: int = shield
-        self._damage: int = 5 + int(self.level * 0.5)
+        self.damage: int = 8 + int(self.level * 0.5)
         self._width: int = width
         self._height: int = height
         self.screen = screen

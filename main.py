@@ -2,11 +2,13 @@
 import pygame
 import math
 import time
-from button import Button
+from button import Button, Lockable_button, Upgrades_button
 from model import Enemy
 from random import randint, choice
 from character_testing import Test_Character
-from pygame_functions import *
+from upgrades import *
+import sys
+from instructions import text
 
 pygame.init()
 
@@ -55,7 +57,7 @@ map_2 = """
                               1111111111111                    
                                 111111111                          
                                 111111111                
-                                111111111                     
+                                111111111                    
                                1111111111                      
                                1111111111                      
                                111111111                      
@@ -159,7 +161,7 @@ class Main_Menu_Projectile:
         size = randint(30, 50)
         self._image = pygame.transform.scale(self._image, (size, size))
         self._rect = self._image.get_rect()
-        self._rect.x = randint(50, 300) if randint(1, 2) == 1 else randint(SCREEN_WIDTH - 300, SCREEN_WIDTH - 50)
+        self._rect.x = randint(50, SCREEN_WIDTH - 50)
         self._rect.y = randint(50, SCREEN_HEIGHT - 50)
         self._dx = choice(possible_speeds)
         self._dy = choice(possible_speeds)
@@ -167,31 +169,31 @@ class Main_Menu_Projectile:
     @property
     def image(self):
         return self._image
-    
+   
     @property
     def dx(self):
         return self._dx
-    
+   
     @property
     def dy(self):
         return self._dy
-    
+   
     @property
     def rect_left(self) -> float:
         return self._rect.left
-    
+   
     @property
     def rect_right(self) -> float:
         return self._rect.right
-    
+   
     @property
     def rect_top(self) -> float:
         return self._rect.top
-    
+   
     @property
     def rect_bottom(self) -> float:
         return self._rect.bottom
-    
+   
     @property
     def rect(self):
         return self._rect
@@ -199,7 +201,7 @@ class Main_Menu_Projectile:
     @property
     def rect_x(self):
         return self._rect.x
-    
+   
     @property
     def rect_y(self):
         return self._rect.y
@@ -218,6 +220,7 @@ class Main_Menu_Projectile:
    
     def draw(self, screen):
         screen.blit(self._image, (self._rect.x, self._rect.y))
+
 
 
 class Projectile(pygame.sprite.Sprite):
@@ -240,11 +243,11 @@ class Projectile(pygame.sprite.Sprite):
         self._angle = 0
         self._speed = 0
         self.speeds = []
-    
+   
     @property
     def start_x(self):
         return self._start_x
-    
+   
     @property
     def start_y(self):
         return self._start_y
@@ -292,14 +295,27 @@ class Projectile(pygame.sprite.Sprite):
             coordinates.append([x, y])
         return coordinates
 
-    def draw_trajectory(self):
+    def draw_trajectory(self, stop_x=0, stop_y=0, stop_speed=0):
+        pressed = False
         coordinates = self.trajectory(1 / 10, self._start_x, self._start_y, self._angle, self._speed)
+        if upgrade_2.get_level() == 1 and stop_x != 0:
+            coordinates = self.trajectory(1 / 10, stop_x, stop_y, 0, 0)
+            pressed = True
+        elif upgrade_2.get_level() == 0:
+            pressed = True
         run = True
 
         while run:
             for coords in coordinates:
                 x = coords[0]
                 y = coords[1]
+
+                if not pressed:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.__dict__["key"] == pygame.K_SPACE:
+                                return [x, y, self._speed]
+                
 
                 self.screen.blit(self.background, (0, 0))
                 draw_tiles(self.map, self.tile_size)
@@ -398,7 +414,7 @@ class Enemy_Projectile(pygame.sprite.Sprite):
             coordinates.append([x, y])
         return coordinates
 
-    def draw_trajectory(self):
+    def draw_trajectory(self, ):
         coordinates = self.trajectory(1 / 10)
         for coords in coordinates:
             x = coords[0]
@@ -426,17 +442,26 @@ class Enemy_Projectile(pygame.sprite.Sprite):
             # Use groupcollide() to detect collisions
             collisions = pygame.sprite.groupcollide(player_group, enemy_projectile_group,
                                                     False, False, pygame.sprite.collide_mask)
+
             # Handle collisions
             for player, projectiles in collisions.items():
                 # print("Character hit by projectiles:", len(projectiles))
                 time.sleep(0.5)
                 deduct_player_health(player)
                 return False
+    
 
+def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
+    win = pygame.display.set_mode((width, height))
+    pygame.display.set_caption(caption)
+    return win
+
+window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
 
 def deduct_player_health(player):
-    global player_group
-    damage = 15
+    global enemy_group
+    for i in enemy_group:
+        damage = i.damage
     player.health -= damage
 
     print(" P health: ", player.health)
@@ -448,9 +473,9 @@ def deduct_player_health(player):
 
 
 def deduct_enemy_health(enemy_hit):
-    global enemy_group
-    damage = randint(30, 90)
-    # damage = 1000000
+    global player_group
+    for i in player_group:
+        damage = i.damage
     old_shield = enemy_hit.shield
     enemy_hit.shield -= damage
     if enemy_hit.shield == 0:
@@ -478,12 +503,6 @@ def enemy_dead_check(level):
 
 def player_dead():
     print("PLAYER IS DEAD")
-
-
-def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
-    win = pygame.display.set_mode((width, height))
-    pygame.display.set_caption(caption)
-    return win
 
 
 def draw_tiles(map, tile_size, first = False):
@@ -544,12 +563,12 @@ def shoot_display(starting_coords, min_angle, max_angle):
 
     angle = math.atan2(SCREEN_HEIGHT - pos[1] - (SCREEN_HEIGHT - y_centre_s), pos[0] - (x_centre_s))
     angle += 2 * math.pi if angle < 0 else 0
-    
+   
     if min_angle == 0:
         if pos[1] > y_centre_s:
             draw = False
             angle = math.radians(min_angle)
-    
+   
     if max_angle == 90:
         if pos[0] < x_centre_s:
             draw = False
@@ -592,10 +611,17 @@ def enemy_shoot(enemy_projectile):
         enemy_projectile.draw_starting_point()
         enemy_projectile.draw_trajectory()
 
-def level_play(screen, map_background, map_tiles, tile_size, projectile_starting_coords, min_angle, max_angle, enemy_damage):
+def level_play(screen, map_background, map_tiles, tile_size, projectile_starting_coords, min_angle, max_angle):
     dot_distance = 6
     clock = pygame.time.Clock()
     current = True
+    # Reset Player Stats at end of each round.
+    try:
+        current_player.health = 100 + (upgrade_4.get_level() * 25)
+        current_player.max_health = 100 + (upgrade_4.get_level() * 25)
+    except:
+        current_player.health = 100
+
     shoot = False
 
     projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], pygame.image.load("test.png"), PJ_S, map_background, map_tiles, screen, tile_size)
@@ -611,11 +637,8 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         enemy.draw_health()
     current_player.draw_health()
 
-    print("enemy group:", enemy_group)
-    print("p projectile group:", projectile_group)
-    print("e projectile group:", enemy_projectile_group)
-    print("player group:", player_group)
-
+    trajectory_level = upgrade_1.get_level()
+    halt_level = upgrade_2.get_level()
 
     run = True
     while run:
@@ -641,7 +664,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
                 #     projectile.change_speed(5)
                 # elif event.button == 5 and not current:
                 #     projectile.change_speed(-5)
-                
+               
 
         screen.blit(map_background, (0, 0))
         draw_tiles(map_tiles, tile_size)
@@ -653,23 +676,175 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         projectile.draw_starting_point()
         returned = shoot_display(projectile_starting_coords, min_angle, max_angle)
         coords = projectile.trajectory(1 / 3, projectile_starting_coords[0], projectile_starting_coords[1], returned[1], returned[0])
-        for i in coords[:10]:
-            if i[0] < SCREEN_WIDTH / dot_distance:
-                pygame.draw.circle(window, "yellow", (i), 10)
-        
+        y_coords = [x[1] for x in coords]
+        y_max = min(y_coords)
+        max_coords = [coords[y_coords.index(y_max)][0], y_max]
+
+        match trajectory_level:
+            case 0:
+                """No trajectory display"""
+                pass
+            case 1:
+                """10 dots across a fifth of the screen"""
+                dot_distance = 5
+                for i in coords[:10]:
+                    if i[0] < SCREEN_WIDTH / dot_distance:
+                        pygame.draw.circle(window, "yellow", (i), 10)
+            case 2:
+                """20 dots across a quarter of the screen"""
+                dot_distance = 4
+                for i in coords[:20]:
+                    if i[0] < SCREEN_WIDTH / dot_distance:
+                        pygame.draw.circle(window, "yellow", (i), 10)
+            case 3:
+                """30 dots 1/3 across screen and shows max height"""
+                dot_distance = 3
+                for i in coords[:30]:
+                    if i[0] < SCREEN_WIDTH / dot_distance:
+                        pygame.draw.circle(window, "yellow", (i), 10)
+                pygame.draw.circle(window, "blue", (max_coords), 10)
+       
         if shoot:
             projectile.change_speed(returned[0])
             projectile.change_angle(returned[1])
-            projectile.draw_trajectory()
+            stop_coords = projectile.draw_trajectory()
+            try:
+                projectile.draw_trajectory(stop_coords[0], stop_coords[1], stop_coords[2])
+            except:
+                pass
+
             projectile.draw_starting_point()
             shoot = False
             enemy_shoot(enemy_projectile)
-        
+                            
         pygame.display.update()
     pygame.quit()
 
 
 rects = [Main_Menu_Projectile() for x in range(100)]
+
+UPGRADES_WIDTH = SCREEN_WIDTH
+UPGRADES_HEIGHT = SCREEN_HEIGHT
+
+upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5, "Info", 3)
+
+upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5, "Info", 1)
+
+upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase AOE", 2, "Info")
+
+upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3, "Info")
+
+upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 4, "Info")
+
+upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase Shield", 1, "Info")
+
+upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Evasion", 5, "Info")
+
+upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Critical Hit Chance", 5, "Info")
+
+upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Upgrade Lifesteal", 5, "Info")
+
+upgrades: list[Upgrade] = [upgrade_1, upgrade_2, upgrade_3, upgrade_4, upgrade_5, upgrade_6, upgrade_7, upgrade_8, upgrade_9]
+
+def upgrades_window():
+    pygame.display.set_caption("Upgrades Window")
+    window = pygame.display.set_mode((UPGRADES_WIDTH, UPGRADES_HEIGHT))
+    window.fill((10, 80, 180))
+
+    plus_buttons = [x.get_plus_button() for x in upgrades]
+    info_buttons = [x.get_info_button() for x in upgrades]
+
+    main_menu_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 70, "Main Menu", font_size=60)
+    main_menu_button.draw(window)
+
+    for upgrade in upgrades:
+        upgrade.display_cost()
+    
+    diamond_amount = 0
+    coin_amount = 0
+
+    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 100)
+
+
+    diamond_text = font.render(f": {diamond_amount}", True, "white")
+    coin_text = font.render(f": {coin_amount}", True, "white")
+
+    big_diamond = pygame.transform.scale(diamond_image, (80, 80))
+    big_coin = pygame.transform.scale(coin_image, (80, 80))
+
+
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and main_menu_button.is_pressed():
+                        main_menu()
+                for plus in plus_buttons:
+                    if event.button == 1 and plus.is_pressed():
+                        index = plus_buttons.index(plus)
+                        plus.add_level()
+                        upgrades[index].display_dots()
+                for info in info_buttons:
+                    if event.button == 1 and info.is_pressed():
+                        index = info_buttons.index(info)
+                        upgrades[index].display_info()
+
+        window.blit(big_diamond, (40, 20))
+        window.blit(diamond_text, (120, 30))
+        window.blit(big_coin, (270, 20))
+        window.blit(coin_text, (350, 30))
+
+        for upgrade in upgrades:
+            upgrade.display_upgrade()
+            upgrade.display_dots()
+            upgrade.display_cost()
+                       
+
+
+        pygame.display.update()
+    pygame.quit()
+
+# https://stackoverflow.com/questions/42014195/rendering-text-with-multiple-lines-in-pygame
+def blit_text(surface:pygame.Surface, text, pos, font, color=pygame.Color('black')):
+    words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
+    space = font.size(' ')[0]  # The width of a space.
+    max_width, max_height = surface.get_size()
+    x, y = pos
+    for line in words:
+        for word in line:
+            word_surface = font.render(word, 0, color)
+            word_width, word_height = word_surface.get_size()
+            if x + word_width >= max_width:
+                x = pos[0]  # Reset the x.
+                y += word_height  # Start on new row.
+            surface.blit(word_surface, (x, y))
+            x += word_width + space
+        x = pos[0]  # Reset the x.
+        y += word_height  # Start on new row.
+
+def instructions_menu():
+    pygame.display.set_caption("Instructions Menu")
+    window.fill((190, 50, 180))
+    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 20)
+    blit_text(window, text, (0, 0), font)
+
+    back_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.5, "Main Menu", font_size=60)
+    back_button.draw(window)
+
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and back_button.is_pressed():
+                    main_menu()
+
+
+        pygame.display.update()
+    pygame.quit()
 
 def main_menu():
     TOLERANCE = 10
@@ -677,14 +852,18 @@ def main_menu():
     window.fill((19, 50, 143))
     pygame.display.set_caption("Main Menu")
 
-    play_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, "Play")
-    options_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "Options")
-    quit_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.75, "Quit")
+    play_button = Button(SCREEN_WIDTH / 5 * 2.5, SCREEN_HEIGHT / 3, "Play")
+    instructions_button = Button(SCREEN_WIDTH / 5, SCREEN_HEIGHT / 3, "Instructions", font_size=60)
+    upgrades_button = Button(SCREEN_WIDTH / 5 * 4, SCREEN_HEIGHT / 3, "Upgrades", font_size=60)
+    options_button = Button(SCREEN_WIDTH / 5 * 1.75, SCREEN_HEIGHT / 3 * 2, "Options")
+    quit_button = Button(SCREEN_WIDTH / 5 * 3.25, SCREEN_HEIGHT / 3 * 2, "Quit")
 
     play_button.draw(window)
     options_button.draw(window)
+    instructions_button.draw(window)
+    upgrades_button.draw(window)
     quit_button.draw(window)
-    buttons = [play_button, options_button, quit_button]
+    buttons = [play_button, instructions_button, upgrades_button, options_button, quit_button]
 
     run = True
     while run:
@@ -695,6 +874,11 @@ def main_menu():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and play_button.is_pressed():
                     level_menu()
+                elif event.button == 1 and instructions_button.is_pressed():
+                    instructions_menu()
+                elif event.button == 1 and upgrades_button.is_pressed():
+                    #upgrades_menu()
+                    upgrades_window()
                 elif event.button == 1 and options_button.is_pressed():
                     options_menu()
                 elif event.button == 1 and quit_button.is_pressed():
@@ -726,17 +910,15 @@ def main_menu():
                         proj.multiply_x(-1)
                         break
             proj.draw(window)
-        
+       
 
-        play_button.draw(window)      
-        options_button.draw(window)  
-        quit_button.draw(window)
+        for button in buttons:
+            button.draw(window)
         pygame.display.update()
 
 
 
     pygame.quit()
-
 
 def controls_menu():
     pygame.display.set_caption("Controls Menu")
@@ -752,7 +934,7 @@ def controls_menu():
 
 def options_menu():
     controls_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, "Controls")
-    back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Back")
+    back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Main Menu", font_size=60)
 
     pygame.display.set_caption("Options Menu")
     window.fill((20, 90, 130))
@@ -774,22 +956,23 @@ def options_menu():
     pygame.quit()
 
 def level_menu():
-    level_1_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.25,"Level 1", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_2_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.25, "Level 2", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_3_button = Button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.25,"Level 3", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_4_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.25, "Level 4", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_5_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.5,"Level 5", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_6_button = Button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.5, "Level 6", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_7_button = Button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.5,"Level 7", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_8_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.5, "Level 8", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_9_button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.75,"Level 9", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_10_button = Button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.75, "Level 10", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Back", 350, 100, font_size=50, border_radius=20, background_colour=(190, 10, 180))
+    level_1_button = Lockable_button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.25,"Level 1", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_2_button = Lockable_button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.25, "Level 2", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_3_button = Lockable_button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.25,"Level 3", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_4_button = Lockable_button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.25, "Level 4", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_5_button = Lockable_button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.5,"Level 5", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_6_button = Lockable_button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.5, "Level 6", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_7_button = Lockable_button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.5,"Level 7", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_8_button = Lockable_button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.5, "Level 8", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_9_button = Lockable_button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.75,"Level 9", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    level_10_button = Lockable_button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.75, "Level 10", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
+    back_button = Lockable_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Main Menu", 350, 100, font_size=50, border_radius=20, background_colour=(190, 10, 180))
+   
     level_buttons = {1 : level_1_button, 2 : level_2_button, 3 : level_3_button,
                      4 : level_4_button, 5 : level_5_button, 6 : level_6_button,
-                     7 : level_7_button, 8 : level_8_button, 9 : level_9_button, 
+                     7 : level_7_button, 8 : level_8_button, 9 : level_9_button,
                      10 : level_10_button}
-    
+   
 
     pygame.display.set_caption("Level Menu")
     window.fill((90, 80, 40))
@@ -819,7 +1002,7 @@ def level_menu():
                                     level_one_enemy[i][1], 1)
                         enemy_group.add(level_one_enemies[i])
 
-                    level_play(window, airport_background, map_1, 40, [20, (SCREEN_HEIGHT - 120)], 0, 90, 40)
+                    level_play(window, airport_background, map_1, 40, [20, (SCREEN_HEIGHT - 120)], 0, 90)
 
                 elif event.button == 1 and level_2_button.is_pressed():
                     pygame.display.set_caption("Level 2")
@@ -830,7 +1013,7 @@ def level_menu():
                                     40, 40, window, level_two_enemy[i][0],
                                     level_two_enemy[i][1], 1)
                         enemy_group.add(level_two_enemies[i])
-                    level_play(window, map_2_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90, 2)
+                    level_play(window, map_2_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_3_button.is_pressed():
                     pygame.display.set_caption("Level 3")
@@ -841,7 +1024,7 @@ def level_menu():
                                     40, 40, window, level_three_enemy[i][0],
                                     level_three_enemy[i][1], 1)
                         enemy_group.add(level_three_enemies[i])
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90, 3)
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_4_button.is_pressed():
                     pygame.display.set_caption("Level 4")
@@ -852,7 +1035,7 @@ def level_menu():
                                     40, 40, window, level_four_enemy[i][0],
                                     level_four_enemy[i][1], 1)
                         enemy_group.add(level_four_enemies[i])
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90, 4)
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_5_button.is_pressed():
                     pygame.display.set_caption("Level 5")
@@ -863,7 +1046,7 @@ def level_menu():
                                     40, 40, window, level_five_enemy[i][0],
                                     level_five_enemy[i][1], 1)
                         enemy_group.add(level_five_enemies[i])
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90, 5)
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_6_button.is_pressed():
                     pygame.display.set_caption("Level 6")
@@ -874,7 +1057,7 @@ def level_menu():
                                     40, 40, window, level_six_enemy[i][0],
                                     level_six_enemy[i][1], 1)
                         enemy_group.add(level_six_enemies[i])
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90, 6)
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_7_button.is_pressed():
                     pygame.display.set_caption("Level 7")
@@ -885,7 +1068,7 @@ def level_menu():
                                     40, 40, window, level_seven_enemy[i][0],
                                     level_seven_enemy[i][1], 1)
                         enemy_group.add(level_seven_enemies[i])
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90, 7)
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_8_button.is_pressed():
                     pygame.display.set_caption("Level 8")
@@ -896,7 +1079,7 @@ def level_menu():
                                     40, 40, window, level_eight_enemy[i][0],
                                     level_eight_enemy[i][1], 1)
                         enemy_group.add(level_eight_enemies[i])
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90, 8)
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_9_button.is_pressed():
                     pygame.display.set_caption("Level 9")
@@ -907,7 +1090,7 @@ def level_menu():
                                     40, 40, window, level_nine_enemy[i][0],
                                     level_nine_enemy[i][1], 1)
                         enemy_group.add(level_nine_enemies[i])
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90, 9)
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and level_10_button.is_pressed():
                     pygame.display.set_caption("Level 10")
@@ -918,7 +1101,7 @@ def level_menu():
                                     40, 40, window, level_ten_enemy[i][0],
                                     level_ten_enemy[i][1], 1)
                         enemy_group.add(level_ten_enemies[i])
-                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90, 10)
+                    level_play(window, airport_background, map_2, 20, [(0 - (0.25 * PJ_S)), (SCREEN_HEIGHT - 100)], 0, 90)
 
                 elif event.button == 1 and back_button.is_pressed():
                     main_menu()
@@ -926,8 +1109,54 @@ def level_menu():
         pygame.display.update()
     pygame.quit()
 
+def upgrades_menu():
+    pygame.display.set_caption("Upgrades Menu")
+    window.fill((80, 200, 90))
 
-window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
+    upgrade_font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 80)
+    super_upgrade_text = upgrade_font.render("Super Upgrades", True, "white")
+    upgrade_text = upgrade_font.render("Upgrades", True, "white")
+
+    window.blit(super_upgrade_text, (25, 80))
+    window.blit(upgrade_text, (720, 80))
+   
+    increase_hp_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.35, "lock.png", increase_hp_upgrade, font_size=40, border_radius=200)
+    decrease_hp_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.6, "lock.png", decrease_hp_upgrade, font_size=40, border_radius=200)
+    increase_luck_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.6, "lock.png", increase_luck_upgrade, font_size=30, border_radius=200)
+    def_lower_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.85, "lock.png", def_lower_upgrade, font_size=40, border_radius=200)
+    atk_lower_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.85, "lock.png", atk_lower_upgrade, font_size=40, border_radius=200)
+    small_char_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.35, "lock.png", small_char_upgrade, font_size=40, border_radius=200)
+
+    bigger_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.35, "lock.png", bigger_proj_upgrade, font_size=40, border_radius=150)
+    arrow_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.6, "lock.png", arrow_proj_upgrade, font_size=40, border_radius=150)
+    cannon_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.85, "lock.png", cannon_proj_upgrade, font_size=40, border_radius=150)
+
+    upgrades = [increase_hp_button, decrease_hp_button, increase_luck_button, def_lower_button, atk_lower_button, small_char_button]
+    super_upgrades = [bigger_proj_button, arrow_proj_button, cannon_proj_button]
+    all_upgrades = upgrades + super_upgrades
+
+    for upgrade in all_upgrades:
+        upgrade.display(window)
+
+   
+   
+    run = True
+    while run:
+        for event in pygame.event.get():
+            for upgrade in all_upgrades:
+                if event.type == pygame.QUIT:
+                    run = False
+
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1 and upgrade.is_pressed():
+                        upgrade.confirm_purchase(window)
+                        upgrade.toggle_clickable()
+                       
+       
+
+        pygame.display.update()
+    pygame.quit()
+
 current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
 player_group.add(current_player)
 
