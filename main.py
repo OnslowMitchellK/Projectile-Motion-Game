@@ -464,7 +464,8 @@ def deduct_player_health(player):
         damage = i.damage
     old_shield = player.shield
     player.shield -= damage
-    if player.shield == 0:
+    if player.shield <= 0:
+        player.shield = 0
         player.health -= (damage - old_shield)
 
     print(" P health: ", player.health)
@@ -484,6 +485,11 @@ def deduct_enemy_health(enemy_hit):
         damage += (upgrade_5.get_level() * 2)
     except:
         pass
+    crit_chance = upgrade_8.get_level()
+    ran = randint(0, 8)
+    if ran <= crit_chance:
+        damage = damage + (damage * 0.4)
+        print("CRITICAL: ", damage)
     old_shield = enemy_hit.shield
     enemy_hit.shield -= damage
     if enemy_hit.shield == 0:
