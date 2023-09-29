@@ -322,12 +322,10 @@ class Projectile(pygame.sprite.Sprite):
                         if event.__dict__["key"] == pygame.K_1 and upgrade_3.get_level() >= 1:
                             self.change_size(2)
                             break
+                        elif event.__dict__["key"] == pygame.K_SPACE and not pressed:
+                            return [x, y]
 
-                if not pressed:
-                    for event in pygame.event.get():
-                        if event.type == pygame.KEYDOWN:
-                            if event.__dict__["key"] == pygame.K_SPACE:
-                                return [x, y]
+                
                 
 
                 self.screen.blit(self.background, (0, 0))
