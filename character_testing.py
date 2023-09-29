@@ -47,6 +47,7 @@ class Test_Character(pygame.sprite.Sprite):
         self.max_health = 100
         self.health = 100
         self.screen = screen
+        self.shield = 0
 
         
 
@@ -79,6 +80,7 @@ class Test_Character(pygame.sprite.Sprite):
         green_percent = int(self.health / (self.max_health / 100))
         pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.5 * self.image.get_height()), 100, 5))
         pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.5 * self.image.get_height()), green_percent, 5))
+        pygame.draw.rect(self.screen, (0, 0, 255), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.53 * self.image.get_height()), self.shield, 5))
 
 
 # class Upgrade(pygame.sprite.Sprite):

@@ -462,7 +462,10 @@ def deduct_player_health(player):
     global enemy_group
     for i in enemy_group:
         damage = i.damage
-    player.health -= damage
+    old_shield = player.shield
+    player.shield -= damage
+    if player.shield == 0:
+        player.health -= (damage - old_shield)
 
     print(" P health: ", player.health)
 
@@ -626,6 +629,10 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         current_player.max_health = 100 + (upgrade_4.get_level() * 25)
     except:
         current_player.health = 100
+    try:
+        current_player.shield = (upgrade_6.get_level() * 25)
+    except:
+        current_player.shield = 0
 
     shoot = False
 
