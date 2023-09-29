@@ -476,6 +476,11 @@ def deduct_enemy_health(enemy_hit):
     global player_group
     for i in player_group:
         damage = i.damage
+    # Damage upgrade.
+    try:
+        damage += (upgrade_5.get_level() * 2)
+    except:
+        pass
     old_shield = enemy_hit.shield
     enemy_hit.shield -= damage
     if enemy_hit.shield == 0:
