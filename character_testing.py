@@ -45,11 +45,24 @@ class Test_Character(pygame.sprite.Sprite):
         self.super_points = 0
         self.damage = 40
         self.max_health = 100
-        self.health = 100
+        self._health = 100
         self.screen = screen
         self.shield = 0
 
-        
+    @property
+    def health(self) -> int:
+        """Health getter."""
+        return self._health
+
+    @health.setter
+    def health(self, new_health) -> int:
+        """Healther setter."""
+        if new_health < 0:
+            self._health = 0
+        elif new_health > self.max_health:
+            self._health = self.max_health
+        else:
+            self._health = new_health
 
     def move(self, moving_left, moving_right):
         # reset movement
