@@ -9,6 +9,7 @@ from character_testing import Test_Character
 from upgrades import *
 import sys
 from instructions import text
+from threading import Thread
 
 pygame.init()
 
@@ -304,7 +305,7 @@ class Projectile(pygame.sprite.Sprite):
     def draw_trajectory(self, stop_x=0, stop_y=0):
         pressed = False
         coordinates = self.trajectory(1 / 10, self._start_x, self._start_y, self._angle, self._speed)
-        if upgrade_2.get_level() == 1 and stop_x != 0:
+        if upgrade_2.get_level() >= 1 and stop_x != 0:
             coordinates = self.trajectory(1 / 10, stop_x, stop_y, 0, 0)
             pressed = True
         elif upgrade_2.get_level() == 0:
@@ -316,20 +317,24 @@ class Projectile(pygame.sprite.Sprite):
                 x = coords[0]
                 y = coords[1]
 
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.__dict__["key"] == pygame.K_1 and upgrade_3.get_level() >= 1:
+                            self.change_size(2)
+                            break
+
                 if not pressed:
                     for event in pygame.event.get():
                         if event.type == pygame.KEYDOWN:
                             if event.__dict__["key"] == pygame.K_SPACE:
                                 return [x, y]
-                for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:
-                        if event.__dict__["key"] == pygame.K_u and upgrade_3.get_level() >= 1:
-                            self.change_size(2)
+                
 
                 self.screen.blit(self.background, (0, 0))
                 draw_tiles(self.map, self.tile_size)
                 player_group.draw(self.screen)
                 enemy_group.draw(self.screen)
+
                 self.rect.centerx = x
                 self.rect.centery = y
                 self.screen.blit(self.image, (self.rect.x, self.rect.y))
