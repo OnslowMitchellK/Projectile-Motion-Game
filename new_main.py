@@ -278,6 +278,12 @@ class Projectile(pygame.sprite.Sprite):
         # self._speed += change_in_speed if 0 <= self._speed + change_in_speed <= 150 else 0
         # pygame.display.set_caption(f"Angle: {self._angle} Speed: {self._speed}")
 
+    def change_size(self, factor):
+        self.image = pygame.transform.scale(self.image, (self.size * factor, self.size * factor))
+        center = self.rect.center
+        self.rect = self.image.get_rect()
+        self.rect.center = center
+
     def draw_starting_point(self):
         self.rect.centerx = self._start_x
         self.rect.centery = self._start_y
@@ -295,7 +301,7 @@ class Projectile(pygame.sprite.Sprite):
             coordinates.append([x, y])
         return coordinates
 
-    def draw_trajectory(self, stop_x=0, stop_y=0, stop_speed=0):
+    def draw_trajectory(self, stop_x=0, stop_y=0):
         pressed = False
         coordinates = self.trajectory(1 / 10, self._start_x, self._start_y, self._angle, self._speed)
         if upgrade_2.get_level() == 1 and stop_x != 0:
@@ -314,8 +320,11 @@ class Projectile(pygame.sprite.Sprite):
                     for event in pygame.event.get():
                         if event.type == pygame.KEYDOWN:
                             if event.__dict__["key"] == pygame.K_SPACE:
-                                return [x, y, self._speed]
-                
+                                return [x, y]
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.__dict__["key"] == pygame.K_u and upgrade_3.get_level() >= 1:
+                            self.change_size(2)
 
                 self.screen.blit(self.background, (0, 0))
                 draw_tiles(self.map, self.tile_size)
@@ -635,7 +644,6 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     print("player group:", player_group)
 
     trajectory_level = upgrade_1.get_level()
-    halt_level = upgrade_2.get_level()
 
     run = True
     while run:
@@ -646,6 +654,8 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
             elif event.type == pygame.KEYDOWN:
                 if event.__dict__["key"] == pygame.K_q:
                     current = False if current else True
+                # if event.__dict__["key"] == pygame.K_u:
+                #     projectile.image = pygame.transform.scale(projectile.image, (2 * projectile.size, 2 * projectile.size))
                 # if event.__dict__["key"] == pygame.K_SPACE:
                 #     shoot = True
                 #     break
@@ -706,10 +716,11 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
             projectile.change_angle(returned[1])
             stop_coords = projectile.draw_trajectory()
             try:
-                projectile.draw_trajectory(stop_coords[0], stop_coords[1], stop_coords[2])
+                projectile.draw_trajectory(stop_coords[0], stop_coords[1])
             except:
                 pass
 
+            projectile.change_size(1)
             projectile.draw_starting_point()
             shoot = False
             enemy_shoot(enemy_projectile)
@@ -727,7 +738,7 @@ upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cann
 
 upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5, "Info", 1)
 
-upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase AOE", 2, "Info")
+upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Projectile Upgrades", 2, "Info")
 
 upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3, "Info")
 
