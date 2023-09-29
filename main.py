@@ -610,12 +610,18 @@ def shoot_display(starting_coords, min_angle, max_angle):
 def enemy_shoot(enemy_projectile):
     for enemy in enemy_group:
         rand_list = [0, randint(-80, 80)]
+        print(upgrade_7.get_level())
+        for i in range(upgrade_7.get_level()):
+            rand_list.append(randint(-80, 80))
+            rand_list.append(randint(-80, 80))
+            rand_list.append(0)
         enemy_projectile.start_x = enemy.rect.topleft[0] + 80
         enemy_projectile.start_y = enemy.rect.topleft[1] + 20
-        # enemy_projectile._angle = enemy.angle + rand_list[randint(0, 1)]
-        enemy_projectile._speed = enemy.speed + rand_list[randint(0, 1)]
+        enemy_projectile._speed = enemy.speed + rand_list[randint(0, len(rand_list) - 1)]
         enemy_projectile._angle = enemy.angle
-        # enemy_projectile._speed = enemy.speed
+
+        print(rand_list)
+
         enemy_projectile.draw_starting_point()
         enemy_projectile.draw_trajectory()
 
