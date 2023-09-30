@@ -302,13 +302,19 @@ class Projectile(pygame.sprite.Sprite):
             coordinates.append([x, y])
         return coordinates
 
-    def draw_trajectory(self, stop_x=0, stop_y=0):
+    def draw_trajectory(self, stop_x=0, stop_y=0, double_jump=False, halt=False):
         pressed = False
+        jumped = False
         coordinates = self.trajectory(1 / 10, self._start_x, self._start_y, self._angle, self._speed)
-        if upgrade_2.get_level() >= 1 and stop_x != 0:
+
+        if upgrade_2.get_level() >= 1 and stop_x != 0 and not double_jump:
             coordinates = self.trajectory(1 / 10, stop_x, stop_y, 0, 0)
             pressed = True
-        elif upgrade_2.get_level() == 0:
+        elif upgrade_3.get_level() >= 2 and stop_x != 0 and double_jump:
+            coordinates = self.trajectory(1 / 10, stop_x, stop_y, self.angle, self.speed)
+            jumped = True
+        
+        if upgrade_2.get_level() == 0:
             pressed = True
         run = True
 
@@ -322,8 +328,11 @@ class Projectile(pygame.sprite.Sprite):
                         if event.__dict__["key"] == pygame.K_1 and upgrade_3.get_level() >= 1:
                             self.change_size(2)
                             break
-                        elif event.__dict__["key"] == pygame.K_SPACE and not pressed:
+                        elif event.__dict__["key"] == pygame.K_SPACE and not pressed and not double_jump:
                             return [x, y]
+                        elif event.__dict__["key"] == pygame.K_2 and upgrade_3.get_level() >= 2 and not jumped and not halt:
+                            self.draw_trajectory(x, y, True)
+                            return
 
                 
                 
@@ -695,14 +704,14 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
                 """No trajectory display"""
                 pass
             case 1:
-                """10 dots across a fifth of the screen"""
-                dot_distance = 5
+                """10 dots across a eigth of the screen"""
+                dot_distance = 8
                 for i in coords[:10]:
                     if i[0] < SCREEN_WIDTH / dot_distance:
                         pygame.draw.circle(window, "yellow", (i), 10)
             case 2:
                 """20 dots across a quarter of the screen"""
-                dot_distance = 4
+                dot_distance = 5
                 for i in coords[:20]:
                     if i[0] < SCREEN_WIDTH / dot_distance:
                         pygame.draw.circle(window, "yellow", (i), 10)
@@ -719,7 +728,7 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
             projectile.change_angle(returned[1])
             stop_coords = projectile.draw_trajectory()
             try:
-                projectile.draw_trajectory(stop_coords[0], stop_coords[1])
+                projectile.draw_trajectory(stop_coords[0], stop_coords[1], halt=True)
             except:
                 pass
 
@@ -741,7 +750,7 @@ upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cann
 
 upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5, "Info", 1)
 
-upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Projectile Upgrades", 2, "Info")
+upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Projectile Upgrades", 2, "Info", 2)
 
 upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3, "Info")
 

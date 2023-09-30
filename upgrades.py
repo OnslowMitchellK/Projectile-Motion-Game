@@ -79,7 +79,7 @@ class Upgrade:
         for i in self.cost_list:
             self.screen.blit(coin_image, (self.x - 60  + 25 * count, self.y - 35))
             count += 1
-    
+
     def get_level(self):
         return self.levels_list.count(1)
 
