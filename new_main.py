@@ -895,8 +895,8 @@ def main_menu():
                     #upgrades_menu()
                     upgrades_window()
                 elif event.button == 1 and options_button.is_pressed():
-                    #options_menu()
-                    level_finished(False)
+                    options_menu()
+                    #level_finished(False)
                 elif event.button == 1 and quit_button.is_pressed():
                     pygame.quit()
         window.fill((19, 50, 143))
