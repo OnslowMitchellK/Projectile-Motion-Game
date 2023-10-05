@@ -517,6 +517,7 @@ def enemy_dead_check(level):
 
 def player_dead():
     print("PLAYER IS DEAD")
+    level_menu()
 
 
 def draw_tiles(map, tile_size, first = False):
@@ -630,6 +631,10 @@ def enemy_shoot(enemy_projectile):
         enemy_projectile.draw_trajectory()
 
 def level_play(screen, map_background, map_tiles, tile_size, projectile_starting_coords, min_angle, max_angle):
+    print("player group: ", len(player_group))
+    if len(player_group) == 0:
+        # current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
+        player_group.append(current_player)
     dot_distance = 6
     clock = pygame.time.Clock()
     current = True
