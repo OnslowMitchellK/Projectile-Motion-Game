@@ -102,6 +102,17 @@ class Info_button(Button):
         pygame.draw.circle(screen, "#474747", ((self.x), self.y), 10, width=2)
 
 
+class Level_completed_button(Button):
+    def __init__(self, x, y, image, text="None", font="C:/Fonts/CroissantOne-Regular.ttf", font_size=20, font_colour=(255, 255, 255), width=50, height=50, background_colour=(252, 177, 3), outline=0, border_radius=25) -> None:
+        super().__init__(x, y, text, width, height, font, font_size, font_colour,background_colour, outline, border_radius)
+        self.image = pygame.image.load(image)
+        self.image = pygame.transform.scale(self.image, (width * 0.6, height * 0.6))
+        self.image_rect = self.image.get_rect()
+        self.image_rect.center = (x, y)
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.background_colour, self._rect, self.outline, border_radius=self.border_radius)
+        screen.blit(self.image, self.image_rect.topleft)
 
 # class Collision_Button(Button):
 #     def __init__(self, x, y, text, width=300, height=100, font="C:/Fonts/Barriecito-Regular.ttf", font_size=100, font_colour=(255, 255, 255), background_colour=(0, 0, 0), outline=0, border_radius=0) -> None:

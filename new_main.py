@@ -2,7 +2,7 @@
 import pygame
 import math
 import time
-from button import Button, Lockable_button, Upgrades_button
+from button import Button, Lockable_button, Upgrades_button, Level_completed_button
 from model import Enemy
 from random import randint, choice
 from character_testing import Test_Character
@@ -517,12 +517,13 @@ def enemy_dead_check(level):
             locked_levels.remove(level)
         except Exception:
             pass
-        level_menu()
         print(current_player.level_points)
+        level_finished(True, level)
 
 
 def player_dead():
     print("PLAYER IS DEAD")
+    level_finished(False)
 
 
 def draw_tiles(map, tile_size, first = False):
@@ -741,6 +742,42 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     pygame.quit()
 
 
+
+def level_finished(won: bool, current_level=0):
+    window.fill("white")
+    str_text = "Level Cleared" if won else "Level Failed"
+    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 30)
+    text = font.render(str_text, True, "black")
+
+    main_menu_button = Level_completed_button(SCREEN_WIDTH * .395, SCREEN_HEIGHT * .6, "home.png")
+    upgrades_menu_button = Level_completed_button(SCREEN_WIDTH * .465, SCREEN_HEIGHT * .6, "upgrades.png")
+    retry_button = Level_completed_button(SCREEN_WIDTH * .535, SCREEN_HEIGHT * .6, "retry.png")
+    next_level_button = Level_completed_button(SCREEN_WIDTH * .606, SCREEN_HEIGHT * .6, "next_level.png")
+
+    buttons = [main_menu_button, upgrades_menu_button, retry_button, next_level_button]
+
+    for button in buttons:
+        button.draw(window)
+
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and main_menu_button.is_pressed():
+                    main_menu()
+                elif event.button == 1 and upgrades_menu_button.is_pressed():
+                    upgrades_window()
+                elif event.button == 1 and retry_button.is_pressed():
+                    level_play(window, )
+                elif event.button == 1 and next_level_button.is_pressed():
+                    pass
+
+        pygame.display.update()
+    pygame.quit()
+
+
 rects = [Main_Menu_Projectile() for x in range(100)]
 
 UPGRADES_WIDTH = SCREEN_WIDTH
@@ -900,7 +937,8 @@ def main_menu():
                     #upgrades_menu()
                     upgrades_window()
                 elif event.button == 1 and options_button.is_pressed():
-                    options_menu()
+                    #options_menu()
+                    level_finished(True)
                 elif event.button == 1 and quit_button.is_pressed():
                     pygame.quit()
         window.fill((19, 50, 143))
