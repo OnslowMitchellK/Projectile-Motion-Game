@@ -488,17 +488,16 @@ def deduct_enemy_health(enemy_hit):
     crit_chance = upgrade_8.get_level()
     ran = randint(0, 8)
     if ran <= crit_chance:
-        damage = damage + (damage * 0.4)
+        damage = damage + (damage * 0.5)
         print("CRITICAL: ", damage)
     if current_player.health < current_player.max_health:
-        current_player.health = current_player.health + upgrade_9.get_level()
+        print("health before: ", current_player.health)
+        print("health after: ", current_player.health + (upgrade_9.get_level() * 2))
+        current_player.health = current_player.health + (upgrade_9.get_level() * 2)
     old_shield = enemy_hit.shield
     enemy_hit.shield -= damage
     if enemy_hit.shield == 0:
         enemy_hit.health -= (damage - old_shield)
-
-    print("health: ", enemy_hit.health)
-    print("shield: ", enemy_hit.shield)
 
     if enemy_hit.health <= 0:
         print("RIP")
@@ -514,7 +513,6 @@ def enemy_dead_check(level):
         except Exception:
             pass
         level_menu()
-        print(current_player.level_points)
 
 
 def player_dead():
@@ -618,7 +616,6 @@ def shoot_display(starting_coords, min_angle, max_angle):
 def enemy_shoot(enemy_projectile):
     for enemy in enemy_group:
         rand_list = [0, randint(-80, 80)]
-        print(upgrade_7.get_level())
         for i in range(upgrade_7.get_level()):
             rand_list.append(randint(-80, 80))
             rand_list.append(randint(-80, 80))
@@ -628,7 +625,6 @@ def enemy_shoot(enemy_projectile):
         enemy_projectile._speed = enemy.speed + rand_list[randint(0, len(rand_list) - 1)]
         enemy_projectile._angle = enemy.angle
 
-        print(rand_list)
 
         enemy_projectile.draw_starting_point()
         enemy_projectile.draw_trajectory()
@@ -643,8 +639,6 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
         current_player.health = 100 + (upgrade_4.get_level() * 25)
     except:
         current_player.health = 100
-    print("UP: ", upgrade_4.get_level())
-    print("player health: ", current_player.health)
     try:
         current_player.shield = (upgrade_6.get_level() * 25)
     except:
