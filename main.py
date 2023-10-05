@@ -639,10 +639,12 @@ def level_play(screen, map_background, map_tiles, tile_size, projectile_starting
     current = True
     # Reset Player Stats at end of each round.
     try:
-        current_player.health = 100 + (upgrade_4.get_level() * 25)
         current_player.max_health = 100 + (upgrade_4.get_level() * 25)
+        current_player.health = 100 + (upgrade_4.get_level() * 25)
     except:
         current_player.health = 100
+    print("UP: ", upgrade_4.get_level())
+    print("player health: ", current_player.health)
     try:
         current_player.shield = (upgrade_6.get_level() * 25)
     except:
