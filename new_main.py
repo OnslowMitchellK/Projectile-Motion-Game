@@ -9,7 +9,7 @@ from character_testing import Test_Character
 from upgrades import *
 import sys
 from instructions import text
-from threading import Thread
+
 
 pygame.init()
 
