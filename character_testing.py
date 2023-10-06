@@ -43,10 +43,26 @@ class Test_Character(pygame.sprite.Sprite):
         self.y = y
         self.level_points = 0
         self.super_points = 0
-        self.health = 100
+        self.damage = 40
+        self.max_health = 100
+        self._health = 100
         self.screen = screen
+        self.shield = 0
 
-        
+    @property
+    def health(self) -> int:
+        """Health getter."""
+        return self._health
+
+    @health.setter
+    def health(self, new_health) -> int:
+        """Healther setter."""
+        if new_health < 0:
+            self._health = 0
+        elif new_health > self.max_health:
+            self._health = self.max_health
+        else:
+            self._health = new_health
 
     def move(self, moving_left, moving_right):
         # reset movement
@@ -74,8 +90,10 @@ class Test_Character(pygame.sprite.Sprite):
         self.kill()
 
     def draw_health(self):
+        green_percent = int(self.health / (self.max_health / 100))
         pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.5 * self.image.get_height()), 100, 5))
-        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.5 * self.image.get_height()), self.health, 5))
+        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.5 * self.image.get_height()), green_percent, 5))
+        pygame.draw.rect(self.screen, (0, 0, 255), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.53 * self.image.get_height()), self.shield, 5))
 
 
 # class Upgrade(pygame.sprite.Sprite):

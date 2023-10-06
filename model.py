@@ -63,10 +63,10 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self._shield = new_shield
 
-    # @property
-    # def damage(self) -> int:
-    #     """Damage getter."""
-    #     return self._damage
+    @property
+    def damage(self) -> int:
+        """Damage getter."""
+        return self._damage
 
     def draw(self):
         self.screen.blit(self.image, self.rect)
