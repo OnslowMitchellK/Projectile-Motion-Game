@@ -585,6 +585,7 @@ def enemy_shoot(enemy_projectile):
 
 
 def level_play(info):
+    global current_player
     screen = window
     map_background = info[0]
     map_tiles = info[1]
@@ -597,6 +598,10 @@ def level_play(info):
     clock = pygame.time.Clock()
     current = True
     shoot = False
+
+    if len(player_group) == 0:
+        current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
+        player_group.add(current_player)
 
     try:
         current_player.max_health = 100 + (upgrade_4.get_level() * 25)
