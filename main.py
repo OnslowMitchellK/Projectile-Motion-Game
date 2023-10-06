@@ -401,13 +401,20 @@ class Enemy_Projectile(pygame.sprite.Sprite):
                     time.sleep(0.5)
                     return False
             # Use groupcollide() to detect collisions
+            collisions = None
+            print(collisions)
+            print("player group: ", player_group)
+            print("projectile group: ", projectile_group)
             collisions = pygame.sprite.groupcollide(player_group, enemy_projectile_group,
                                                     False, False, pygame.sprite.collide_mask)
-
+            print(collisions)
             # Handle collisions
             for player, projectiles in collisions.items():
+                print("player: ", player)
+                print("projectiles: ", projectiles)
                 time.sleep(0.5)
                 deduct_player_health(player)
+                print("HIT")
                 return False
     
 
