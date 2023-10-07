@@ -627,7 +627,7 @@ def level_play(info):
 
     run = True
     while run:
-        clock.tick(30)
+        #clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -664,7 +664,7 @@ def level_play(info):
         for enemy in enemy_group:
             enemy.draw_health()
         current_player.draw_health()
-        projectile.draw_starting_point()
+        #projectile.draw_starting_point()
         returned = shoot_display(projectile_starting_coords, min_angle, max_angle)
         coords = projectile.trajectory(1 / 3, projectile_starting_coords[0], projectile_starting_coords[1], returned[1], returned[0])
         y_coords = [x[1] for x in coords]
@@ -695,7 +695,10 @@ def level_play(info):
                         pygame.draw.circle(window, "yellow", (i), 10)
                 pygame.draw.circle(window, "blue", (max_coords), 10)
        
-        if shoot and current_player.get_image() == "animations/Aziz Animations/Aziz 3.png":
+        if shoot and current_player.get_image() == "animations/Aziz Animations/Aziz 4.png":
+            while current_player.get_image() != "animations/Aziz Animations/Aziz 1.png":
+                current_player.change_image()
+
             projectile.change_speed(returned[0])
             projectile.change_angle(returned[1])
             stop_coords = projectile.draw_trajectory()
