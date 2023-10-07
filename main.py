@@ -623,6 +623,8 @@ def level_play(info):
 
     trajectory_level = upgrade_1.get_level()
 
+    image_counter = 0
+
     run = True
     while run:
         clock.tick(30)
@@ -650,9 +652,15 @@ def level_play(info):
                 # elif event.button == 5 and not current:
                 #     projectile.change_speed(-5)
                
-
+        image_counter += 1
         screen.blit(map_background, (0, 0))
         draw_tiles(map_tiles, tile_size)
+        if image_counter % 10 == 0:
+            p = current_player.change_image()
+            player_group.clear()
+            player_group.add(p)
+            image_counter = 0
+    
         player_group.draw(screen)
         enemy_group.draw(screen)
         for enemy in enemy_group:
