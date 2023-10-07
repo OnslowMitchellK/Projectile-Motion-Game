@@ -402,12 +402,8 @@ class Enemy_Projectile(pygame.sprite.Sprite):
                     return False
             # Use groupcollide() to detect collisions
             collisions = None
-            print(collisions)
-            print("player group: ", player_group)
-            print("projectile group: ", projectile_group)
             collisions = pygame.sprite.groupcollide(player_group, enemy_projectile_group,
                                                     False, False, pygame.sprite.collide_mask)
-            print(collisions)
             # Handle collisions
             for player, projectiles in collisions.items():
                 print("player: ", player)
@@ -462,7 +458,19 @@ def deduct_enemy_health(enemy_hit):
         enemy_hit.health -= (damage - old_shield)
     if enemy_hit.health <= 0:
         print("RIP")
-        enemy_hit.die()
+        for i in range(20):
+            if (i % 2) != 0 and i < 19:
+                enemy_hit.image = enemy_hit.dead_image
+                enemy_group.draw(window)
+                pygame.display.update()
+                pygame.time.wait(250)
+            elif (i % 2) == 0 and i < 19:
+                enemy_hit.image = enemy_hit.alive_image
+                enemy_group.draw(window)
+                pygame.display.update()
+                pygame.time.wait(250)
+            elif i == 19:
+                enemy_hit.die()
         enemy_dead_check(enemy_hit.level + 2)
 
 locked_levels = [2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -662,8 +670,6 @@ def level_play(info):
                 #     projectile.change_speed(5)
                 # elif event.button == 5 and not current:
                 #     projectile.change_speed(-5)
-               
-
         screen.blit(map_background, (0, 0))
         draw_tiles(map_tiles, tile_size)
         player_group.draw(screen)

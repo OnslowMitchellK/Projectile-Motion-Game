@@ -1,5 +1,6 @@
 import pygame
 from random import randint
+import time
 LEVEL_ONE_ENEMY_NUM = 2
 enemy_image = pygame.image.load("enemy.jpeg")
 
@@ -17,7 +18,10 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.image_mask = pygame.mask.from_surface(self.image)
-
+        self.alive_image = pygame.image.load('enemy.png').convert_alpha()
+        self.dead_image = pygame.image.load('enemywhite.png').convert_alpha()
+        self.dead_image = pygame.transform.scale(self.dead_image, (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3)))
+        self.alive_image = pygame.transform.scale(self.alive_image, (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3)))
         self.x = x
         self.y = y
         self._name: str = name
