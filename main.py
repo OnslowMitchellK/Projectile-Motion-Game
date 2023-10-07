@@ -446,8 +446,8 @@ def deduct_enemy_health(enemy_hit):
         damage += (upgrade_5.get_level() * 2)
     except:
         pass
-    crit_chance = upgrade_8.get_level() - 1
-    ran = randint(0, 8)
+    crit_chance = upgrade_8.get_level()
+    ran = randint(1, 8)
     if ran <= crit_chance:
         damage = damage + (damage * 0.5)
     if current_player.health < current_player.max_health:
