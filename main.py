@@ -446,7 +446,7 @@ def deduct_enemy_health(enemy_hit):
         damage += (upgrade_5.get_level() * 2)
     except:
         pass
-    crit_chance = upgrade_8.get_level()
+    crit_chance = upgrade_8.get_level() - 1
     ran = randint(0, 8)
     if ran <= crit_chance:
         damage = damage + (damage * 0.5)
@@ -459,17 +459,17 @@ def deduct_enemy_health(enemy_hit):
     if enemy_hit.health <= 0:
         print("RIP")
         for i in range(13):
-            if (i % 2) != 0 and i < 13:
+            if (i % 2) != 0 and i < 8:
                 enemy_hit.image = enemy_hit.dead_image
                 enemy_group.draw(window)
                 pygame.display.update()
                 pygame.time.wait(250)
-            elif (i % 2) == 0 and i < 13:
+            elif (i % 2) == 0 and i < 8:
                 enemy_hit.image = enemy_hit.alive_image
                 enemy_group.draw(window)
                 pygame.display.update()
                 pygame.time.wait(250)
-            elif i == 13:
+            elif i == 9:
                 enemy_hit.die()
         enemy_dead_check(enemy_hit.level + 2)
 
