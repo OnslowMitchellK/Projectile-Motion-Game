@@ -656,9 +656,7 @@ def level_play(info):
         screen.blit(map_background, (0, 0))
         draw_tiles(map_tiles, tile_size)
         if image_counter % 10 == 0:
-            p = current_player.change_image()
-            player_group.clear()
-            player_group.add(p)
+            current_player.change_image()
             image_counter = 0
     
         player_group.draw(screen)
@@ -697,7 +695,7 @@ def level_play(info):
                         pygame.draw.circle(window, "yellow", (i), 10)
                 pygame.draw.circle(window, "blue", (max_coords), 10)
        
-        if shoot:
+        if shoot and current_player.get_image() == "animations/Aziz Animations/Aziz 3.png":
             projectile.change_speed(returned[0])
             projectile.change_angle(returned[1])
             stop_coords = projectile.draw_trajectory()
@@ -1196,7 +1194,7 @@ def upgrades_menu():
         pygame.display.update()
     pygame.quit()
 
-current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
+current_player = Test_Character(65, SCREEN_HEIGHT - 160, 3, 0, window)
 player_group.add(current_player)
 
 main_menu()

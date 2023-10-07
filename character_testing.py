@@ -41,22 +41,24 @@ class Image_Coords:
 
 aziz_1 = Image_Coords(0, 0)
 aziz_2 = Image_Coords(0, 0)
-aziz_3 = Image_Coords(0, 20)
-aziz_4 = Image_Coords(0, 10)
-aziz_5 = Image_Coords(0, -10)
-aziz_6 = Image_Coords(0, -20)
+aziz_3 = Image_Coords(0, 40)
+aziz_4 = Image_Coords(0, 20)
+aziz_5 = Image_Coords(0, -20)
+aziz_6 = Image_Coords(0, -40)
 aziz_7 = Image_Coords(0, 0)
 aziz_8 = Image_Coords(0, 0)
 
+file = "animations/Aziz Animations/"
+
 aziz_images: dict[str, Image_Coords] = {
-    "Aziz 1.png": aziz_1,
-    "Aziz 2.png": aziz_2,
-    "Aziz 3.png": aziz_3,
-    "Aziz 4.png": aziz_4,
-    "Aziz 5.png": aziz_5,
-    "Aziz 6.png": aziz_6,
-    "Aziz 7.png": aziz_7,
-    "Aziz 8.png": aziz_8
+    f"{file}Aziz 1.png": aziz_1,
+    f"{file}Aziz 2.png": aziz_2,
+    f"{file}Aziz 3.png": aziz_3,
+    f"{file}Aziz 4.png": aziz_4,
+    f"{file}Aziz 5.png": aziz_5,
+    f"{file}Aziz 6.png": aziz_6,
+    f"{file}Aziz 7.png": aziz_7,
+    f"{file}Aziz 8.png": aziz_8
 }
 
 
@@ -67,7 +69,7 @@ class Test_Character(pygame.sprite.Sprite):
         self.speed = speed
         self.direction = 1
         self.flip = False
-        img = pygame.image.load(f'test_slime.jpeg')
+        img = pygame.image.load(f'{file}Aziz 1.png')
         # Rescaling the img of the character that appears on the screen
         self.scale = scale
         self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
@@ -98,6 +100,10 @@ class Test_Character(pygame.sprite.Sprite):
             self._health = self.max_health
         else:
             self._health = new_health
+    
+    def get_image(self):
+        return f"{self.current_image}"
+
 
     def change_image(self):
         is_image = False
