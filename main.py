@@ -458,18 +458,18 @@ def deduct_enemy_health(enemy_hit):
         enemy_hit.health -= (damage - old_shield)
     if enemy_hit.health <= 0:
         print("RIP")
-        for i in range(20):
-            if (i % 2) != 0 and i < 19:
+        for i in range(13):
+            if (i % 2) != 0 and i < 13:
                 enemy_hit.image = enemy_hit.dead_image
                 enemy_group.draw(window)
                 pygame.display.update()
                 pygame.time.wait(250)
-            elif (i % 2) == 0 and i < 19:
+            elif (i % 2) == 0 and i < 13:
                 enemy_hit.image = enemy_hit.alive_image
                 enemy_group.draw(window)
                 pygame.display.update()
                 pygame.time.wait(250)
-            elif i == 19:
+            elif i == 13:
                 enemy_hit.die()
         enemy_dead_check(enemy_hit.level + 2)
 
