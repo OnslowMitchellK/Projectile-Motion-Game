@@ -623,6 +623,7 @@ def level_play(info):
     projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], pygame.image.load("test.png"), PJ_S, map_background, map_tiles, screen, tile_size)
     projectile_group.add(projectile)
     enemy_projectile = Enemy_Projectile(0, 0, "test.png", PJ_S, map_background, map_tiles, screen, tile_size, 0, 0)
+    enemy_projectile_group.empty()
     enemy_projectile_group.add(enemy_projectile)
 
     screen.blit(map_background, (0, 0))
