@@ -602,8 +602,6 @@ def enemy_shoot(enemy_projectile, background, map_tiles, tile_size):
             current_player.draw_health()
             enemy.image = enemy.shoot_animations[i]
             enemy_group.draw(window)
-            # for enemy in enemy_group:
-            #     enemy.draw_health()
             pygame.display.update()
             pygame.time.wait(50)
         window.blit(background, (0, 0))
