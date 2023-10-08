@@ -443,7 +443,7 @@ def deduct_enemy_health(enemy_hit):
         damage = i.damage
     # Damage upgrade.
     try:
-        damage += (upgrade_5.get_level() * 2)
+        damage += (upgrade_5.get_level() * 8)
     except:
         pass
     crit_chance = upgrade_8.get_level()
