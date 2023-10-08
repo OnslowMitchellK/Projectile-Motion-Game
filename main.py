@@ -584,7 +584,7 @@ def shoot_display(starting_coords, min_angle, max_angle):
     return [speed, math.degrees(angle)]
 
 
-def enemy_shoot(enemy_projectile):
+def enemy_shoot(enemy_projectile, background, map_tiles, tile_size):
     for enemy in enemy_group:
         rand_list = [0, randint(-80, 80)]
         for i in range(upgrade_7.get_level()):
@@ -595,6 +595,23 @@ def enemy_shoot(enemy_projectile):
         enemy_projectile.start_y = enemy.rect.topleft[1] + 20
         enemy_projectile._speed = enemy.speed + rand_list[randint(0, len(rand_list) - 1)]
         enemy_projectile._angle = enemy.angle
+        for i in range(len(enemy.shoot_animations)):
+            window.blit(background, (0, 0))
+            draw_tiles(map_tiles, tile_size, True)
+            player_group.draw(window)
+            current_player.draw_health()
+            enemy.image = enemy.shoot_animations[i]
+            enemy_group.draw(window)
+            # for enemy in enemy_group:
+            #     enemy.draw_health()
+            pygame.display.update()
+            pygame.time.wait(50)
+        window.blit(background, (0, 0))
+        draw_tiles(map_tiles, tile_size, True)
+        player_group.draw(window)
+        current_player.draw_health()
+        enemy.image = enemy.alive_image
+        enemy_group.draw(window)
         enemy_projectile.draw_starting_point()
         enemy_projectile.draw_trajectory()
 
@@ -720,7 +737,7 @@ def level_play(info):
             projectile.change_size(1)
             projectile.draw_starting_point()
             shoot = False
-            enemy_shoot(enemy_projectile)
+            enemy_shoot(enemy_projectile, map_background, map_tiles, tile_size)
 
         pygame.display.update()
     pygame.quit()
