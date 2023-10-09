@@ -10,7 +10,7 @@ from upgrades import *
 import sys
 from instructions import text
 from level_info import level_info
-
+import json
 
 pygame.init()
 
@@ -935,6 +935,7 @@ def main_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                # save_file()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and play_button.is_pressed():
                     level_menu()
@@ -1055,6 +1056,7 @@ def level_menu():
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and level_1_button.is_pressed():
@@ -1174,6 +1176,12 @@ def level_menu():
         pygame.display.update()
     pygame.quit()
 
+def save_file():
+    open_file = open("save.json", 'w')
+    save_dict = {'1': [upgrades, locked_levels]}
+    json.dump(save_dict, open_file)
+    
+
 def upgrades_menu():
     pygame.display.set_caption("Upgrades Menu")
     window.fill((80, 200, 90))
@@ -1203,7 +1211,7 @@ def upgrades_menu():
     for upgrade in all_upgrades:
         upgrade.display(window)
 
-   
+
    
     run = True
     while run:
