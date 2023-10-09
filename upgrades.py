@@ -13,7 +13,7 @@ coin_image = pygame.transform.scale(coin_image, (20, 20))
 
 
 class Upgrade:
-    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
+    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, prices, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
         self.screen = screen
         self.rect = pygame.Rect(0, 0, width, height)
         self.x = x
@@ -45,6 +45,8 @@ class Upgrade:
         self.info_rect = pygame.Rect(0, 0, 200, 200)
         self.info_rect.center = (screen.get_width() / 2, screen.get_height() / 2)
 
+        self.level_prices = prices
+
 
     def get_plus_button(self):
         return self.plus_button
@@ -74,9 +76,17 @@ class Upgrade:
             pygame.draw.circle(self.screen, "#474747", ((self.x - 40  + 25 * count), self.y), 10, width=2)
             count += 1
     
+    # def display_cost(self):
+    #     count = 0
+    #     for i in self.cost_list:
+    #         self.screen.blit(coin_image, (self.x - 60  + 25 * count, self.y - 35))
+    #         count += 1
+
     def display_cost(self):
+        index = self.get_level()
+        cost = self.level_prices[index]
         count = 0
-        for i in self.cost_list:
+        for i in range(cost):
             self.screen.blit(coin_image, (self.x - 60  + 25 * count, self.y - 35))
             count += 1
 
@@ -84,14 +94,22 @@ class Upgrade:
         return self.levels_list.count(1)
 
 class Super_upgrade(Upgrade):
-    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
-        super().__init__(screen, x, y, image, title, cost, info_text, levels, width, height, font_size, font, font_colour)
+    def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, prices, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
+        super().__init__(screen, x, y, image, title, cost, info_text, prices, levels, width, height, font_size, font, font_colour)
         pass
 
 
+    # def display_cost(self):
+    #     count = 0
+    #     for i in self.cost_list:
+    #         self.screen.blit(diamond_image, (self.x - 60  + 25 * count, self.y - 35))
+    #         count += 1
+
     def display_cost(self):
+        index = self.get_level()
+        cost = self.level_prices[index]
         count = 0
-        for i in self.cost_list:
+        for i in range(cost):
             self.screen.blit(diamond_image, (self.x - 60  + 25 * count, self.y - 35))
             count += 1
     
