@@ -253,7 +253,7 @@ class Projectile(pygame.sprite.Sprite):
             coordinates = self.trajectory(1 / 10, stop_x, stop_y, 0, 0)
             pressed = True
         elif upgrade_3.get_level() >= 2 and stop_x != 0 and double_jump:
-            coordinates = self.trajectory(1 / 10, stop_x, stop_y, self.angle, self.speed)
+            coordinates = self.trajectory(1 / 10, stop_x, stop_y, self.angle, self.speed * 0.8)
             jumped = True
         
         if upgrade_2.get_level() == 0:
@@ -627,7 +627,7 @@ def level_play(info):
 
     run = True
     while run:
-        #clock.tick(30)
+        clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -655,7 +655,7 @@ def level_play(info):
         image_counter += 1
         screen.blit(map_background, (0, 0))
         draw_tiles(map_tiles, tile_size)
-        if image_counter % 10 == 0:
+        if image_counter % 6 == 0:
             current_player.change_image()
             image_counter = 0
     
