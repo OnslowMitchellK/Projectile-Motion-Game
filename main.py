@@ -765,23 +765,23 @@ rects = [Main_Menu_Projectile() for x in range(100)]
 UPGRADES_WIDTH = SCREEN_WIDTH
 UPGRADES_HEIGHT = SCREEN_HEIGHT
 
-upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5, "Info", [1, 1, 1], 3)
+upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5, "Info", [2, 1, 1], 3)
 
 upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5, "Info", [1], 1)
 
-upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Projectile Upgrades", 2, "Info", [1, 1], 2)
+upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Projectile Upgrades", 2, "Info", [3, 1], 2)
 
-upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3, "Info", [1, 1, 1, 1])
+upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3, "Info", [1, 4, 1, 1])
 
-upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 4, "Info", [1, 1, 1, 1])
+upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 4, "Info", [1, 1, 5, 1])
 
 upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase Shield", 1, "Info", [1, 1, 1, 1])
 
 upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Evasion", 5, "Info", [1, 1, 1, 1])
 
-upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Critical Hit Chance", 5, "Info", [1, 1, 1, 1])
+upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Critical Hit Chance", 5, "Info", [2, 1, 1, 1])
 
-upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Upgrade Lifesteal", 5, "Info", [1, 1, 1, 1])
+upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Upgrade Lifesteal", 5, "Info", [1, 5, 1, 1])
 
 upgrades: list[Upgrade] = [upgrade_1, upgrade_2, upgrade_3, upgrade_4, upgrade_5, upgrade_6, upgrade_7, upgrade_8, upgrade_9]
 
@@ -799,8 +799,8 @@ def upgrades_window():
     for upgrade in upgrades:
         upgrade.display_cost()
     
-    diamond_amount = 0
-    coin_amount = 0
+    diamond_amount = current_player.super_points
+    coin_amount = current_player.level_points
 
     font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 100)
 
@@ -823,12 +823,36 @@ def upgrades_window():
                 for plus in plus_buttons:
                     if event.button == 1 and plus.is_pressed():
                         index = plus_buttons.index(plus)
-                        plus.add_level()
+                        super = True if index <= 2 else False
+                        returned = upgrades[index].deduct(current_player.super_points) if super else upgrades[index].deduct(current_player.level_points)
+                        if super:
+                            already_done = True if diamond_amount != current_player.super_points else False
+                        else:
+                            already_done = True if coin_amount != current_player.level_points else False
+
+                        if returned[0] and not already_done:
+                            plus.add_level()
+
+                            if super:
+                                current_player.super_points -= returned[1]
+                                diamond_amount = current_player.super_points
+                                diamond_text = font.render(f": {current_player.super_points}", True, "white")
+
+                            else:
+                                current_player.level_points -= returned[1]
+                                coin_amount = current_player.level_points
+                                coin_text = font.render(f": {current_player.level_points}", True, "white")
+
                         upgrades[index].display_dots()
+                        
+
                 for info in info_buttons:
                     if event.button == 1 and info.is_pressed():
                         index = info_buttons.index(info)
                         upgrades[index].display_info()
+
+        window.fill((10, 80, 180))
+        
 
         window.blit(big_diamond, (40, 20))
         window.blit(diamond_text, (120, 30))
@@ -1198,6 +1222,8 @@ def upgrades_menu():
     pygame.quit()
 
 current_player = Test_Character(65, SCREEN_HEIGHT - 160, 3, 0, window)
+current_player.super_points = 10
+current_player.level_points = 9
 player_group.add(current_player)
 
 main_menu()

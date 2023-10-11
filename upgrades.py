@@ -83,8 +83,9 @@ class Upgrade:
     #         count += 1
 
     def display_cost(self):
-        index = self.get_level()
-        cost = self.level_prices[index]
+        cost = self.get_price()
+        if not cost:
+            return
         count = 0
         for i in range(cost):
             self.screen.blit(coin_image, (self.x - 60  + 25 * count, self.y - 35))
@@ -92,6 +93,19 @@ class Upgrade:
 
     def get_level(self):
         return self.levels_list.count(1)
+
+    def get_price(self):
+        index = self.get_level()
+        try:
+            cost = self.level_prices[index]
+        except Exception:
+            return False
+        return cost
+    
+    def deduct(self, level_points):
+        new_points = level_points - self.get_price() if level_points - self.get_price() >= 0 else level_points
+        bought = True if new_points != level_points else False
+        return [bought, new_points]
 
 class Super_upgrade(Upgrade):
     def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, prices, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
@@ -106,12 +120,14 @@ class Super_upgrade(Upgrade):
     #         count += 1
 
     def display_cost(self):
-        index = self.get_level()
-        cost = self.level_prices[index]
+        cost = self.get_price()
+        if not cost:
+            return
         count = 0
         for i in range(cost):
             self.screen.blit(diamond_image, (self.x - 60  + 25 * count, self.y - 35))
             count += 1
+    
     
 
 
