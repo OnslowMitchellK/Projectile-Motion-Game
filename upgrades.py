@@ -27,6 +27,7 @@ class Upgrade:
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.font = pygame.font.SysFont(font, font_size)
 
+        self.name = title
         self.title = self.font.render(title, True, font_colour)
         self.cost = cost
         self.cost_list = [0 for i in range(cost)]

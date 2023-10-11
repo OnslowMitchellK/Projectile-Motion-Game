@@ -935,7 +935,7 @@ def main_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                # save_file()
+                save_file()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and play_button.is_pressed():
                     level_menu()
@@ -1178,7 +1178,10 @@ def level_menu():
 
 def save_file():
     open_file = open("save.json", 'w')
-    save_dict = {'1': [upgrades, locked_levels]}
+    save_upgrades = {}
+    for i in upgrades:
+        save_upgrades[i.name] = i.get_level()
+    save_dict = {'1': [save_upgrades, locked_levels]}
     json.dump(save_dict, open_file)
     
 
