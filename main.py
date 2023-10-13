@@ -665,6 +665,7 @@ def level_play(info):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                save_file()
             elif event.type == pygame.KEYDOWN:
                 if event.__dict__["key"] == pygame.K_q:
                     current = False if current else True
@@ -770,6 +771,7 @@ def level_finished(won: bool, current_level=1):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                save_file()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and main_menu_button.is_pressed():
                     main_menu()
@@ -842,6 +844,7 @@ def upgrades_window():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                save_file()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and main_menu_button.is_pressed():
                         main_menu()
@@ -902,6 +905,7 @@ def instructions_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                save_file()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and back_button.is_pressed():
                     main_menu()
@@ -994,6 +998,7 @@ def controls_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                save_file()
 
         pygame.display.update()
     pygame.quit()
@@ -1043,12 +1048,16 @@ def level_menu():
     pygame.display.set_caption("Level Menu")
     window.fill((90, 80, 40))
 
-
-    for button in level_buttons.items():
-        button[1].draw(window)
-        if button[0] in locked_levels:
-            button[1].lock_button(window, "lock.png")
-            button[1].toggle_clickable()
+    i = 1
+    print(locked_levels)
+    for button in level_buttons:
+        level_buttons[i].draw(window)
+        print(button)
+        if i in locked_levels:
+            level_buttons[i].lock_button(window, "lock.png")
+            level_buttons[i].toggle_clickable()
+        i += 1
+        
 
     back_button.draw(window)
 
@@ -1183,7 +1192,17 @@ def save_file():
         save_upgrades[i.name] = i.get_level()
     save_dict = {'1': [save_upgrades, locked_levels]}
     json.dump(save_dict, open_file)
-    
+
+def upload_save():
+    global locked_levels
+    try:
+        open_f = open('save.json')
+        data = json.load(open_f)
+        for i in data['1']:
+            print(i)
+        locked_levels = data['1'][1]
+    except:
+        pass
 
 def upgrades_menu():
     pygame.display.set_caption("Upgrades Menu")
@@ -1235,5 +1254,5 @@ def upgrades_menu():
 
 current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
 player_group.add(current_player)
-
+upload_save()
 main_menu()
