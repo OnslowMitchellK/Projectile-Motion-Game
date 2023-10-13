@@ -1188,8 +1188,8 @@ def level_menu():
 def save_file():
     open_file = open("save.json", 'w')
     save_upgrades = {}
-    for i in upgrades:
-        save_upgrades[i.name] = i.get_level()
+    for i in range(len(upgrades)):
+        save_upgrades[i] = upgrades[i].levels_list
     save_dict = {'1': [save_upgrades, locked_levels]}
     json.dump(save_dict, open_file)
 
@@ -1201,8 +1201,10 @@ def upload_save():
         for i in data['1']:
             print(i)
         locked_levels = data['1'][1]
+        upgrade_1.levels_list = data['1'][0]["0"]
     except:
         pass
+    print(upgrade_1.levels_list)
 
 def upgrades_menu():
     pygame.display.set_caption("Upgrades Menu")

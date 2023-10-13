@@ -1,1 +1,1 @@
-{"1": [{"Upgrade Trajection Display": 0, "Projectile Halt": 0, "Projectile Upgrades": 0, "Increase Health": 0, "Increase Damage": 0, "Increase Shield": 0, "Increase Evasion": 0, "Increase Critical Hit Chance": 0, "Upgrade Lifesteal": 0}, [6, 7, 8, 9, 10]]}
+{"1": [{"0": [false, false, false], "1": [true], "2": [false, false], "3": [true, true, false, false], "4": [false, false, false, false], "5": [false, false, false, false], "6": [false, false, false, false], "7": [false, false, false, false], "8": [false, false, false, false]}, [6, 7, 8, 9, 10]]}
