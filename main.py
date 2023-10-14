@@ -1189,7 +1189,7 @@ def save_file():
     open_file = open("save.json", 'w')
     save_upgrades = {}
     for i in range(len(upgrades)):
-        save_upgrades[i] = upgrades[i].levels_list
+        save_upgrades[i + 1] = upgrades[i].levels_list
     save_dict = {'1': [save_upgrades, locked_levels]}
     json.dump(save_dict, open_file)
 
@@ -1198,9 +1198,11 @@ def upload_save():
     try:
         open_f = open('save.json')
         data = json.load(open_f)
-        for i in data['1']:
-            print(i)
+        # for i in data['1']:
+        #     print(i)
         locked_levels = data['1'][1]
+        print("data", data['1'][0]["0"])
+        print("level list", upgrade_1.levels_list)
         upgrade_1.levels_list = data['1'][0]["0"]
     except:
         pass
