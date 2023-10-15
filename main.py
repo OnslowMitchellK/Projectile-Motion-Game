@@ -1205,7 +1205,6 @@ def upload_save():
             i.plus_button.level_list = i.levels_list
             count += 1
     except:
-        print("EXCEPTION")
         pass
 
 def upgrades_menu():
