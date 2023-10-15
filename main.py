@@ -1202,7 +1202,7 @@ def upload_save():
         count = 1
         for i in upgrades:
             i.levels_list = data['1'][0][f"{count}"]
-            i.plus_button.level_list = i.levels_list
+            i.plus_button.levels_list = i.levels_list
             count += 1
     except:
         pass
