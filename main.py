@@ -1198,15 +1198,15 @@ def upload_save():
     try:
         open_f = open('save.json')
         data = json.load(open_f)
-        # for i in data['1']:
-        #     print(i)
         locked_levels = data['1'][1]
-        print("data", data['1'][0]["0"])
-        print("level list", upgrade_1.levels_list)
-        upgrade_1.levels_list = data['1'][0]["0"]
+        count = 1
+        for i in upgrades:
+            i.levels_list = data['1'][0][f"{count}"]
+            i.plus_button.level_list = i.levels_list
+            count += 1
     except:
+        print("EXCEPTION")
         pass
-    print(upgrade_1.levels_list)
 
 def upgrades_menu():
     pygame.display.set_caption("Upgrades Menu")

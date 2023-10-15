@@ -85,7 +85,7 @@ class Plus_button(Button):
         count = 0
         for i in self.levels_list:
             if not i:
-                self.levels_list[count] = True
+                self.levels_list[self.levels_list.count(True)] = True
                 break
             count += 1
         return self.levels_list
