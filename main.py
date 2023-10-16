@@ -421,7 +421,7 @@ window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
 def deduct_player_health(player):
     global enemy_group
     for i in enemy_group:
-        damage = i.damage
+        damage = i.damage * 100
     old_shield = player.shield
     player.shield -= damage
     if player.shield <= 0:
@@ -466,13 +466,15 @@ def enemy_dead_check(level):
             locked_levels.remove(level)
         except Exception:
             pass
-        print(current_player.level_points)
         level_finished(True, level)
 
 
 def player_dead():
     print("PLAYER IS DEAD")
-    level_finished(False)
+    for enemy in enemy_group:
+        level = enemy.level - 1
+    print(level)
+    level_finished(False, level)
 
 
 def draw_tiles(map, tile_size, first = False):
@@ -834,12 +836,12 @@ def upgrades_window():
                             plus.add_level()
 
                             if super:
-                                current_player.super_points -= returned[1]
+                                current_player.super_points = returned[1]
                                 diamond_amount = current_player.super_points
                                 diamond_text = font.render(f": {current_player.super_points}", True, "white")
 
                             else:
-                                current_player.level_points -= returned[1]
+                                current_player.level_points = returned[1]
                                 coin_amount = current_player.level_points
                                 coin_text = font.render(f": {current_player.level_points}", True, "white")
 
@@ -858,6 +860,7 @@ def upgrades_window():
         window.blit(diamond_text, (120, 30))
         window.blit(big_coin, (270, 20))
         window.blit(coin_text, (350, 30))
+        main_menu_button.draw(window)
 
         for upgrade in upgrades:
             upgrade.display_upgrade()
