@@ -1222,8 +1222,8 @@ def upgrades_menu():
     pygame.quit()
 
 current_player = Test_Character(65, SCREEN_HEIGHT - 160, 3, 0, window)
-current_player.super_points = 10
-current_player.level_points = 9
+current_player.super_points = 30
+current_player.level_points = 30
 player_group.add(current_player)
 
 main_menu()

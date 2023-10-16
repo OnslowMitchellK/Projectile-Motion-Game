@@ -23,7 +23,7 @@ map_1 = """00000000000000000000000000000000
 33333333333333333333333333333333"""
 
 
-map_2 = """                                                                
+map_22 = """                                                                
 
                                                                
                                                                
@@ -61,15 +61,35 @@ map_2 = """
 1111111111111111111111111111111111111111111111111111111111111111
 1111111111111111111111111111111111111111111111111111111111111111"""
 
+map_2 = """00000000000000000000000000000000
+0000000000000000000000000000000
+0000000000000000000000000000000
+0000000000000000000000000000000
+0000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+00000000000000000000000000000000
+"""
+
 airport_background = pygame.image.load("completed_airport_background.png")
 airport_background = pygame.transform.scale(airport_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-map_2_background = pygame.image.load("map2.png")
+map_2_background = pygame.image.load("map2/map2_ofic jstbackground.png")
 map_2_background = pygame.transform.scale(map_2_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # screen, map background, map tiles, tile size, projectile starting coords, min angle, max angle
 level_1_info = [airport_background, map_1, 40, [40, (SCREEN_HEIGHT - 180)], 0, 90]
-level_2_info = [map_2_background, map_2, 20, [20, (SCREEN_HEIGHT - 120)], 30, 90]
+level_2_info = [map_2_background, map_2, 20, [20, (SCREEN_HEIGHT - 120)], 0, 90]
 level_3_info = []
 level_4_info = []
 level_5_info = []
