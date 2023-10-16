@@ -542,7 +542,6 @@ def enemy_dead_check(level):
             locked_levels.remove(level)
         except Exception:
             pass
-        print(current_player.level_points)
         level_finished(True, level)
 
 
@@ -703,7 +702,7 @@ def level_play(info):
         current_player.shield = (upgrade_6.get_level() * 25)
     except:
         current_player.shield = 0
-
+    projectile_group.empty()
     projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], pygame.image.load("test.png"), PJ_S, map_background, map_tiles, screen, tile_size)
     projectile_group.add(projectile)
     enemy_projectile = Enemy_Projectile(0, 0, "test.png", PJ_S, map_background, map_tiles, screen, tile_size, 0, 0)
@@ -840,16 +839,19 @@ def level_finished(won: bool, current_level=1):
                     upgrades_window()
                 elif event.button == 1 and retry_button.is_pressed():
                     enemy_group.empty()
+                    print(current_level)
                     for i in make_enemy:
-                        if i.level == current_level - 1:
+                        print("current level: ", current_level)
+                        if i.level == current_level - 2:
                             enemy_group.add(i)
-                    level_play(level_info[current_level - 1])
+                    level_play(level_info[current_level - 2])
                 elif event.button == 1 and next_level_button.is_pressed():
                     if won:
+                        print("current level: ", current_level)
                         for i in make_enemy:
                             if i.level == current_level:
                                 enemy_group.add(i)
-                        level_play(level_info[current_level])
+                        level_play(level_info[current_level - 1])
 
         pygame.display.update()
     pygame.quit()
@@ -1117,7 +1119,6 @@ def level_menu():
     window.fill((90, 80, 40))
 
     i = 1
-    print(locked_levels)
     for button in level_buttons:
         level_buttons[i].draw(window)
         print(button)
