@@ -23,7 +23,7 @@ map_1 = """00000000000000000000000000000000
 33333333333333333333333333333333"""
 
 
-map_2 = """                                                                
+map_22 = """                                                                
 
                                                                
                                                                
@@ -69,7 +69,7 @@ map_2_background = pygame.transform.scale(map_2_background, (SCREEN_WIDTH, SCREE
 
 # screen, map background, map tiles, tile size, rpojectile starting coords, min angle, max angle
 level_1_info = [airport_background, map_1, 40, [20, (SCREEN_HEIGHT - 120)], 0, 90]
-level_2_info = [map_2_background, map_2, 20, [20, (SCREEN_HEIGHT - 120)], 30, 90]
+level_2_info = [map_2_background, map_1, 20, [20, (SCREEN_HEIGHT - 120)], 30, 90]
 level_3_info = []
 level_4_info = []
 level_5_info = []

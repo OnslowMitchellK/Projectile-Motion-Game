@@ -11,12 +11,18 @@ import sys
 from instructions import text
 from level_info import level_info
 import json
+from map_model import Map_Masks
 
 pygame.init()
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 BLACK = (0, 0, 0)
+
+map_obj_2 = Map_Masks(pygame.image.load('map2_objects.png').convert_alpha())
+
+map_object_list = [map_obj_2]
+map_group = pygame.sprite.Group()
 
 
 
@@ -279,6 +285,7 @@ class Projectile(pygame.sprite.Sprite):
 
                 self.screen.blit(self.background, (0, 0))
                 draw_tiles(self.map, self.tile_size)
+                map_group.draw(self.screen)
                 player_group.draw(self.screen)
                 enemy_group.draw(self.screen)
 
@@ -300,6 +307,13 @@ class Projectile(pygame.sprite.Sprite):
                     time.sleep(0.5)
                     run = False
                     break
+                
+                map_collisions = pygame.sprite.groupcollide(map_group, projectile_group,
+                                                        False, False, pygame.sprite.collide_mask)
+                # Handle collisions
+                for map, projectiles in map_collisions.items():
+                    time.sleep(0.5)
+                    return False
 
                 # Use groupcollide() to detect collisions
                 collisions = pygame.sprite.groupcollide(enemy_group, projectile_group,
@@ -382,6 +396,7 @@ class Enemy_Projectile(pygame.sprite.Sprite):
 
             self.screen.blit(self.background, (0, 0))
             draw_tiles(self.map, self.tile_size)
+            map_group.draw(self.screen)
             # self.screen.blit(current_player.image, current_player.rect)
             player_group.draw(self.screen)
             enemy_group.draw(self.screen)
@@ -398,6 +413,14 @@ class Enemy_Projectile(pygame.sprite.Sprite):
                 if self.rect.colliderect(tile):
                     time.sleep(0.5)
                     return False
+
+            map_collisions = pygame.sprite.groupcollide(map_group, enemy_projectile_group,
+                                                    False, False, pygame.sprite.collide_mask)
+            # Handle collisions
+            for map, projectiles in map_collisions.items():
+                time.sleep(0.5)
+                return False
+
             # Use groupcollide() to detect collisions
             collisions = None
             collisions = pygame.sprite.groupcollide(player_group, enemy_projectile_group,
@@ -658,6 +681,7 @@ def enemy_shoot(enemy_projectile, background, map_tiles, tile_size):
         for i in range(len(enemy.shoot_animations)):
             window.blit(background, (0, 0))
             draw_tiles(map_tiles, tile_size, True)
+            map_group.draw(window)
             player_group.draw(window)
             current_player.draw_health()
             enemy.image = enemy.shoot_animations[i]
@@ -666,6 +690,7 @@ def enemy_shoot(enemy_projectile, background, map_tiles, tile_size):
             pygame.time.wait(50)
         window.blit(background, (0, 0))
         draw_tiles(map_tiles, tile_size, True)
+        map_group.draw(window)
         player_group.draw(window)
         current_player.draw_health()
         enemy.image = enemy.alive_image
@@ -711,6 +736,7 @@ def level_play(info):
 
     screen.blit(map_background, (0, 0))
     draw_tiles(map_tiles, tile_size, True)
+    map_group.draw(screen)
     projectile.draw_starting_point()
     player_group.draw(screen)
     for enemy in enemy_group:
@@ -748,6 +774,7 @@ def level_play(info):
                 #     projectile.change_speed(-5)
         screen.blit(map_background, (0, 0))
         draw_tiles(map_tiles, tile_size)
+        map_group.draw(screen)
         player_group.draw(screen)
         enemy_group.draw(screen)
         for enemy in enemy_group:
@@ -839,7 +866,7 @@ def level_finished(won: bool, current_level=1):
                     upgrades_window()
                 elif event.button == 1 and retry_button.is_pressed():
                     enemy_group.empty()
-                    print(current_level)
+                    map_group.empty()
                     for i in make_enemy:
                         print("current level: ", current_level)
                         if i.level == current_level - 2:
@@ -847,10 +874,11 @@ def level_finished(won: bool, current_level=1):
                     level_play(level_info[current_level - 2])
                 elif event.button == 1 and next_level_button.is_pressed():
                     if won:
-                        print("current level: ", current_level)
+                        map_group.empty()
                         for i in make_enemy:
                             if i.level == current_level:
                                 enemy_group.add(i)
+                        map_group.add(map_object_list[current_level - 1])
                         level_play(level_info[current_level - 1])
 
         pygame.display.update()
@@ -1097,6 +1125,7 @@ def options_menu():
     pygame.quit()
 
 def level_menu():
+    map_group.empty()
     level_1_button = Lockable_button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.25,"Level 1", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     level_2_button = Lockable_button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.25, "Level 2", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     level_3_button = Lockable_button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.25,"Level 3", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
@@ -1158,6 +1187,7 @@ def level_menu():
                                     40, 40, window, level_two_enemy[i][0],
                                     level_two_enemy[i][1], 1)
                         enemy_group.add(level_two_enemies[i])
+                        map_group.add(map_object_list[0])
                     level_play(level_info[1])
 
                 elif event.button == 1 and level_3_button.is_pressed():
@@ -1169,6 +1199,7 @@ def level_menu():
                                     40, 40, window, level_three_enemy[i][0],
                                     level_three_enemy[i][1], 1)
                         enemy_group.add(level_three_enemies[i])
+                        map_group.add(map_object_list[1])
                     level_play(level_info[2])
 
                 elif event.button == 1 and level_4_button.is_pressed():
@@ -1180,6 +1211,7 @@ def level_menu():
                                     40, 40, window, level_four_enemy[i][0],
                                     level_four_enemy[i][1], 1)
                         enemy_group.add(level_four_enemies[i])
+                        map_group.add(map_object_list[2])
                     level_play(level_info[3])
 
                 elif event.button == 1 and level_5_button.is_pressed():
@@ -1191,6 +1223,7 @@ def level_menu():
                                     40, 40, window, level_five_enemy[i][0],
                                     level_five_enemy[i][1], 1)
                         enemy_group.add(level_five_enemies[i])
+                        map_group.add(map_object_list[3])
                     level_play(level_info[4])
 
                 elif event.button == 1 and level_6_button.is_pressed():
@@ -1202,6 +1235,7 @@ def level_menu():
                                     40, 40, window, level_six_enemy[i][0],
                                     level_six_enemy[i][1], 1)
                         enemy_group.add(level_six_enemies[i])
+                        map_group.add(map_object_list[4])
                     level_play(level_info[5])
 
                 elif event.button == 1 and level_7_button.is_pressed():
@@ -1213,6 +1247,7 @@ def level_menu():
                                     40, 40, window, level_seven_enemy[i][0],
                                     level_seven_enemy[i][1], 1)
                         enemy_group.add(level_seven_enemies[i])
+                        map_group.add(map_object_list[5])
                     level_play(level_info[6])
 
                 elif event.button == 1 and level_8_button.is_pressed():
@@ -1224,6 +1259,7 @@ def level_menu():
                                     40, 40, window, level_eight_enemy[i][0],
                                     level_eight_enemy[i][1], 1)
                         enemy_group.add(level_eight_enemies[i])
+                        map_group.add(map_object_list[6])
                     level_play(level_info[7])
 
                 elif event.button == 1 and level_9_button.is_pressed():
@@ -1235,6 +1271,7 @@ def level_menu():
                                     40, 40, window, level_nine_enemy[i][0],
                                     level_nine_enemy[i][1], 1)
                         enemy_group.add(level_nine_enemies[i])
+                        map_group.add(map_object_list[7])
                     level_play(level_info[8])
 
                 elif event.button == 1 and level_10_button.is_pressed():
@@ -1246,6 +1283,7 @@ def level_menu():
                                     40, 40, window, level_ten_enemy[i][0],
                                     level_ten_enemy[i][1], 1)
                         enemy_group.add(level_ten_enemies[i])
+                        map_group.add(map_object_list[8])
                     level_play(level_info[9])
 
                 elif event.button == 1 and back_button.is_pressed():
