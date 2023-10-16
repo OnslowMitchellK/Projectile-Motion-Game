@@ -82,8 +82,6 @@ level_ten_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[1][1]]]
 
 
-
-
 img_1 = pygame.image.load("tile1.png")
 img_2 = pygame.image.load("tile2.png")
 transparent_tile = pygame.image.load("transparent_tile.png")
@@ -420,6 +418,69 @@ def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
     return win
 
 window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
+
+make_enemy = []
+for i in range(len(level_one_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_one_coordinates[i][0],
+                SCREEN_HEIGHT - level_one_coordinates[i][1],
+                40, 40, window, level_one_enemy[i][0],
+                level_one_enemy[i][1], 1))
+for i in range(len(level_two_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_two_coordinates[i][0],
+                SCREEN_HEIGHT - level_two_coordinates[i][1],
+                40, 40, window, level_two_enemy[i][0],
+                level_two_enemy[i][1], 2))
+for i in range(len(level_three_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_three_coordinates[i][0],
+                SCREEN_HEIGHT - level_three_coordinates[i][1],
+                40, 40, window, level_three_enemy[i][0],
+                level_three_enemy[i][1], 3))
+for i in range(len(level_four_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_four_coordinates[i][0],
+                SCREEN_HEIGHT - level_four_coordinates[i][1],
+                40, 40, window, level_four_enemy[i][0],
+                level_four_enemy[i][1], 4))
+for i in range(len(level_five_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_five_coordinates[i][0],
+                SCREEN_HEIGHT - level_five_coordinates[i][1],
+                40, 40, window, level_five_enemy[i][0],
+                level_five_enemy[i][1], 5))
+for i in range(len(level_six_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_six_coordinates[i][0],
+                SCREEN_HEIGHT - level_six_coordinates[i][1],
+                40, 40, window, level_six_enemy[i][0],
+                level_six_enemy[i][1], 6))
+for i in range(len(level_seven_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_seven_coordinates[i][0],
+                SCREEN_HEIGHT - level_seven_coordinates[i][1],
+                40, 40, window, level_seven_enemy[i][0],
+                level_seven_enemy[i][1], 7))
+for i in range(len(level_eight_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_eight_coordinates[i][0],
+                SCREEN_HEIGHT - level_eight_coordinates[i][1],
+                40, 40, window, level_eight_enemy[i][0],
+                level_eight_enemy[i][1], 8))
+for i in range(len(level_nine_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_nine_coordinates[i][0],
+                SCREEN_HEIGHT - level_nine_coordinates[i][1],
+                40, 40, window, level_nine_enemy[i][0],
+                level_nine_enemy[i][1], 9))
+for i in range(len(level_ten_coordinates)):
+    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                level_ten_coordinates[i][0],
+                SCREEN_HEIGHT - level_ten_coordinates[i][1],
+                40, 40, window, level_ten_enemy[i][0],
+                level_ten_enemy[i][1], 10))
+
 
 def deduct_player_health(player):
     global enemy_group
@@ -778,9 +839,16 @@ def level_finished(won: bool, current_level=1):
                 elif event.button == 1 and upgrades_menu_button.is_pressed():
                     upgrades_window()
                 elif event.button == 1 and retry_button.is_pressed():
+                    enemy_group.empty()
+                    for i in make_enemy:
+                        if i.level == current_level - 1:
+                            enemy_group.add(i)
                     level_play(level_info[current_level - 1])
                 elif event.button == 1 and next_level_button.is_pressed():
                     if won:
+                        for i in make_enemy:
+                            if i.level == current_level:
+                                enemy_group.add(i)
                         level_play(level_info[current_level])
 
         pygame.display.update()
