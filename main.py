@@ -37,9 +37,9 @@ level_one_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[1][1]]]
 level_two_enemies = {}
 level_two_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
-level_two_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
+level_two_enemy = [[130, 2, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[0][1] + 20],
-                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                   [170, 2, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[1][1]]]
 level_three_enemies = {}
 level_three_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
@@ -412,6 +412,10 @@ class Enemy_Projectile(pygame.sprite.Sprite):
             self.rect.y = y
             pygame.display.update()
 
+            if self.rect.centerx < -200:
+                time.sleep(0.5)
+                return False
+
             # for tile in tile_rects:
             #     if self.rect.colliderect(tile):
             #         time.sleep(0.5)
@@ -748,6 +752,8 @@ def level_play(info):
 
     trajectory_level = upgrade_1.get_level()
 
+    image_counter = 0
+
     run = True
     while run:
         clock.tick(30)
@@ -775,15 +781,22 @@ def level_play(info):
                 #     projectile.change_speed(5)
                 # elif event.button == 5 and not current:
                 #     projectile.change_speed(-5)
+        
+        image_counter += 1
         screen.blit(map_background, (0, 0))
         draw_tiles(map_tiles, tile_size)
+
+        if image_counter % 6 == 0:
+            current_player.change_image()
+            image_counter = 0
+
         map_group.draw(screen)
         player_group.draw(screen)
         enemy_group.draw(screen)
         for enemy in enemy_group:
             enemy.draw_health()
         current_player.draw_health()
-        projectile.draw_starting_point()
+        # projectile.draw_starting_point()
         returned = shoot_display(projectile_starting_coords, min_angle, max_angle)
         coords = projectile.trajectory(1 / 3, projectile_starting_coords[0], projectile_starting_coords[1], returned[1], returned[0])
         y_coords = [x[1] for x in coords]
@@ -814,7 +827,10 @@ def level_play(info):
                         pygame.draw.circle(window, "yellow", (i), 10)
                 pygame.draw.circle(window, "blue", (max_coords), 10)
        
-        if shoot:
+        if shoot and current_player.get_image() == "animations/Aziz Animations/Aziz 4.png":
+            while current_player.get_image() != "animations/Aziz Animations/Aziz 1.png":
+                current_player.change_image()
+
             projectile.change_speed(returned[0])
             projectile.change_angle(returned[1])
             stop_coords = projectile.draw_trajectory()
@@ -893,23 +909,23 @@ rects = [Main_Menu_Projectile() for x in range(100)]
 UPGRADES_WIDTH = SCREEN_WIDTH
 UPGRADES_HEIGHT = SCREEN_HEIGHT
 
-upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5, "Info", 3)
+upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "cannon.png", "Upgrade Trajection Display", 5, "Info", [2, 1, 1], 3)
 
-upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5, "Info", 1)
+upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Projectile Halt", 5, "Info", [1], 1)
 
-upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Projectile Upgrades", 2, "Info", 2)
+upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Projectile Upgrades", 2, "Info", [3, 1], 2)
 
-upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3, "Info")
+upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Health", 3, "Info", [1, 4, 1, 1])
 
-upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 4, "Info")
+upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Damage", 4, "Info", [1, 1, 5, 1])
 
-upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase Shield", 1, "Info")
+upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Increase Shield", 1, "Info", [1, 1, 1, 1])
 
-upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Evasion", 5, "Info")
+upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "cannon.png", "Increase Evasion", 5, "Info", [1, 1, 1, 1])
 
-upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Critical Hit Chance", 5, "Info")
+upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "cannon.png", "Increase Critical Hit Chance", 5, "Info", [2, 1, 1, 1])
 
-upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Upgrade Lifesteal", 5, "Info")
+upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "cannon.png", "Upgrade Lifesteal", 5, "Info", [1, 5, 1, 1])
 
 upgrades: list[Upgrade] = [upgrade_1, upgrade_2, upgrade_3, upgrade_4, upgrade_5, upgrade_6, upgrade_7, upgrade_8, upgrade_9]
 
@@ -927,8 +943,8 @@ def upgrades_window():
     for upgrade in upgrades:
         upgrade.display_cost()
     
-    diamond_amount = 0
-    coin_amount = 0
+    diamond_amount = current_player.super_points
+    coin_amount = current_player.level_points
 
     font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 100)
 
@@ -952,17 +968,39 @@ def upgrades_window():
                 for plus in plus_buttons:
                     if event.button == 1 and plus.is_pressed():
                         index = plus_buttons.index(plus)
-                        plus.add_level()
+                        super = True if index <= 2 else False
+                        returned = upgrades[index].deduct(current_player.super_points) if super else upgrades[index].deduct(current_player.level_points)
+                        if super:
+                            already_done = True if diamond_amount != current_player.super_points else False
+                        else:
+                            already_done = True if coin_amount != current_player.level_points else False
+
+                        if returned[0] and not already_done:
+                            plus.add_level()
+
+                            if super:
+                                current_player.super_points = returned[1]
+                                diamond_amount = current_player.super_points
+                                diamond_text = font.render(f": {current_player.super_points}", True, "white")
+
+                            else:
+                                current_player.level_points = returned[1]
+                                coin_amount = current_player.level_points
+                                coin_text = font.render(f": {current_player.level_points}", True, "white")
+
                         upgrades[index].display_dots()
                 for info in info_buttons:
                     if event.button == 1 and info.is_pressed():
                         index = info_buttons.index(info)
                         upgrades[index].display_info()
+        
+        window.fill((10, 80, 190))
 
         window.blit(big_diamond, (40, 20))
         window.blit(diamond_text, (120, 30))
         window.blit(big_coin, (270, 20))
         window.blit(coin_text, (350, 30))
+        main_menu_button.draw(window)
 
         for upgrade in upgrades:
             upgrade.display_upgrade()
@@ -1303,7 +1341,7 @@ def save_file():
     save_upgrades = {}
     for i in range(len(upgrades)):
         save_upgrades[i + 1] = upgrades[i].levels_list
-    save_dict = {'1': [save_upgrades, locked_levels]}
+    save_dict = {'1': [save_upgrades, locked_levels, current_player.level_points, current_player.super_points]}
     json.dump(save_dict, open_file)
 
 def upload_save():
@@ -1317,58 +1355,13 @@ def upload_save():
             i.levels_list = data['1'][0][f"{count}"]
             i.plus_button.levels_list = i.levels_list
             count += 1
+        current_player.level_points = data['1'][2]
+        current_player.super_points = data['1'][3]
     except:
         pass
 
-def upgrades_menu():
-    pygame.display.set_caption("Upgrades Menu")
-    window.fill((80, 200, 90))
 
-    upgrade_font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 80)
-    super_upgrade_text = upgrade_font.render("Super Upgrades", True, "white")
-    upgrade_text = upgrade_font.render("Upgrades", True, "white")
-
-    window.blit(super_upgrade_text, (25, 80))
-    window.blit(upgrade_text, (720, 80))
-   
-    increase_hp_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.35, "lock.png", increase_hp_upgrade, font_size=40, border_radius=200)
-    decrease_hp_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.6, "lock.png", decrease_hp_upgrade, font_size=40, border_radius=200)
-    increase_luck_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.6, "lock.png", increase_luck_upgrade, font_size=30, border_radius=200)
-    def_lower_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.85, "lock.png", def_lower_upgrade, font_size=40, border_radius=200)
-    atk_lower_button = Upgrades_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.85, "lock.png", atk_lower_upgrade, font_size=40, border_radius=200)
-    small_char_button = Upgrades_button(SCREEN_WIDTH * 0.82, SCREEN_HEIGHT * 0.35, "lock.png", small_char_upgrade, font_size=40, border_radius=200)
-
-    bigger_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.35, "lock.png", bigger_proj_upgrade, font_size=40, border_radius=150)
-    arrow_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.6, "lock.png", arrow_proj_upgrade, font_size=40, border_radius=150)
-    cannon_proj_button = Super_upgrades_button(SCREEN_WIDTH * 0.18, SCREEN_HEIGHT * 0.85, "lock.png", cannon_proj_upgrade, font_size=40, border_radius=150)
-
-    upgrades = [increase_hp_button, decrease_hp_button, increase_luck_button, def_lower_button, atk_lower_button, small_char_button]
-    super_upgrades = [bigger_proj_button, arrow_proj_button, cannon_proj_button]
-    all_upgrades = upgrades + super_upgrades
-
-    for upgrade in all_upgrades:
-        upgrade.display(window)
-
-
-   
-    run = True
-    while run:
-        for event in pygame.event.get():
-            for upgrade in all_upgrades:
-                if event.type == pygame.QUIT:
-                    run = False
-
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1 and upgrade.is_pressed():
-                        upgrade.confirm_purchase(window)
-                        upgrade.toggle_clickable()
-                       
-       
-
-        pygame.display.update()
-    pygame.quit()
-
-current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
+current_player = Test_Character(65, SCREEN_HEIGHT - 160, 3, 0, window)
 player_group.add(current_player)
 upload_save()
 main_menu()

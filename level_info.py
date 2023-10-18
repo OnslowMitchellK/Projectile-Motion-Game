@@ -61,6 +61,8 @@ map_22 = """
 1111111111111111111111111111111111111111111111111111111111111111
 1111111111111111111111111111111111111111111111111111111111111111"""
 
+map_3 = ""
+
 airport_background = pygame.image.load("completed_airport_background.png")
 airport_background = pygame.transform.scale(airport_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -75,10 +77,10 @@ map_4_background = pygame.image.load("map4_background.png")
 map_4_background = pygame.transform.scale(map_4_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # screen, map background, map tiles, tile size, rpojectile starting coords, min angle, max angle
-level_1_info = [airport_background, map_1, 40, [20, (SCREEN_HEIGHT - 120)], 0, 90]
-level_2_info = [map_2_background, map_1, 20, [20, (SCREEN_HEIGHT - 120)], 30, 90]
-level_3_info = [map_3_background, map_1, 20, [20, (SCREEN_HEIGHT - 120)], 30, 90]
-level_4_info = [map_4_background, map_1, 20, [20, (SCREEN_HEIGHT - 120)], 30, 90]
+level_1_info = [airport_background, map_1, 40, [40, (SCREEN_HEIGHT - 180)], 0, 90]
+level_2_info = [map_2_background, map_3, 20, [20, (SCREEN_HEIGHT - 120)], 30, 90]
+level_3_info = [map_3_background, map_3, 20, [20, (SCREEN_HEIGHT - 120)], 30, 90]
+level_4_info = [map_4_background, map_3, 20, [20, (SCREEN_HEIGHT - 120)], 30, 90]
 level_5_info = []
 level_6_info = []
 level_7_info = []
