@@ -43,11 +43,11 @@ level_two_enemy = [[130, 2, level_two_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_two_coordinates[1][1]]]
 level_three_enemies = {}
 level_three_coordinates = [[SCREEN_WIDTH - 500, 150], [SCREEN_WIDTH - 300, 360], [SCREEN_WIDTH - 120, 470]]
-level_three_enemy = [[130, 80, level_three_coordinates[0][0] + 80, SCREEN_HEIGHT -
+level_three_enemy = [[130, 85, level_three_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_three_coordinates[0][1] + 20],
-                    [130, 80, level_three_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    [150, 85, level_three_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_three_coordinates[1][1] + 20],
-                   [170, 98, level_three_coordinates[2][0] + 80, SCREEN_HEIGHT -
+                   [180, 129, level_three_coordinates[2][0] + 80, SCREEN_HEIGHT -
                     level_three_coordinates[2][1]]]
 level_four_enemies = {}
 level_four_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
@@ -686,6 +686,7 @@ def enemy_shoot(enemy_projectile, background, map_tiles, tile_size):
         enemy_projectile.start_x = enemy.rect.topleft[0] + 80
         enemy_projectile.start_y = enemy.rect.topleft[1] + 20
         enemy_projectile._speed = enemy.speed + rand_list[randint(0, len(rand_list) - 1)]
+        print(enemy_projectile._speed)
         enemy_projectile._angle = enemy.angle
         for i in range(len(enemy.shoot_animations)):
             window.blit(background, (0, 0))
