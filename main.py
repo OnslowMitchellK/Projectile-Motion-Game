@@ -684,7 +684,7 @@ def level_play(info):
                     if i[0] < SCREEN_WIDTH / dot_distance:
                         pygame.draw.circle(window, "yellow", (i), 10)
             case 2:
-                """20 dots across a quarter of the screen"""
+                """20 dots across a fifth of the screen"""
                 dot_distance = 5
                 for i in coords[:20]:
                     if i[0] < SCREEN_WIDTH / dot_distance:
