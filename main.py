@@ -712,7 +712,7 @@ def enemy_shoot(enemy_projectile, background, map_tiles, tile_size):
 
 
 def level_play(info):
-    global current_player
+    global current_player, enemy_group
     screen = window
     map_background = info[0]
     map_tiles = info[1]
@@ -757,6 +757,8 @@ def level_play(info):
 
     trajectory_level = upgrade_1.get_level()
 
+    exit_button = Button(50, 25, "Exit", 100, 50, font_size=40)
+
     image_counter = 0
 
     run = True
@@ -775,7 +777,10 @@ def level_play(info):
                 #     shoot = True
                 #     break
             elif event.type == pygame.MOUSEBUTTONDOWN and not shoot:
-                if event.button == 1:
+                if event.button == 1 and exit_button.is_pressed():
+                    enemy_group = pygame.sprite.Group()
+                    main_menu()
+                elif event.button == 1:
                     shoot = True
                     break
                 # if event.button == 4 and current:
@@ -848,6 +853,8 @@ def level_play(info):
             projectile.draw_starting_point()
             shoot = False
             enemy_shoot(enemy_projectile, map_background, map_tiles, tile_size)
+        
+        exit_button.draw(window)
 
         pygame.display.update()
     pygame.quit()
@@ -1067,15 +1074,15 @@ def main_menu():
     play_button = Button(SCREEN_WIDTH / 5 * 2.5, SCREEN_HEIGHT / 3, "Play")
     instructions_button = Button(SCREEN_WIDTH / 5, SCREEN_HEIGHT / 3, "Instructions", font_size=60)
     upgrades_button = Button(SCREEN_WIDTH / 5 * 4, SCREEN_HEIGHT / 3, "Upgrades", font_size=60)
-    options_button = Button(SCREEN_WIDTH / 5 * 1.75, SCREEN_HEIGHT / 3 * 2, "Options")
+    clear_button = Button(SCREEN_WIDTH / 5 * 1.75, SCREEN_HEIGHT / 3 * 2, "Clear Save", font_size=60)
     quit_button = Button(SCREEN_WIDTH / 5 * 3.25, SCREEN_HEIGHT / 3 * 2, "Quit")
 
     play_button.draw(window)
-    options_button.draw(window)
+    clear_button.draw(window)
     instructions_button.draw(window)
     upgrades_button.draw(window)
     quit_button.draw(window)
-    buttons = [play_button, instructions_button, upgrades_button, options_button, quit_button]
+    buttons = [play_button, instructions_button, upgrades_button, clear_button, quit_button]
 
     run = True
     while run:
@@ -1090,11 +1097,9 @@ def main_menu():
                 elif event.button == 1 and instructions_button.is_pressed():
                     instructions_menu()
                 elif event.button == 1 and upgrades_button.is_pressed():
-                    #upgrades_menu()
                     upgrades_window()
-                elif event.button == 1 and options_button.is_pressed():
-                    options_menu()
-                    #level_finished(False)
+                elif event.button == 1 and clear_button.is_pressed():
+                    clear_save()
                 elif event.button == 1 and quit_button.is_pressed():
                     pygame.quit()
         window.fill((19, 50, 143))
@@ -1134,38 +1139,48 @@ def main_menu():
 
     pygame.quit()
 
-def controls_menu():
-    pygame.display.set_caption("Controls Menu")
-    window.fill((10, 80, 180))
-    run = True
-    while run:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                save_file()
 
-        pygame.display.update()
-    pygame.quit()
+def clear_save():
+    global locked_levels
+    CLEAR_WIDTH = 600
+    CLEAR_HEIGHT = 300
 
-def options_menu():
-    controls_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, "Controls")
-    back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Main Menu", font_size=60)
-
-    pygame.display.set_caption("Options Menu")
+    pygame.display.set_caption("Clear Save")
+    pygame.display.set_mode((CLEAR_WIDTH, CLEAR_HEIGHT))
     window.fill((20, 90, 130))
 
-    controls_button.draw(window)
-    back_button.draw(window)
+    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 30)
+    confirmation_text_pt_1 = font.render("Are you sure you want to clear your save?", True, "white") 
+    confirmation_text_pt_2 = font.render("Note this will clear all your progress and cannot be reversed", True, "white")
+
+    yes_button = Button(CLEAR_WIDTH * 0.5 - 50, CLEAR_HEIGHT * 0.5 + 50, "Yes", 80, 40, font_size=60)
+    no_button = Button(CLEAR_WIDTH * 0.5 + 50, CLEAR_HEIGHT * 0.5 + 50, "No", 80, 40, font_size=60)
     run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1 and controls_button.is_pressed():
-                    controls_menu()
-                elif event.button == 1 and back_button.is_pressed():
+                if event.button == 1 and yes_button.is_pressed():
+                    with open("save.json", "w") as save:
+                        save.truncate()
+                    current_player.level_points = 0
+                    current_player.super_points = 0
+                    locked_levels = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+                    for upgrade in upgrades:
+                        upgrade.reset_level()
+
+
+                    pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
                     main_menu()
+                elif event.button == 1 and no_button.is_pressed():
+                    pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+                    main_menu()
+
+        window.blit(confirmation_text_pt_1, (90, 40))
+        window.blit(confirmation_text_pt_2, (8, 80))
+        yes_button.draw(window)
+        no_button.draw(window)
 
         pygame.display.update()
     pygame.quit()
@@ -1368,8 +1383,8 @@ def upload_save():
         current_player.level_points = data['1'][2]
         current_player.super_points = data['1'][3]
 
-        current_player.super_points = 200
-        current_player.level_points = 200
+        #current_player.super_points = 200
+        #current_player.level_points = 200
     except:
         pass
 

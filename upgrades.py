@@ -106,6 +106,11 @@ class Upgrade:
         new_points = level_points - self.get_price() if level_points - self.get_price() >= 0 else level_points
         bought = True if new_points != level_points else False
         return [bought, new_points]
+    
+    def reset_level(self):
+        for i in range(len(self.levels_list)):
+            self.levels_list[i] = 0
+
 
 class Super_upgrade(Upgrade):
     def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, prices, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
