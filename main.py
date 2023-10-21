@@ -84,8 +84,8 @@ level_ten_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
 
 
 
-img_1 = pygame.image.load("tile1.png")
-img_2 = pygame.image.load("tile2.png")
+#img_1 = pygame.image.load("tile1.png")
+#img_2 = pygame.image.load("tile2.png")
 transparent_tile = pygame.image.load("transparent_tile.png")
 font_directory = "C:/Fonts/Barriecito-Regular.ttf"
 tile_rects = []
@@ -99,7 +99,7 @@ player_group = pygame.sprite.Group()
 
 
 class Main_Menu_Projectile:
-    def __init__(self, image="test.png", possible_speeds = [-8, -7, -6, -5, -4, -3, 3, 4, 5, 6, 7, 8]) -> None:
+    def __init__(self, image="player_enemy_images/proj.png", possible_speeds = [-8, -7, -6, -5, -4, -3, 3, 4, 5, 6, 7, 8]) -> None:
         self._image = pygame.image.load(image)
         size = randint(30, 50)
         self._image = pygame.transform.scale(self._image, (size, size))
