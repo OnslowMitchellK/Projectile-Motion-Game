@@ -15,7 +15,7 @@ SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Projectile Motion gmae')
+pygame.display.set_caption('Projectile Motion game')
 
 # Movement variables
 moving_left = False
@@ -157,59 +157,3 @@ class Test_Character(pygame.sprite.Sprite):
         pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.5 * self.image.get_height()), green_percent, 5))
         pygame.draw.rect(self.screen, (0, 0, 255), pygame.Rect(self.x - (self.image.get_width()/3), self.y - (0.53 * self.image.get_height()), self.shield, 5))
 
-
-# class Upgrade(pygame.sprite.Sprite):
-# 	def __init__(self, char_type, x, y, scale):
-# 		pygame.sprite.Sprite.__init__(self)
-# 		self.char_type = char_type
-# 		img = pygame.image.load(f'Assets/{char_type}/arrow.png')
-# 		self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
-# 		self.rect = self.image.get_rect()
-# 		self.rect.center = (x, y)
-
-# 	def draw(self):
-# 		screen.blit(self.image, self.rect)
-
-
-# # character spawn location
-# player = Test_Character('player', 200, 200, 3, 5)
-# upgrade = Upgrade('upgrade', 400, 400, 0.5)
-
-
-
-
-# run = True
-# while run:
-
-# 	clock.tick(FPS)
-
-# 	draw_bg()
-
-# 	player.draw()
-
-# 	player.move(moving_left, moving_right)
-
-# 	for event in pygame.event.get():
-# 		# quit game
-# 		if event.type == pygame.QUIT:
-# 			run = False
-# 		# keyboard input
-# 		if event.type == pygame.KEYDOWN:
-# 			if event.key == pygame.K_a:
-# 				moving_left = True
-# 			if event.key == pygame.K_d:
-# 				moving_right = True
-# 			if event.key == pygame.K_ESCAPE:
-# 				run = False
-
-
-# 		# keyboard input released
-# 		if event.type == pygame.KEYUP:
-# 			if event.key == pygame.K_a:
-# 				moving_left = False
-# 			if event.key == pygame.K_d:
-# 				moving_right = False
-
-# 		pygame.display.update()
-
-# pygame.quit()

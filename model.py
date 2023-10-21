@@ -1,7 +1,8 @@
 import pygame
 from random import randint
+import time
 LEVEL_ONE_ENEMY_NUM = 2
-enemy_image = pygame.image.load("enemy.jpeg")
+enemy_image = pygame.image.load("Assets/player_enemy_images/enemy.jpeg")
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -12,12 +13,16 @@ class Enemy(pygame.sprite.Sprite):
                  screen, angle: int, speed: int, level: int):
         """Enemy variables."""
         super().__init__()
-        self.image = pygame.image.load('enemy.png').convert_alpha()
+        self.image = pygame.image.load('Assets/player_enemy_images/enemy.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (int(self.image.get_width() * 3), int(self.image.get_height() * 3)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.image_mask = pygame.mask.from_surface(self.image)
-
+        self.alive_image = pygame.image.load('Assets/player_enemy_images/enemy.png').convert_alpha()
+        self.dead_image = pygame.image.load('animations/enemy_animation/Enemy 1/Enemywhite.png').convert_alpha()
+        self.shoot_animations = [pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_1.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3))), pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_2.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3))), pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_3.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3))), pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_4.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3))), pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_5.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3))), pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_6.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3))), pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_7.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3))), pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_8.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3))), pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_9.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3))), pygame.transform.scale(pygame.image.load('animations/enemy_animation/Enemy 1/ellipse_10.png').convert_alpha(), (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3)))]
+        self.dead_image = pygame.transform.scale(self.dead_image, (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3)))
+        self.alive_image = pygame.transform.scale(self.alive_image, (int(self.alive_image.get_width() * 3), int(self.alive_image.get_height() * 3)))
         self.x = x
         self.y = y
         self._name: str = name
@@ -25,7 +30,7 @@ class Enemy(pygame.sprite.Sprite):
         self.max_health = health * (1 + (self.level ** 2) * 0.02)
         self._health: int = health * (1 + (self.level ** 2) * 0.02)
         self._shield: int = shield
-        self._damage: int = 5 + int(self.level * 0.5)
+        self.damage: int = 8 + int(self.level * 0.5)
         self._width: int = width
         self._height: int = height
         self.screen = screen
@@ -63,10 +68,10 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self._shield = new_shield
 
-    @property
-    def damage(self) -> int:
-        """Damage getter."""
-        return self._damage
+    # @property
+    # def damage(self) -> int:
+    #     """Damage getter."""
+    #     return self._damage
 
     def draw(self):
         self.screen.blit(self.image, self.rect)
