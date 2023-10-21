@@ -50,10 +50,12 @@ level_three_enemy = [[130, 85, level_three_coordinates[0][0] + 80, SCREEN_HEIGHT
                    [180, 129, level_three_coordinates[2][0] + 80, SCREEN_HEIGHT -
                     level_three_coordinates[2][1]]]
 level_four_enemies = {}
-level_four_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_four_coordinates = [[SCREEN_WIDTH - 700, 500], [SCREEN_WIDTH - 300, 340], [SCREEN_WIDTH - 100, 600]]
 level_four_enemy = [[130, 80, level_four_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_four_coordinates[0][1] + 20],
-                   [170, 98, level_four_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    [110, 130, level_four_coordinates[0][0] + 80, SCREEN_HEIGHT -
+                    level_four_coordinates[0][1] + 20],
+                   [140, 104, level_four_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_four_coordinates[1][1]]]
 level_five_enemies = {}
 level_five_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
@@ -1262,6 +1264,8 @@ def level_menu():
                                     level_four_enemy[i][1], 1)
                         enemy_group.add(level_four_enemies[i])
                     map_group.add(map_object_list[2])
+                    current_player.y = 250
+                    current_player.rect.center = (current_player.x, current_player.y)
                     level_play(level_info[3])
 
                 elif event.button == 1 and level_5_button.is_pressed():
