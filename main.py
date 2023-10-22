@@ -24,9 +24,11 @@ map_obj_3 = Map_Masks(pygame.image.load('Assets/map3/map_3_obj.png').convert_alp
 map_obj_4 = Map_Masks(pygame.image.load('Assets/map4/map_4_obj.png').convert_alpha())
 map_obj_3.image = pygame.transform.scale(map_obj_3.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-map_object_list = [map_obj_2, map_obj_3, map_obj_4]
+map_object_list = [0, 1, map_obj_2, map_obj_3, map_obj_4]
 map_group = pygame.sprite.Group()
 
+
+player_coords = {1: (65, SCREEN_HEIGHT - 160), 2: (100, 300), 3: (145, 580), 4: (100, 250)}
 
 
 level_one_enemies = {}
@@ -670,9 +672,9 @@ def shoot_display(starting_coords, min_angle, max_angle):
     # pygame.draw.arc(window, ((0, 0, 0)), arc_rect, 0, angle, 10)
     # https://stackoverflow.com/questions/12141150/from-list-of-integers-get-number-closest-to-a-given-value
     closest_angle = min(angles, key=lambda x:abs(x-math.degrees(angle)))
-    speed = pos[0] / 5 if closest_angle == 0 else (y_centre_s - pos[1]) / 5
+    speed = pos[0] / 15 + (SCREEN_HEIGHT - pos[1]) / 8 #if closest_angle == 0 else (y_centre_s - pos[1]) / 5
     speed = 0 if speed < 0 else speed
-    speed_text = font.render(f"{speed} px/s", True, "white")
+    speed_text = font.render(f"{round(speed, 2)} px/s", True, "white")
     window.blit(speed_text, (120, SCREEN_HEIGHT - 50))
 
     return [speed, math.degrees(angle)]
@@ -763,7 +765,7 @@ def level_play(info):
 
     run = True
     while run:
-        clock.tick(30)
+        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -1224,7 +1226,6 @@ def level_menu():
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and level_1_button.is_pressed():
@@ -1246,12 +1247,12 @@ def level_menu():
                                     level_two_coordinates[i][0],
                                     SCREEN_HEIGHT - level_two_coordinates[i][1],
                                     40, 40, window, level_two_enemy[i][0],
-                                    level_two_enemy[i][1], 1)
+                                    level_two_enemy[i][1], 2)
                         enemy_group.add(level_two_enemies[i])
-                    map_group.add(map_object_list[0])
-                    current_player.x = 100
-                    current_player.y = 320
-                    current_player.rect.center = (current_player.x, current_player.y)
+                    map_group.add(map_object_list[2])
+                    current_player.x = player_coords[2][0]
+                    current_player.y = player_coords[2][1]
+                    current_player.rect.center = player_coords[2]
                     level_play(level_info[1])
 
                 elif event.button == 1 and level_3_button.is_pressed():
@@ -1261,12 +1262,12 @@ def level_menu():
                                     level_three_coordinates[i][0],
                                     SCREEN_HEIGHT - level_three_coordinates[i][1],
                                     40, 40, window, level_three_enemy[i][0],
-                                    level_three_enemy[i][1], 1)
+                                    level_three_enemy[i][1], 3)
                         enemy_group.add(level_three_enemies[i])
-                    map_group.add(map_object_list[1])
-                    current_player.x = 145
-                    current_player.y = 580
-                    current_player.rect.center = (current_player.x, current_player.y)
+                    map_group.add(map_object_list[3])
+                    current_player.x = player_coords[3][0]
+                    current_player.y = player_coords[3][1]
+                    current_player.rect.center = player_coords[3]
                     level_play(level_info[2])
 
                 elif event.button == 1 and level_4_button.is_pressed():
@@ -1276,11 +1277,12 @@ def level_menu():
                                     level_four_coordinates[i][0],
                                     SCREEN_HEIGHT - level_four_coordinates[i][1],
                                     40, 40, window, level_four_enemy[i][0],
-                                    level_four_enemy[i][1], 1)
+                                    level_four_enemy[i][1], 4)
                         enemy_group.add(level_four_enemies[i])
-                    map_group.add(map_object_list[2])
-                    current_player.y = 250
-                    current_player.rect.center = (current_player.x, current_player.y)
+                    map_group.add(map_object_list[4])
+                    current_player.x = player_coords[4][0]
+                    current_player.y = player_coords[4][1]
+                    current_player.rect.center = player_coords[4]
                     level_play(level_info[3])
 
                 elif event.button == 1 and level_5_button.is_pressed():
@@ -1290,9 +1292,9 @@ def level_menu():
                                     level_five_coordinates[i][0],
                                     SCREEN_HEIGHT - level_five_coordinates[i][1],
                                     40, 40, window, level_five_enemy[i][0],
-                                    level_five_enemy[i][1], 1)
+                                    level_five_enemy[i][1], 5)
                         enemy_group.add(level_five_enemies[i])
-                    map_group.add(map_object_list[3])
+                    map_group.add(map_object_list[5])
                     level_play(level_info[4])
 
                 elif event.button == 1 and level_6_button.is_pressed():
@@ -1302,9 +1304,9 @@ def level_menu():
                                     level_six_coordinates[i][0],
                                     SCREEN_HEIGHT - level_six_coordinates[i][1],
                                     40, 40, window, level_six_enemy[i][0],
-                                    level_six_enemy[i][1], 1)
+                                    level_six_enemy[i][1], 6)
                         enemy_group.add(level_six_enemies[i])
-                    map_group.add(map_object_list[4])
+                    map_group.add(map_object_list[6])
                     level_play(level_info[5])
 
                 elif event.button == 1 and level_7_button.is_pressed():
@@ -1314,9 +1316,9 @@ def level_menu():
                                     level_seven_coordinates[i][0],
                                     SCREEN_HEIGHT - level_seven_coordinates[i][1],
                                     40, 40, window, level_seven_enemy[i][0],
-                                    level_seven_enemy[i][1], 1)
+                                    level_seven_enemy[i][1], 7)
                         enemy_group.add(level_seven_enemies[i])
-                    map_group.add(map_object_list[5])
+                    map_group.add(map_object_list[7])
                     level_play(level_info[6])
 
                 elif event.button == 1 and level_8_button.is_pressed():
@@ -1326,9 +1328,9 @@ def level_menu():
                                     level_eight_coordinates[i][0],
                                     SCREEN_HEIGHT - level_eight_coordinates[i][1],
                                     40, 40, window, level_eight_enemy[i][0],
-                                    level_eight_enemy[i][1], 1)
+                                    level_eight_enemy[i][1], 8)
                         enemy_group.add(level_eight_enemies[i])
-                    map_group.add(map_object_list[6])
+                    map_group.add(map_object_list[8])
                     level_play(level_info[7])
 
                 elif event.button == 1 and level_9_button.is_pressed():
@@ -1338,9 +1340,9 @@ def level_menu():
                                     level_nine_coordinates[i][0],
                                     SCREEN_HEIGHT - level_nine_coordinates[i][1],
                                     40, 40, window, level_nine_enemy[i][0],
-                                    level_nine_enemy[i][1], 1)
+                                    level_nine_enemy[i][1], 9)
                         enemy_group.add(level_nine_enemies[i])
-                    map_group.add(map_object_list[7])
+                    map_group.add(map_object_list[9])
                     level_play(level_info[8])
 
                 elif event.button == 1 and level_10_button.is_pressed():
@@ -1350,9 +1352,9 @@ def level_menu():
                                     level_ten_coordinates[i][0],
                                     SCREEN_HEIGHT - level_ten_coordinates[i][1],
                                     40, 40, window, level_ten_enemy[i][0],
-                                    level_ten_enemy[i][1], 1)
+                                    level_ten_enemy[i][1], 10)
                         enemy_group.add(level_ten_enemies[i])
-                    map_group.add(map_object_list[8])
+                    map_group.add(map_object_list[10])
                     level_play(level_info[9])
 
                 elif event.button == 1 and back_button.is_pressed():
