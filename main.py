@@ -203,10 +203,18 @@ class Projectile(pygame.sprite.Sprite):
     @property
     def start_x(self):
         return self._start_x
+
+    @start_x.setter
+    def start_x(self, new_start_x) -> int:
+        self._start_x = new_start_x
    
     @property
     def start_y(self):
         return self._start_y
+
+    @start_y.setter
+    def start_y(self, new_start_y) -> int:
+        self._start_y = new_start_y
 
     @property
     def shoot(self):
@@ -744,8 +752,6 @@ def level_play(info):
         current_player.shield = 0
     projectile_group.empty()
     projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], pygame.image.load("test.png"), PJ_S, map_background, map_tiles, screen, tile_size)
-    projectile._start_x = current_player.x
-    projectile._start_y = current_player.y
     projectile_group.add(projectile)
     enemy_projectile = Enemy_Projectile(0, 0, "test.png", PJ_S, map_background, map_tiles, screen, tile_size, 0, 0)
     enemy_projectile_group.empty()
