@@ -917,7 +917,7 @@ def level_finished(won: bool, current_level):
                             enemy_group.add(i)
                     level_play(level_info[current_level - 1])
                 elif event.button == 1 and next_level_button.is_pressed():
-                    if won:
+                    if won or (current_level + 1) not in locked_levels:
                         map_group.empty()
                         loop_enemies()
                         if len(player_group) == 0:
