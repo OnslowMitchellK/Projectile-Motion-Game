@@ -28,7 +28,7 @@ map_object_list = [0, 1, map_obj_2, map_obj_3, map_obj_4]
 map_group = pygame.sprite.Group()
 
 
-player_coords = {1: (65, SCREEN_HEIGHT - 160), 2: (100, 300), 3: (145, 580), 4: (100, 250)}
+player_coords = {1: (65, SCREEN_HEIGHT - 160), 2: (100, 300), 3: (145, 580), 4: (65, 250)}
 
 
 level_one_enemies = {}
@@ -1198,6 +1198,7 @@ def options_menu():
     pygame.quit()
 
 def level_menu():
+    global current_player
     map_group.empty()
     level_1_button = Lockable_button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.25,"Level 1", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     level_2_button = Lockable_button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.25, "Level 2", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
@@ -1239,6 +1240,10 @@ def level_menu():
 
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                enemy_group.empty()
+                if len(player_group) == 0:
+                    current_player = Test_Character(65, SCREEN_HEIGHT - 160, 3, 0, window)
+                    player_group.add(current_player)
                 if event.button == 1 and level_1_button.is_pressed():
                     pygame.display.set_caption("Level 1")
                     for i in range(len(level_one_coordinates)):
