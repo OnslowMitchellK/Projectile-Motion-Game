@@ -1,6 +1,4 @@
 import pygame
-from random import randint
-import time
 LEVEL_ONE_ENEMY_NUM = 2
 enemy_image = pygame.image.load("Assets/player_enemy_images/enemy.jpeg")
 
@@ -37,11 +35,6 @@ class Enemy(pygame.sprite.Sprite):
         self.angle = angle
         self.speed = speed
 
-    # @property
-    # def name(self) -> str:
-    #     """Name getter."""
-    #     return self._name
-
     @property
     def health(self) -> int:
         """Health getter."""
@@ -68,11 +61,6 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self._shield = new_shield
 
-    # @property
-    # def damage(self) -> int:
-    #     """Damage getter."""
-    #     return self._damage
-
     def draw(self):
         self.screen.blit(self.image, self.rect)
         pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
@@ -85,10 +73,3 @@ class Enemy(pygame.sprite.Sprite):
         green_percent = int(self.health / (self.max_health / 100))
         pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.x, self.y - (0.125 * self.image.get_height()), green_percent, 5))
         pygame.draw.rect(self.screen, (0, 0, 255), pygame.Rect(self.x, self.y - (0.175 * self.image.get_height()), self.shield, 5))
-# print("Name: ", level_one_enemies[1].name)
-# print("Health: ", level_one_enemies[1].health)
-# print("Damage: ", level_one_enemies[1].damage)
-# print("x Coordinate: ", level_one_enemies[1]._x)
-# print("y Coordinate: ", level_one_enemies[1]._y)
-# print("Width: ", level_one_enemies[1]._width)
-# print("Height: ", level_one_enemies[1]._height)

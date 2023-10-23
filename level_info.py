@@ -1,67 +1,6 @@
 import pygame
-
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
-
-map_1 = """00000000000000000000000000000000
-0000000000000000000000000000000
-0000000000000000000000000000000
-0000000000000000000000000000000
-0000000000000000000000000000000
-00000000000000000000000000000000
-00000000000000000000000003333300
-0000000000000000000000000333330
-00000000000000000000000003333300
-00000000000000000000000003333300
-00000000000000000000000003333300
-00000000000000000000000003333300
-00000000000000000000000003333300
-00000000000000000000000003333300
-00000000000000000000000000000000
-00000000000000000000000000000000
-33333333333333333333333333333333
-33333333333333333333333333333333"""
-
-
-map_22 = """                                                                
-
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                                                               
-                         22222222222222222222222                
-                          111111111111111111111                
-                            11111111111111111                  
-                              1111111111111                    
-                                111111111                          
-                                111111111                
-                                111111111                    
-                               1111111111                      
-                               1111111111                      
-                               111111111                      
-                               111111111                        
-           22222222222         111111111                    2222
-           11111111111           11111111                  21111
-           11111111111          111111111                2211111
-           11111111111         1111111111              221111111
-           11111111111         11111111              22111111111
-           11111111111         111111111          22211111111111
-           11111111111         1111111111        211111111111111
-2222222222211111111111222222222211111111122222222111111111111111
-1111111111111111111111111111111111111111111111111111111111111111
-1111111111111111111111111111111111111111111111111111111111111111"""
-
-map_3 = ""
 
 airport_background = pygame.image.load("Assets/map1/completed_airport_background.png")
 airport_background = pygame.transform.scale(airport_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -76,11 +15,11 @@ map_3_background = pygame.transform.scale(map_3_background, (SCREEN_WIDTH, SCREE
 map_4_background = pygame.image.load("Assets/map4/map4_background.png")
 map_4_background = pygame.transform.scale(map_4_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-# screen, map background, map tiles, tile size, projectile starting coords, min angle, max angle
-level_1_info = [airport_background, map_1, 40, [40, (SCREEN_HEIGHT - 180)], 0, 90]
-level_2_info = [map_2_background, map_3, 20, [100, 300], 0, 90]
-level_3_info = [map_3_background, map_3, 20, [145, 580], 0, 90]
-level_4_info = [map_4_background, map_3, 20, [100, 250], 0, 90]
+# map background, projectile starting coords
+level_1_info = [airport_background, [40, (SCREEN_HEIGHT - 180)]]
+level_2_info = [map_2_background, [100, 300]]
+level_3_info = [map_3_background, [145, 580]]
+level_4_info = [map_4_background, [100, 250]]
 level_5_info = []
 level_6_info = []
 level_7_info = []

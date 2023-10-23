@@ -1,6 +1,5 @@
 import pygame
 
-pygame.init()
 
 class Map_Masks(pygame.sprite.Sprite):
     """Enemy Class."""

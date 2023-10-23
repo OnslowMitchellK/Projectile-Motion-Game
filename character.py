@@ -4,29 +4,6 @@
 
 import pygame
 
-# framerate
-clock = pygame.time.Clock()
-FPS = 60
-
-pygame.init()
-
-
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
-
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Projectile Motion game')
-
-# Movement variables
-moving_left = False
-moving_right = False
-
-# Colour
-BG = (215, 142, 32)
-
-def draw_bg():
-    screen.fill(BG)
-
 class Image_Coords:
     def __init__(self, relative_x, relative_y) -> None:
         self._x = relative_x
@@ -63,7 +40,7 @@ aziz_images: dict[str, Image_Coords] = {
 
 
 
-class Test_Character(pygame.sprite.Sprite):
+class Character(pygame.sprite.Sprite):
     def __init__(self, x, y, scale, speed, screen):
         pygame.sprite.Sprite.__init__(self)
         self.speed = speed
@@ -117,36 +94,8 @@ class Test_Character(pygame.sprite.Sprite):
             elif self.current_image == image:
                 is_image = True
 
-        dx = aziz_images[self.current_image].x()
-        dy = aziz_images[self.current_image].y()
-
-        self.x += dx
-        self.y += dy
-
         img = pygame.image.load(self.current_image)
         self.image = pygame.transform.scale(img, (int(img.get_width() * self.scale), int(img.get_height() * self.scale)))
-
-    def move(self, moving_left, moving_right):
-        # reset movement
-        dx = 0
-        dy = 0
-
-        # left or right movement
-        if moving_left:
-            dx = -self.speed
-            self.flip = True
-            self.direction = -1
-        if moving_right:
-            dx = self.speed
-            self.flip = False
-            self.direction = 1
-
-        #update rectangle position
-        self.rect.x += dx
-        self.rect.y += dy
-
-    # def draw(self):
-    #     screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
     def die(self):
         self.kill()
