@@ -203,10 +203,18 @@ class Projectile(pygame.sprite.Sprite):
     @property
     def start_x(self):
         return self._start_x
+    
+    @start_x.setter
+    def start_x(self, new_start_x) -> int:
+        self._start_x = new_start_x
    
     @property
     def start_y(self):
         return self._start_y
+
+    @start_y.setter
+    def start_y(self, new_start_y) -> int:
+        self._start_y = new_start_y
 
     @property
     def shoot(self):
@@ -272,9 +280,11 @@ class Projectile(pygame.sprite.Sprite):
         if upgrade_2.get_level() == 0:
             pressed = True
         run = True
+        clock = pygame.time.Clock()
 
         while run:
             for coords in coordinates:
+                clock.tick(60)
                 x = coords[0]
                 y = coords[1]
 
@@ -399,7 +409,9 @@ class Enemy_Projectile(pygame.sprite.Sprite):
 
     def draw_trajectory(self, ):
         coordinates = self.trajectory(1 / 10)
+        clock = pygame.time.Clock()
         for coords in coordinates:
+            clock.tick(60)
             x = coords[0]
             y = coords[1]
 
@@ -537,10 +549,10 @@ def deduct_player_health(player):
 def deduct_enemy_health(enemy_hit):
     global player_group
     for i in player_group:
-        damage = i.damage
+        damage = i.damage + 200
     # Damage upgrade.
     try:
-        damage += (upgrade_5.get_level() * 8)
+        damage += (upgrade_5.get_level() * 20)
     except:
         pass
     crit_chance = upgrade_8.get_level()
@@ -568,14 +580,13 @@ def deduct_enemy_health(enemy_hit):
                 pygame.time.wait(250)
             elif i == 9:
                 enemy_hit.die()
-        enemy_dead_check(enemy_hit.level + 2)
+        enemy_dead_check(enemy_hit.level)
 
 locked_levels = [2, 3, 4, 5, 6, 7, 8, 9, 10]
 def enemy_dead_check(level):
     if len(enemy_group) == 0:
-        current_player.level_points += 1
         try:
-            locked_levels.remove(level)
+            locked_levels.remove(level + 1)
         except Exception:
             pass
         level_finished(True, level)
@@ -583,7 +594,8 @@ def enemy_dead_check(level):
 
 def player_dead():
     print("PLAYER IS DEAD")
-    level_finished(False)
+    enemy_group.sprites()[0].level
+    level_finished(False, enemy_group.sprites()[0].level)
 
 
 def draw_tiles(map, tile_size, first = False):
@@ -729,7 +741,7 @@ def level_play(info):
     shoot = False
 
     if len(player_group) == 0:
-        current_player = Test_Character(65, SCREEN_HEIGHT - 160, 1.5, 0, window)
+        current_player = Test_Character(65, SCREEN_HEIGHT - 160, 3, 0, window)
         player_group.add(current_player)
 
     try:
@@ -765,7 +777,7 @@ def level_play(info):
 
     run = True
     while run:
-        clock.tick(60)
+        clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -780,7 +792,7 @@ def level_play(info):
                 #     break
             elif event.type == pygame.MOUSEBUTTONDOWN and not shoot:
                 if event.button == 1 and exit_button.is_pressed():
-                    enemy_group = pygame.sprite.Group()
+                    enemy_group.empty()
                     main_menu()
                 elif event.button == 1:
                     shoot = True
@@ -863,7 +875,7 @@ def level_play(info):
 
 
 
-def level_finished(won: bool, current_level=1):
+def level_finished(won: bool, current_level):
     background = pygame.Rect(0, 0, 400, 200)
     background.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     pygame.draw.rect(window, "black", background, border_radius=10)
@@ -874,7 +886,20 @@ def level_finished(won: bool, current_level=1):
     text_rect = text.get_rect()
     text_rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.4)
 
+    diamond_text = font.render(f"+1", True, "white")
+    coin_text = font.render(f"+3", True, "white")
+
+    diamond = pygame.transform.scale(diamond_image, (40, 40))
+    coin = pygame.transform.scale(coin_image, (40, 40))
+
     window.blit(text, text_rect.topleft)
+    if won:
+        window.blit(diamond, (SCREEN_WIDTH * 0.5 - 100, SCREEN_HEIGHT * 0.47))
+        window.blit(diamond_text, (SCREEN_WIDTH * 0.5 - 50, SCREEN_HEIGHT * 0.48))
+        window.blit(coin, (SCREEN_WIDTH * 0.5 + 10, SCREEN_HEIGHT * 0.47))
+        window.blit(coin_text, (SCREEN_WIDTH * 0.5 + 60, SCREEN_HEIGHT * 0.48))
+        current_player.super_points += 1
+        current_player.level_points += 3
 
     main_menu_button = Level_completed_button(SCREEN_WIDTH * .395, SCREEN_HEIGHT * .6, "Assets/level_finished_images/home.png")
     upgrades_menu_button = Level_completed_button(SCREEN_WIDTH * .465, SCREEN_HEIGHT * .6, "Assets/level_finished_images/upgrades.png")
@@ -902,17 +927,21 @@ def level_finished(won: bool, current_level=1):
                     map_group.empty()
                     for i in make_enemy:
                         print("current level: ", current_level)
-                        if i.level == current_level - 2:
+                        if i.level == current_level:
                             enemy_group.add(i)
-                    level_play(level_info[current_level - 2])
+                    level_play(level_info[current_level - 1])
                 elif event.button == 1 and next_level_button.is_pressed():
                     if won:
                         map_group.empty()
+                        print("current_level = ", current_level)
                         for i in make_enemy:
-                            if i.level == current_level:
+                            if i.level == current_level + 1:
                                 enemy_group.add(i)
-                        map_group.add(map_object_list[current_level - 1])
-                        level_play(level_info[current_level - 1])
+                        map_group.add(map_object_list[current_level + 1])
+                        current_player.x = player_coords[current_level + 1][0]
+                        current_player.y = player_coords[current_level + 1][1]
+                        current_player.rect.center = player_coords[current_level + 1]
+                        level_play(level_info[current_level])
 
         pygame.display.update()
     pygame.quit()
@@ -1237,7 +1266,9 @@ def level_menu():
                                     40, 40, window, level_one_enemy[i][0],
                                     level_one_enemy[i][1], 1)
                         enemy_group.add(level_one_enemies[i])
-
+                    current_player.x = player_coords[1][0]
+                    current_player.y = player_coords[1][1]
+                    current_player.rect.center = player_coords[1]
                     level_play(level_info[0])
 
                 elif event.button == 1 and level_2_button.is_pressed():
