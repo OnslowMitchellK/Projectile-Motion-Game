@@ -15,16 +15,14 @@ map_3_background = pygame.transform.scale(map_3_background, (SCREEN_WIDTH, SCREE
 map_4_background = pygame.image.load("Assets/map4/map4_background.png")
 map_4_background = pygame.transform.scale(map_4_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
+map_5_background = pygame.image.load("Assets/map5/map5_background.png")
+map_5_background = pygame.transform.scale(map_5_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
 # map background, projectile starting coords
 level_1_info = [airport_background, [40, (SCREEN_HEIGHT - 180)]]
 level_2_info = [map_2_background, [100, 300]]
 level_3_info = [map_3_background, [145, 580]]
 level_4_info = [map_4_background, [100, 250]]
-level_5_info = []
-level_6_info = []
-level_7_info = []
-level_8_info = []
-level_9_info = []
-level_10_info = []
+level_5_info = [map_5_background, [100, 420]]
 
-level_info = [level_1_info, level_2_info, level_3_info, level_4_info, level_5_info, level_6_info, level_7_info, level_8_info, level_9_info, level_10_info]
+level_info = [level_1_info, level_2_info, level_3_info, level_4_info, level_5_info]

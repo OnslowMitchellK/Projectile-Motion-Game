@@ -28,13 +28,14 @@ window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
 map_obj_2 = Map_Masks(pygame.image.load('Assets/map2/map2_objects.png').convert_alpha())
 map_obj_3 = Map_Masks(pygame.image.load('Assets/map3/map_3_obj.png').convert_alpha())
 map_obj_4 = Map_Masks(pygame.image.load('Assets/map4/map_4_obj.png').convert_alpha())
+map_obj_5 = Map_Masks(pygame.image.load('Assets/map5/map_5_obj.png').convert_alpha())
 map_obj_3.image = pygame.transform.scale(map_obj_3.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-map_object_list = [0, 1, map_obj_2, map_obj_3, map_obj_4]
+map_object_list = [0, 1, map_obj_2, map_obj_3, map_obj_4, map_obj_5]
 map_group = pygame.sprite.Group()
 
 
-player_coords = {1: (65, SCREEN_HEIGHT - 160), 2: (100, 300), 3: (145, 580), 4: (100, 250)}
+player_coords = {1: (65, SCREEN_HEIGHT - 160), 2: (100, 300), 3: (145, 580), 4: (100, 250), 5: (100, 420)}
 
 
 level_one_enemies = {}
@@ -71,36 +72,6 @@ level_five_enemy = [[130, 80, level_five_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_five_coordinates[0][1] + 20],
                    [170, 98, level_five_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_five_coordinates[1][1]]]
-level_six_enemies = {}
-level_six_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
-level_six_enemy = [[130, 80, level_six_coordinates[0][0] + 80, SCREEN_HEIGHT -
-                    level_six_coordinates[0][1] + 20],
-                   [170, 98, level_six_coordinates[1][0] + 80, SCREEN_HEIGHT -
-                    level_six_coordinates[1][1]]]
-level_seven_enemies = {}
-level_seven_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
-level_seven_enemy = [[130, 80, level_seven_coordinates[0][0] + 80, SCREEN_HEIGHT -
-                    level_seven_coordinates[0][1] + 20],
-                   [170, 98, level_seven_coordinates[1][0] + 80, SCREEN_HEIGHT -
-                    level_seven_coordinates[1][1]]]
-level_eight_enemies = {}
-level_eight_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
-level_eight_enemy = [[130, 80, level_eight_coordinates[0][0] + 80, SCREEN_HEIGHT -
-                    level_eight_coordinates[0][1] + 20],
-                   [170, 98, level_eight_coordinates[1][0] + 80, SCREEN_HEIGHT -
-                    level_eight_coordinates[1][1]]]
-level_nine_enemies = {}
-level_nine_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
-level_nine_enemy = [[130, 80, level_nine_coordinates[0][0] + 80, SCREEN_HEIGHT -
-                    level_nine_coordinates[0][1] + 20],
-                   [170, 98, level_nine_coordinates[1][0] + 80, SCREEN_HEIGHT -
-                    level_nine_coordinates[1][1]]]
-level_ten_enemies = {}
-level_ten_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
-level_ten_enemy = [[130, 80, level_ten_coordinates[0][0] + 80, SCREEN_HEIGHT -
-                    level_ten_coordinates[0][1] + 20],
-                   [170, 98, level_ten_coordinates[1][0] + 80, SCREEN_HEIGHT -
-                    level_ten_coordinates[1][1]]]
 
 
 font_directory = "C:/Fonts/Barriecito-Regular.ttf"
@@ -469,36 +440,6 @@ for i in range(len(level_five_coordinates)):
                 SCREEN_HEIGHT - level_five_coordinates[i][1],
                 40, 40, window, level_five_enemy[i][0],
                 level_five_enemy[i][1], 5))
-for i in range(len(level_six_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_six_coordinates[i][0],
-                SCREEN_HEIGHT - level_six_coordinates[i][1],
-                40, 40, window, level_six_enemy[i][0],
-                level_six_enemy[i][1], 6))
-for i in range(len(level_seven_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_seven_coordinates[i][0],
-                SCREEN_HEIGHT - level_seven_coordinates[i][1],
-                40, 40, window, level_seven_enemy[i][0],
-                level_seven_enemy[i][1], 7))
-for i in range(len(level_eight_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_eight_coordinates[i][0],
-                SCREEN_HEIGHT - level_eight_coordinates[i][1],
-                40, 40, window, level_eight_enemy[i][0],
-                level_eight_enemy[i][1], 8))
-for i in range(len(level_nine_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_nine_coordinates[i][0],
-                SCREEN_HEIGHT - level_nine_coordinates[i][1],
-                40, 40, window, level_nine_enemy[i][0],
-                level_nine_enemy[i][1], 9))
-for i in range(len(level_ten_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_ten_coordinates[i][0],
-                SCREEN_HEIGHT - level_ten_coordinates[i][1],
-                40, 40, window, level_ten_enemy[i][0],
-                level_ten_enemy[i][1], 10))
 
 
 def deduct_player_health(player):
@@ -553,7 +494,7 @@ def deduct_enemy_health(enemy_hit):
                 enemy_hit.die()
         enemy_dead_check(enemy_hit.level)
 
-locked_levels = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+locked_levels = [2, 3, 4, 5]
 def enemy_dead_check(level):
     if len(enemy_group) == 0:
         try:
@@ -635,8 +576,6 @@ def level_play(info):
     screen = window
     map_background = info[0]
     projectile_starting_coords = info[1]
-    # min_angle = info[4]
-    # max_angle = info[5]
 
     dot_distance = 6
     clock = pygame.time.Clock()
@@ -722,19 +661,19 @@ def level_play(info):
                 """10 dots across a eigth of the screen"""
                 dot_distance = 8
                 for i in coords[:10]:
-                    if i[0] < SCREEN_WIDTH / dot_distance:
+                    if i[0] < SCREEN_WIDTH / dot_distance + current_player.x:
                         pygame.draw.circle(window, "yellow", (i), 10)
             case 2:
                 """20 dots across a quarter of the screen"""
                 dot_distance = 5
                 for i in coords[:20]:
-                    if i[0] < SCREEN_WIDTH / dot_distance:
+                    if i[0] < SCREEN_WIDTH / dot_distance + current_player.x:
                         pygame.draw.circle(window, "yellow", (i), 10)
             case 3:
                 """30 dots 1/3 across screen and shows max height"""
                 dot_distance = 3
                 for i in coords[:30]:
-                    if i[0] < SCREEN_WIDTH / dot_distance:
+                    if i[0] < SCREEN_WIDTH / dot_distance + current_player.x:
                         pygame.draw.circle(window, "yellow", (i), 10)
                 pygame.draw.circle(window, "blue", (max_coords), 10)
        
@@ -767,13 +706,15 @@ def level_finished(won: bool, current_level):
     pygame.draw.rect(window, "black", background, border_radius=10)
 
     str_text = "Level Cleared" if won else "Level Failed"
+    if current_level == 5 and won:
+        str_text = "Congrats You Won"
     font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 50)
     text = font.render(str_text, True, "white")
     text_rect = text.get_rect()
     text_rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.4)
 
-    diamond_text = font.render(f"+1", True, "white")
-    coin_text = font.render(f"+3", True, "white")
+    diamond_text = font.render(f"+2", True, "white")
+    coin_text = font.render(f"+4", True, "white")
 
     diamond = pygame.transform.scale(diamond_image, (40, 40))
     coin = pygame.transform.scale(coin_image, (40, 40))
@@ -785,8 +726,8 @@ def level_finished(won: bool, current_level):
         window.blit(diamond_text, (SCREEN_WIDTH * 0.5 - 50, SCREEN_HEIGHT * 0.48))
         window.blit(coin, (SCREEN_WIDTH * 0.5 + 10, SCREEN_HEIGHT * 0.47))
         window.blit(coin_text, (SCREEN_WIDTH * 0.5 + 60, SCREEN_HEIGHT * 0.48))
-        current_player.super_points += 1
-        current_player.level_points += 3
+        current_player.super_points += 2
+        current_player.level_points += 4
 
     main_menu_button = Level_completed_button(SCREEN_WIDTH * .395, SCREEN_HEIGHT * .6, "Assets/level_finished_images/home.png")
     upgrades_menu_button = Level_completed_button(SCREEN_WIDTH * .465, SCREEN_HEIGHT * .6, "Assets/level_finished_images/upgrades.png")
@@ -818,9 +759,10 @@ def level_finished(won: bool, current_level):
                         if i.level == current_level:
                             enemy_group.add(i)
                     level_play(level_info[current_level - 1])
-                elif event.button == 1 and next_level_button.is_pressed():
-                    if won:
+                elif event.button == 1 and next_level_button.is_pressed() and current_level != 5:
+                    if won or (current_level + 1) not in locked_levels:
                         map_group.empty()
+                        loop_enemies()
                         print("current_level = ", current_level)
                         for i in make_enemy:
                             if i.level == current_level + 1:
@@ -829,7 +771,9 @@ def level_finished(won: bool, current_level):
                         current_player.x = player_coords[current_level + 1][0]
                         current_player.y = player_coords[current_level + 1][1]
                         current_player.rect.center = player_coords[current_level + 1]
+                        pygame.display.set_caption(f"Level {current_level + 1}")
                         level_play(level_info[current_level])
+
 
         pygame.display.update()
     pygame.quit()
@@ -840,23 +784,23 @@ rects = [Main_Menu_Projectile() for x in range(100)]
 UPGRADES_WIDTH = SCREEN_WIDTH
 UPGRADES_HEIGHT = SCREEN_HEIGHT
 
-upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/cannon.png", "Upgrade Trajection Display", 5, "Info", [2, 1, 1], 3)
+upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/cannon.png", "Upgrade Trajection Display", 5, "Info", [1, 1, 2], 3)
 
-upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/cannon.png", "Projectile Halt", 5, "Info", [1], 1)
+upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/cannon.png", "Projectile Halt", 5, "Info", [2], 1)
 
-upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/cannon.png", "Projectile Upgrades", 2, "Info", [3, 1], 2)
+upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/cannon.png", "Projectile Upgrades", 2, "Info", [1, 1], 2)
 
-upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/cannon.png", "Increase Health", 3, "Info", [1, 4, 1, 1])
+upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/cannon.png", "Increase Health", 3, "Info", [1, 1, 1, 1])
 
-upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/cannon.png", "Increase Damage", 4, "Info", [1, 1, 5, 1])
+upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/cannon.png", "Increase Damage", 4, "Info", [1, 1, 1, 1])
 
 upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/cannon.png", "Increase Shield", 1, "Info", [1, 1, 1, 1])
 
 upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/cannon.png", "Increase Evasion", 5, "Info", [1, 1, 1, 1])
 
-upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/cannon.png", "Increase Critical Hit Chance", 5, "Info", [2, 1, 1, 1])
+upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/cannon.png", "Increase Critical Hit Chance", 5, "Info", [1, 1, 1, 1])
 
-upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/cannon.png", "Upgrade Lifesteal", 5, "Info", [1, 5, 1, 1])
+upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/cannon.png", "Upgrade Lifesteal", 5, "Info", [1, 1, 1, 1])
 
 upgrades: list[Upgrade] = [upgrade_1, upgrade_2, upgrade_3, upgrade_4, upgrade_5, upgrade_6, upgrade_7, upgrade_8, upgrade_9]
 
@@ -1076,7 +1020,7 @@ def clear_save():
                         save.truncate()
                     current_player.level_points = 0
                     current_player.super_points = 0
-                    locked_levels = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+                    locked_levels = [2, 3, 4, 5]
                     completed_levels = []
                     for upgrade in upgrades:
                         upgrade.reset_level()
@@ -1103,17 +1047,10 @@ def level_menu():
     level_3_button = Lockable_button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.25,"Level 3", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     level_4_button = Lockable_button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.25, "Level 4", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     level_5_button = Lockable_button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.5,"Level 5", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_6_button = Lockable_button(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * 0.5, "Level 6", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_7_button = Lockable_button(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.5,"Level 7", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_8_button = Lockable_button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.5, "Level 8", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_9_button = Lockable_button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.75,"Level 9", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
-    level_10_button = Lockable_button(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.75, "Level 10", 100, 100, font_size=30, border_radius=20, background_colour=(190, 10, 180))
     back_button = Lockable_button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, "Main Menu", 350, 100, font_size=50, border_radius=20, background_colour=(190, 10, 180))
    
     level_buttons = {1 : level_1_button, 2 : level_2_button, 3 : level_3_button,
-                     4 : level_4_button, 5 : level_5_button, 6 : level_6_button,
-                     7 : level_7_button, 8 : level_8_button, 9 : level_9_button,
-                     10 : level_10_button}
+                     4 : level_4_button, 5 : level_5_button}
    
 
     pygame.display.set_caption("Level Menu")
@@ -1205,67 +1142,9 @@ def level_menu():
                                     level_five_enemy[i][1], 5)
                         enemy_group.add(level_five_enemies[i])
                     map_group.add(map_object_list[5])
+                    current_player.x = player_coords[5][0]
+                    current_player.y = player_coords[5][1]
                     level_play(level_info[4])
-
-                elif event.button == 1 and level_6_button.is_pressed():
-                    pygame.display.set_caption("Level 6")
-                    for i in range(len(level_six_coordinates)):
-                        level_six_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
-                                    level_six_coordinates[i][0],
-                                    SCREEN_HEIGHT - level_six_coordinates[i][1],
-                                    40, 40, window, level_six_enemy[i][0],
-                                    level_six_enemy[i][1], 6)
-                        enemy_group.add(level_six_enemies[i])
-                    map_group.add(map_object_list[6])
-                    level_play(level_info[5])
-
-                elif event.button == 1 and level_7_button.is_pressed():
-                    pygame.display.set_caption("Level 7")
-                    for i in range(len(level_seven_coordinates)):
-                        level_seven_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
-                                    level_seven_coordinates[i][0],
-                                    SCREEN_HEIGHT - level_seven_coordinates[i][1],
-                                    40, 40, window, level_seven_enemy[i][0],
-                                    level_seven_enemy[i][1], 7)
-                        enemy_group.add(level_seven_enemies[i])
-                    map_group.add(map_object_list[7])
-                    level_play(level_info[6])
-
-                elif event.button == 1 and level_8_button.is_pressed():
-                    pygame.display.set_caption("Level 8")
-                    for i in range(len(level_eight_coordinates)):
-                        level_eight_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
-                                    level_eight_coordinates[i][0],
-                                    SCREEN_HEIGHT - level_eight_coordinates[i][1],
-                                    40, 40, window, level_eight_enemy[i][0],
-                                    level_eight_enemy[i][1], 8)
-                        enemy_group.add(level_eight_enemies[i])
-                    map_group.add(map_object_list[8])
-                    level_play(level_info[7])
-
-                elif event.button == 1 and level_9_button.is_pressed():
-                    pygame.display.set_caption("Level 9")
-                    for i in range(len(level_nine_coordinates)):
-                        level_nine_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
-                                    level_nine_coordinates[i][0],
-                                    SCREEN_HEIGHT - level_nine_coordinates[i][1],
-                                    40, 40, window, level_nine_enemy[i][0],
-                                    level_nine_enemy[i][1], 9)
-                        enemy_group.add(level_nine_enemies[i])
-                    map_group.add(map_object_list[9])
-                    level_play(level_info[8])
-
-                elif event.button == 1 and level_10_button.is_pressed():
-                    pygame.display.set_caption("Level 10")
-                    for i in range(len(level_ten_coordinates)):
-                        level_ten_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
-                                    level_ten_coordinates[i][0],
-                                    SCREEN_HEIGHT - level_ten_coordinates[i][1],
-                                    40, 40, window, level_ten_enemy[i][0],
-                                    level_ten_enemy[i][1], 10)
-                        enemy_group.add(level_ten_enemies[i])
-                    map_group.add(map_object_list[10])
-                    level_play(level_info[9])
 
                 elif event.button == 1 and back_button.is_pressed():
                     main_menu()

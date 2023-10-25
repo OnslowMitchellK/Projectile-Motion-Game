@@ -33,7 +33,7 @@ Projectile Halt, press space when the projectile is in mid-air to stop all horiz
 
 Projectile Upgrades:
 At upgrade 1, press 1 when the projectile is in mid-air to double the size of the projectile for the remainder of the shot.
-At upgrade 2, press 2 when the projectile is in mid-air to make the projectile bounce at a portion of the spped and the same angle.
+At upgrade 2, press 2 when the projectile is in mid-air to make the projectile bounce at a portion of the speed and the same angle.
 
 ***Note***
 Both projectile halt and the mid-air double jump cnanot be used in conjunction with each other.
