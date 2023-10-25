@@ -30,6 +30,7 @@ map_obj_2 = Map_Masks(pygame.image.load('Assets/map2/map_2_obj.png').convert_alp
 map_obj_3 = Map_Masks(pygame.image.load('Assets/map3/map_3_obj.png').convert_alpha())
 map_obj_4 = Map_Masks(pygame.image.load('Assets/map4/map_4_obj.png').convert_alpha())
 map_obj_5 = Map_Masks(pygame.image.load('Assets/map5/map_5_obj.png').convert_alpha())
+map_obj_1.image = pygame.transform.scale(map_obj_1.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 map_obj_3.image = pygame.transform.scale(map_obj_3.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 map_object_list = [0, map_obj_1, map_obj_2, map_obj_3, map_obj_4, map_obj_5]
