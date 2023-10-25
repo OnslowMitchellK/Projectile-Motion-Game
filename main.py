@@ -28,13 +28,14 @@ window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
 map_obj_2 = Map_Masks(pygame.image.load('Assets/map2/map2_objects.png').convert_alpha())
 map_obj_3 = Map_Masks(pygame.image.load('Assets/map3/map_3_obj.png').convert_alpha())
 map_obj_4 = Map_Masks(pygame.image.load('Assets/map4/map_4_obj.png').convert_alpha())
+map_obj_5 = Map_Masks(pygame.image.load('Assets/map5/map_5_obj.png').convert_alpha())
 map_obj_3.image = pygame.transform.scale(map_obj_3.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-map_object_list = [0, 1, map_obj_2, map_obj_3, map_obj_4]
+map_object_list = [0, 1, map_obj_2, map_obj_3, map_obj_4, map_obj_5]
 map_group = pygame.sprite.Group()
 
 
-player_coords = {1: (65, SCREEN_HEIGHT - 160), 2: (100, 300), 3: (145, 580), 4: (65, 250)}
+player_coords = {1: (65, SCREEN_HEIGHT - 160), 2: (100, 300), 3: (145, 580), 4: (65, 250), 5: (100, 420)}
 
 
 level_one_enemies = {}
@@ -61,16 +62,18 @@ level_four_enemies = {}
 level_four_coordinates = [[SCREEN_WIDTH - 700, 500], [SCREEN_WIDTH - 300, 340], [SCREEN_WIDTH - 100, 600]]
 level_four_enemy = [[130, 80, level_four_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_four_coordinates[0][1] + 20],
-                    [110, 130, level_four_coordinates[0][0] + 80, SCREEN_HEIGHT -
-                    level_four_coordinates[0][1] + 20],
-                   [140, 104, level_four_coordinates[1][0] + 80, SCREEN_HEIGHT -
-                    level_four_coordinates[1][1]]]
+                    [110, 130, level_four_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_four_coordinates[1][1] + 20],
+                   [140, 104, level_four_coordinates[2][0] + 80, SCREEN_HEIGHT -
+                    level_four_coordinates[2][1]]]
 level_five_enemies = {}
-level_five_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
+level_five_coordinates = [[SCREEN_WIDTH - 890, 180], [SCREEN_WIDTH - 435, 600], [1040, 602]]
 level_five_enemy = [[130, 80, level_five_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_five_coordinates[0][1] + 20],
-                   [170, 98, level_five_coordinates[1][0] + 80, SCREEN_HEIGHT -
-                    level_five_coordinates[1][1]]]
+                    [170, 98, level_five_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_five_coordinates[1][1]],
+                   [170, 98, level_five_coordinates[2][0] + 80, SCREEN_HEIGHT -
+                    level_five_coordinates[2][1]]]
 level_six_enemies = {}
 level_six_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
 level_six_enemy = [[130, 80, level_six_coordinates[0][0] + 80, SCREEN_HEIGHT -
@@ -1232,6 +1235,9 @@ def level_menu():
                                     level_five_enemy[i][1], 5)
                         enemy_group.add(level_five_enemies[i])
                     map_group.add(map_object_list[5])
+                    current_player.x = player_coords[5][0]
+                    current_player.y = player_coords[5][1]
+                    current_player.rect.center = player_coords[5]
                     level_play(level_info[4])
 
                 elif event.button == 1 and level_6_button.is_pressed():
