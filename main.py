@@ -68,11 +68,11 @@ level_four_enemy = [[130, 80, level_four_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_four_coordinates[2][1]]]
 level_five_enemies = {}
 level_five_coordinates = [[SCREEN_WIDTH - 890, 180], [SCREEN_WIDTH - 435, 600], [1040, 602]]
-level_five_enemy = [[130, 80, level_five_coordinates[0][0] + 80, SCREEN_HEIGHT -
+level_five_enemy = [[110, 80, level_five_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_five_coordinates[0][1] + 20],
-                    [170, 98, level_five_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    [170, 95, level_five_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_five_coordinates[1][1]],
-                   [170, 98, level_five_coordinates[2][0] + 80, SCREEN_HEIGHT -
+                   [160, 98, level_five_coordinates[2][0] + 80, SCREEN_HEIGHT -
                     level_five_coordinates[2][1]]]
 level_six_enemies = {}
 level_six_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
@@ -410,8 +410,6 @@ class Enemy_Projectile(pygame.sprite.Sprite):
                 enemy.draw_health()
             current_player.draw_health()
 
-            rotate_angle = math.atan2((current_player.y - y), (current_player.x - x))
-            self.image = pygame.transform.rotate(self.image, rotate_angle)
             self.screen.blit(self.image, (x, y))
             self.rect.x = x
             self.rect.y = y
@@ -667,7 +665,7 @@ def level_play(info):
     projectile_group.empty()
     projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], pygame.image.load("Assets/player_enemy_images/proj.png"), PJ_S, map_background, screen)
     projectile_group.add(projectile)
-    enemy_projectile = Enemy_Projectile(0, 0, "Assets/player_enemy_images/enemy_proj.png", PJ_S * 3, map_background,screen, 0, 0)
+    enemy_projectile = Enemy_Projectile(0, 0, "Assets/player_enemy_images/proj.png", PJ_S, map_background,screen, 0, 0)
     enemy_projectile_group.empty()
     enemy_projectile_group.add(enemy_projectile)
 
