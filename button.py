@@ -90,17 +90,6 @@ class Plus_button(Button):
             count += 1
         return self.levels_list
 
-class Info_button(Button):
-    def __init__(self, x, y, width=20, height=20, text="i", font="C:/Fonts/CroissantOne-Regular.ttf", font_size=20, font_colour=(255, 255, 255), background_colour="#D4D4D4", outline=0, border_radius=0) -> None:
-        super().__init__(x, y, text, width, height, font, font_size, font_colour, background_colour, outline, border_radius)
-        self.fonts = pygame.font.SysFont(font, font_size)
-        self.texts = self.fonts.render(text, True, font_colour)
-
-    def draw(self, screen: pygame.Surface):
-        pygame.draw.rect(screen, self.background_colour, self._rect, self.outline, border_radius=10)
-        screen.blit(self.texts, (self._rect.centerx - self.text.get_width() / 2, self._rect.centery - self.text.get_height() / 2))
-        pygame.draw.circle(screen, "#474747", ((self.x), self.y), 10, width=2)
-
 
 class Level_completed_button(Button):
     def __init__(self, x, y, image, text="None", font="C:/Fonts/CroissantOne-Regular.ttf", font_size=20, font_colour=(255, 255, 255), width=50, height=50, background_colour=(252, 177, 3), outline=0, border_radius=25) -> None:

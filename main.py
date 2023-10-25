@@ -407,8 +407,6 @@ class Enemy_Projectile(pygame.sprite.Sprite):
                 enemy.draw_health()
             current_player.draw_health()
 
-            rotate_angle = math.atan2((current_player.y - y), (current_player.x - x))
-            self.image = pygame.transform.rotate(self.image, rotate_angle)
             self.screen.blit(self.image, (x, y))
             self.rect.x = x
             self.rect.y = y
@@ -601,7 +599,6 @@ def shoot_display(starting_coords):
 
     return [speed, math.degrees(angle)]
 
-
 def enemy_shoot(enemy_projectile, background):
     for enemy in enemy_group:
         rand_list = [0, randint(-80, 80)]
@@ -662,7 +659,7 @@ def level_play(info):
     projectile_group.empty()
     projectile = Projectile(projectile_starting_coords[0], projectile_starting_coords[1], pygame.image.load("Assets/player_enemy_images/proj.png"), PJ_S, map_background, screen)
     projectile_group.add(projectile)
-    enemy_projectile = Enemy_Projectile(0, 0, "Assets/player_enemy_images/enemy_proj.png", PJ_S * 3, map_background,screen, 0, 0)
+    enemy_projectile = Enemy_Projectile(0, 0, "Assets/player_enemy_images/proj.png", PJ_S, map_background,screen, 0, 0)
     enemy_projectile_group.empty()
     enemy_projectile_group.add(enemy_projectile)
 
@@ -711,7 +708,6 @@ def level_play(info):
         for enemy in enemy_group:
             enemy.draw_health()
         current_player.draw_health()
-        # projectile.draw_starting_point()
         returned = shoot_display(projectile_starting_coords)
         coords = projectile.trajectory(1 / 3, projectile_starting_coords[0], projectile_starting_coords[1], returned[1], returned[0])
         y_coords = [x[1] for x in coords]
@@ -755,7 +751,6 @@ def level_play(info):
                 pass
 
             projectile.change_size(1)
-            projectile.draw_starting_point()
             shoot = False
             enemy_shoot(enemy_projectile, map_background)
         
@@ -765,7 +760,7 @@ def level_play(info):
     pygame.quit()
 
 
-
+completed_levels = []
 def level_finished(won: bool, current_level):
     background = pygame.Rect(0, 0, 400, 200)
     background.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
@@ -784,7 +779,8 @@ def level_finished(won: bool, current_level):
     coin = pygame.transform.scale(coin_image, (40, 40))
 
     window.blit(text, text_rect.topleft)
-    if won:
+    if won and current_level not in completed_levels:
+        completed_levels.append(current_level)
         window.blit(diamond, (SCREEN_WIDTH * 0.5 - 100, SCREEN_HEIGHT * 0.47))
         window.blit(diamond_text, (SCREEN_WIDTH * 0.5 - 50, SCREEN_HEIGHT * 0.48))
         window.blit(coin, (SCREEN_WIDTH * 0.5 + 10, SCREEN_HEIGHT * 0.47))
@@ -816,6 +812,7 @@ def level_finished(won: bool, current_level):
                 elif event.button == 1 and retry_button.is_pressed():
                     enemy_group.empty()
                     map_group.empty()
+                    map_group.add(map_object_list[current_level])
                     for i in make_enemy:
                         print("current level: ", current_level)
                         if i.level == current_level:
@@ -869,7 +866,6 @@ def upgrades_window():
     window.fill((10, 80, 180))
 
     plus_buttons = [x.get_plus_button() for x in upgrades]
-    info_buttons = [x.get_info_button() for x in upgrades]
 
     main_menu_button = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 70, "Main Menu", font_size=60)
     main_menu_button.draw(window)
@@ -923,10 +919,6 @@ def upgrades_window():
                                 coin_text = font.render(f": {current_player.level_points}", True, "white")
 
                         upgrades[index].display_dots()
-                for info in info_buttons:
-                    if event.button == 1 and info.is_pressed():
-                        index = info_buttons.index(info)
-                        upgrades[index].display_info()
         
         window.fill((10, 80, 190))
 
@@ -941,8 +933,6 @@ def upgrades_window():
             upgrade.display_dots()
             upgrade.display_cost()
                        
-
-
         pygame.display.update()
     pygame.quit()
 
@@ -967,10 +957,10 @@ def blit_text(surface:pygame.Surface, text, pos, font, color=pygame.Color('black
 def instructions_menu():
     pygame.display.set_caption("Instructions Menu")
     window.fill((190, 50, 180))
-    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 20)
+    font = pygame.font.SysFont("C:/Fonts/Barriecito-Regular.ttf", 24)
     blit_text(window, text, (0, 0), font)
 
-    back_button = Button(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.9, "Main Menu", font_size=60)
+    back_button = Button(SCREEN_WIDTH * 0.89, SCREEN_HEIGHT * 0.9, "Main Menu", 260, 86.67, font_size=60)
     back_button.draw(window)
 
     run = True
@@ -982,7 +972,6 @@ def instructions_menu():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and back_button.is_pressed():
                     main_menu()
-
 
         pygame.display.update()
     pygame.quit()
@@ -1061,9 +1050,8 @@ def main_menu():
 
     pygame.quit()
 
-
 def clear_save():
-    global locked_levels
+    global locked_levels, completed_levels
     CLEAR_WIDTH = 600
     CLEAR_HEIGHT = 300
 
@@ -1089,6 +1077,7 @@ def clear_save():
                     current_player.level_points = 0
                     current_player.super_points = 0
                     locked_levels = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+                    completed_levels = []
                     for upgrade in upgrades:
                         upgrade.reset_level()
 
@@ -1139,7 +1128,6 @@ def level_menu():
             level_buttons[i].toggle_clickable()
         i += 1
         
-
     back_button.draw(window)
 
     run = True
@@ -1307,11 +1295,8 @@ def upload_save():
         current_player.level_points = data['1'][2]
         current_player.super_points = data['1'][3]
 
-        #current_player.super_points = 200
-        #current_player.level_points = 200
     except:
         pass
-
 
 current_player = Character(65, SCREEN_HEIGHT - 160, 3, 0, window)
 player_group.add(current_player)

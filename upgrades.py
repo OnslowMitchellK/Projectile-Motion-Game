@@ -1,7 +1,7 @@
 """This is a file containing all the upgrades name, description and price."""
 
 import pygame
-from button import Plus_button, Info_button
+from button import Plus_button
 
 COST = 1
 
@@ -39,7 +39,6 @@ class Upgrade:
         self.plus_button_outline = pygame.Rect(0, 0, 50, 50)
         self.plus_button_outline.center = (self.x + self.width / 2.8, self.y)
 
-        self.info_button = Info_button(x + width / 1.8, y)
         self.info_font = pygame.font.SysFont(font, 12)
         self.info_text = self.info_font.render(info_text, True, "black")
         self.info_rect = pygame.Rect(0, 0, 200, 200)
@@ -47,12 +46,8 @@ class Upgrade:
 
         self.level_prices = prices
 
-
     def get_plus_button(self):
         return self.plus_button
-    
-    def get_info_button(self):
-        return self.info_button
     
     def display_info(self):
         pygame.draw.rect(self.screen, "white", self.info_rect)
@@ -65,7 +60,6 @@ class Upgrade:
         self.display_dots()
         self.plus_button.draw(self.screen)
         pygame.draw.rect(self.screen, "#474747", self.plus_button_outline, 3, border_radius=20)
-        self.info_button.draw(self.screen)
     
     def display_dots(self):
         count = 0
@@ -116,13 +110,6 @@ class Super_upgrade(Upgrade):
     def __init__(self, screen: pygame.Surface, x, y, image, title, cost, info_text, prices, levels=4, width=250, height=80, font_size=30, font="C:/Fonts/Barriecito-Regular.ttf", font_colour="white") -> None:
         super().__init__(screen, x, y, image, title, cost, info_text, prices, levels, width, height, font_size, font, font_colour)
         pass
-
-
-    # def display_cost(self):
-    #     count = 0
-    #     for i in self.cost_list:
-    #         self.screen.blit(diamond_image, (self.x - 60  + 25 * count, self.y - 35))
-    #         count += 1
 
     def display_cost(self):
         cost = self.get_price()
