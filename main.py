@@ -757,7 +757,6 @@ def level_play(info):
                 pass
 
             projectile.change_size(1)
-            projectile.draw_starting_point()
             shoot = False
             enemy_shoot(enemy_projectile, map_background)
         
