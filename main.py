@@ -1156,6 +1156,7 @@ def level_menu():
                     map_group.add(map_object_list[5])
                     current_player.x = player_coords[5][0]
                     current_player.y = player_coords[5][1]
+                    current_player.rect.center = player_coords[5]
                     level_play(level_info[4])
 
                 elif event.button == 1 and back_button.is_pressed():
