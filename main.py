@@ -25,13 +25,15 @@ def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
 
 window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
 
+map_obj_1 = Map_Masks(pygame.image.load('Assets/map1/map_1_obj.png').convert_alpha())
 map_obj_2 = Map_Masks(pygame.image.load('Assets/map2/map2_objects.png').convert_alpha())
 map_obj_3 = Map_Masks(pygame.image.load('Assets/map3/map_3_obj.png').convert_alpha())
 map_obj_4 = Map_Masks(pygame.image.load('Assets/map4/map_4_obj.png').convert_alpha())
 map_obj_5 = Map_Masks(pygame.image.load('Assets/map5/map_5_obj.png').convert_alpha())
+map_obj_1.image = pygame.transform.scale(map_obj_1.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 map_obj_3.image = pygame.transform.scale(map_obj_3.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-map_object_list = [0, 1, map_obj_2, map_obj_3, map_obj_4, map_obj_5]
+map_object_list = [0, map_obj_1, map_obj_2, map_obj_3, map_obj_4, map_obj_5]
 map_group = pygame.sprite.Group()
 
 
@@ -67,11 +69,13 @@ level_four_enemy = [[130, 80, level_four_coordinates[0][0] + 80, SCREEN_HEIGHT -
                    [140, 104, level_four_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_four_coordinates[1][1]]]
 level_five_enemies = {}
-level_five_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
-level_five_enemy = [[130, 80, level_five_coordinates[0][0] + 80, SCREEN_HEIGHT -
+level_five_coordinates = [[SCREEN_WIDTH - 890, 180], [SCREEN_WIDTH - 435, 600], [1040, 602]]
+level_five_enemy = [[110, 80, level_five_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_five_coordinates[0][1] + 20],
-                   [170, 98, level_five_coordinates[1][0] + 80, SCREEN_HEIGHT -
-                    level_five_coordinates[1][1]]]
+                    [170, 95, level_five_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                    level_five_coordinates[1][1]],
+                   [160, 98, level_five_coordinates[2][0] + 80, SCREEN_HEIGHT -
+                    level_five_coordinates[2][1]]]
 
 
 font_directory = "C:/Fonts/Barriecito-Regular.ttf"
@@ -410,36 +414,40 @@ class Enemy_Projectile(pygame.sprite.Sprite):
 
 
 make_enemy = []
-for i in range(len(level_one_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_one_coordinates[i][0],
-                SCREEN_HEIGHT - level_one_coordinates[i][1],
-                40, 40, window, level_one_enemy[i][0],
-                level_one_enemy[i][1], 1))
-for i in range(len(level_two_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_two_coordinates[i][0],
-                SCREEN_HEIGHT - level_two_coordinates[i][1],
-                40, 40, window, level_two_enemy[i][0],
-                level_two_enemy[i][1], 2))
-for i in range(len(level_three_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_three_coordinates[i][0],
-                SCREEN_HEIGHT - level_three_coordinates[i][1],
-                40, 40, window, level_three_enemy[i][0],
-                level_three_enemy[i][1], 3))
-for i in range(len(level_four_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_four_coordinates[i][0],
-                SCREEN_HEIGHT - level_four_coordinates[i][1],
-                40, 40, window, level_four_enemy[i][0],
-                level_four_enemy[i][1], 4))
-for i in range(len(level_five_coordinates)):
-    make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
-                level_five_coordinates[i][0],
-                SCREEN_HEIGHT - level_five_coordinates[i][1],
-                40, 40, window, level_five_enemy[i][0],
-                level_five_enemy[i][1], 5))
+
+def loop_enemies():
+    global make_enemy
+    make_enemy = []
+    for i in range(len(level_one_coordinates)):
+        make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                    level_one_coordinates[i][0],
+                    SCREEN_HEIGHT - level_one_coordinates[i][1],
+                    40, 40, window, level_one_enemy[i][0],
+                    level_one_enemy[i][1], 1))
+    for i in range(len(level_two_coordinates)):
+        make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                    level_two_coordinates[i][0],
+                    SCREEN_HEIGHT - level_two_coordinates[i][1],
+                    40, 40, window, level_two_enemy[i][0],
+                    level_two_enemy[i][1], 2))
+    for i in range(len(level_three_coordinates)):
+        make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                    level_three_coordinates[i][0],
+                    SCREEN_HEIGHT - level_three_coordinates[i][1],
+                    40, 40, window, level_three_enemy[i][0],
+                    level_three_enemy[i][1], 3))
+    for i in range(len(level_four_coordinates)):
+        make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                    level_four_coordinates[i][0],
+                    SCREEN_HEIGHT - level_four_coordinates[i][1],
+                    40, 40, window, level_four_enemy[i][0],
+                    level_four_enemy[i][1], 4))
+    for i in range(len(level_five_coordinates)):
+        make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+                    level_five_coordinates[i][0],
+                    SCREEN_HEIGHT - level_five_coordinates[i][1],
+                    40, 40, window, level_five_enemy[i][0],
+                    level_five_enemy[i][1], 5))
 
 
 def deduct_player_health(player):
@@ -505,13 +513,9 @@ def enemy_dead_check(level):
 
 
 def player_dead():
-    print("PLAYER IS DEAD")
     enemy_group.sprites()[0].level
     level_finished(False, enemy_group.sprites()[0].level)
 
-def draw_enemies(enemy_level_list):
-    for i in range(len(level_one_enemies)):
-        level_one_enemies[i].draw()
 
 def shoot_display(starting_coords):
     x_centre_s = starting_coords[0]
@@ -754,6 +758,11 @@ def level_finished(won: bool, current_level):
                     enemy_group.empty()
                     map_group.empty()
                     map_group.add(map_object_list[current_level])
+                    loop_enemies()
+                    if len(player_group) == 0:
+                        current_player = Character(player_coords[current_level][0],
+                                                    player_coords[current_level][1], 3, 0, window)
+                        player_group.add(current_player)
                     for i in make_enemy:
                         print("current level: ", current_level)
                         if i.level == current_level:
@@ -763,7 +772,9 @@ def level_finished(won: bool, current_level):
                     if won or (current_level + 1) not in locked_levels:
                         map_group.empty()
                         loop_enemies()
-                        print("current_level = ", current_level)
+                        if len(player_group) == 0:
+                            current_player = Character(65, SCREEN_HEIGHT - 160, 3, 0, window)
+                            player_group.add(current_player)
                         for i in make_enemy:
                             if i.level == current_level + 1:
                                 enemy_group.add(i)
