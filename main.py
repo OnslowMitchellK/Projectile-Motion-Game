@@ -81,7 +81,7 @@ level_three_enemy = [[130, 85, level_three_coordinates[0][0] + 80, SCREEN_HEIGHT
                     level_three_coordinates[0][1] + 20],
                     [150, 85, level_three_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_three_coordinates[1][1] + 20],
-                   [180, 129, level_three_coordinates[2][0] + 80, SCREEN_HEIGHT -
+                   [180, 133, level_three_coordinates[2][0] + 80, SCREEN_HEIGHT -
                     level_three_coordinates[2][1]]]
 level_four_enemies = {}
 level_four_coordinates = [[SCREEN_WIDTH - 700, 500], [SCREEN_WIDTH - 300, 340], [SCREEN_WIDTH - 100, 600]]
@@ -490,7 +490,7 @@ def deduct_player_health(player):
 def deduct_enemy_health(enemy_hit):
     global player_group
     for i in player_group:
-        damage = i.damage + 50
+        damage = i.damage
     # Damage upgrade.
     try:
         damage += (upgrade_5.get_level() * 20)

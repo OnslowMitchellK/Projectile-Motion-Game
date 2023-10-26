@@ -56,7 +56,7 @@ class Character(pygame.sprite.Sprite):
         self.y = y
         self.level_points = 0
         self.super_points = 0
-        self.damage = 40
+        self.damage = 50
         self.max_health = 100
         self._health = 100
         self.screen = screen
