@@ -399,6 +399,7 @@ class Enemy_Projectile(pygame.sprite.Sprite):
     def draw_trajectory(self):
         coordinates = self.trajectory(1 / 10)
         clock = pygame.time.Clock()
+        pygame.event.pump()
         for coords in coordinates:
             clock.tick(60)
             x = coords[0]
@@ -521,13 +522,13 @@ def deduct_player_health(player):
     if player.health <= 0:
         print("RIP")
         player.die()
-        player_dead(level)
+        player_dead()
 
 
 def deduct_enemy_health(enemy_hit):
     global player_group
     for i in player_group:
-        damage = i.damage + 200
+        damage = i.damage
     # Damage upgrade.
     try:
         damage += (upgrade_5.get_level() * 20)
@@ -544,7 +545,6 @@ def deduct_enemy_health(enemy_hit):
     if enemy_hit.shield == 0:
         enemy_hit.health -= (damage - old_shield)
     if enemy_hit.health <= 0:
-        print("RIP")
         for i in range(13):
             if (i % 2) != 0 and i < 8:
                 enemy_hit.image = enemy_hit.dead_image
@@ -617,7 +617,6 @@ def enemy_shoot(enemy_projectile, background):
         enemy_projectile.start_x = enemy.rect.topleft[0] + 80
         enemy_projectile.start_y = enemy.rect.topleft[1] + 20
         enemy_projectile._speed = enemy.speed + rand_list[randint(0, len(rand_list) - 1)]
-        print(enemy_projectile._speed)
         enemy_projectile._angle = enemy.angle
         for i in range(len(enemy.shoot_animations)):
             window.blit(background, (0, 0))
