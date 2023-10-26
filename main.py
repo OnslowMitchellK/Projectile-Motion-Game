@@ -13,6 +13,27 @@ import json
 from map_model import Map_Masks
 import sys
 
+shoot_sound_1 = pygame.mixer.Sound("Assets/Music/Sound effects/Projectile Release/Projectilerelease.mp3")
+shoot_sound_2 = pygame.mixer.Sound("Assets/Music/Sound effects/Projectile Release/Projectilerelease2.mp3")
+shoot_sound_3 = pygame.mixer.Sound("Assets/Music/Sound effects/Projectile Release/Projectilerelease3.mp3")
+shoot_sounds = [shoot_sound_1, shoot_sound_2, shoot_sound_3]
+
+enemy_hit_1 = pygame.mixer.Sound("Assets/Music/Sound effects/Enemy hit/Grunt hit.mp3")
+enemy_hit_2 = pygame.mixer.Sound("Assets/Music/Sound effects/Enemy hit/JoeyGrunt.mp3")
+enemy_hit_sounds = [enemy_hit_1, enemy_hit_2]
+
+enemy_death_1 = pygame.mixer.Sound("Assets/Music/Sound effects/Enemy Death/Enemy1 Death.mp3")
+enemy_death_2 = pygame.mixer.Sound("Assets/Music/Sound effects/Enemy Death/Enemy2Death.mp3")
+enemy_death_sounds = [enemy_death_1, enemy_death_2]
+
+taunt_1 = pygame.mixer.Sound("Assets/Music/Sound effects/Enemy Taunt/taunt1.mp3")
+taunt_2 = pygame.mixer.Sound("Assets/Music/Sound effects/Enemy Taunt/taunt2.mp3")
+taunt_3 = pygame.mixer.Sound("Assets/Music/Sound effects/Enemy Taunt/taunt3.mp3")
+taunt_sounds = [taunt_1, taunt_2, taunt_3]
+
+win_sound = pygame.mixer.Sound("Assets/Music/Sound effects/Winning and losing/win_sound.mp3")
+lose_sound = pygame.mixer.Sound("Assets/Music/Sound effects/Winning and losing/lose_sound.mp3")
+
 
 pygame.init()
 
@@ -469,7 +490,7 @@ def deduct_player_health(player):
 def deduct_enemy_health(enemy_hit):
     global player_group
     for i in player_group:
-        damage = i.damage + 200
+        damage = i.damage + 50
     # Damage upgrade.
     try:
         damage += (upgrade_5.get_level() * 20)
@@ -486,6 +507,7 @@ def deduct_enemy_health(enemy_hit):
     if enemy_hit.shield == 0:
         enemy_hit.health -= (damage - old_shield)
     if enemy_hit.health <= 0:
+        pygame.mixer.Sound.play(choice(enemy_death_sounds))
         for i in range(13):
             if (i % 2) != 0 and i < 8:
                 pygame.event.pump()
@@ -501,6 +523,7 @@ def deduct_enemy_health(enemy_hit):
             elif i == 9:
                 enemy_hit.die()
         enemy_dead_check(enemy_hit.level)
+    pygame.mixer.Sound.play(choice(enemy_hit_sounds))
 
 locked_levels = [2, 3, 4, 5]
 def enemy_dead_check(level):
@@ -644,6 +667,8 @@ def level_play(info):
         if image_counter % 6 == 0:
             current_player.change_image()
             image_counter = 0
+        if randint(0, 150) ==  0:     
+            pygame.mixer.Sound.play(choice(taunt_sounds))
 
         map_group.draw(screen)
         player_group.draw(screen)
@@ -682,6 +707,7 @@ def level_play(info):
                 pygame.draw.circle(window, "blue", (max_coords), 10)
        
         if shoot and current_player.get_image() == "animations/Aziz Animations/Aziz 4.png":
+            pygame.mixer.Sound.play(choice(shoot_sounds))
             while current_player.get_image() != "animations/Aziz Animations/Aziz 1.png":
                 current_player.change_image()
 
@@ -707,6 +733,7 @@ def level_play(info):
 completed_levels = []
 def level_finished(won: bool, current_level):
     global current_player
+    pygame.mixer.Sound.play(win_sound) if won else pygame.mixer.Sound.play(lose_sound)
     background = pygame.Rect(0, 0, 400, 200)
     background.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     pygame.draw.rect(window, "black", background, border_radius=10)
