@@ -2,8 +2,8 @@ import pygame
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
-airport_background = pygame.image.load("Assets/map1/completed_airport_background.png")
-airport_background = pygame.transform.scale(airport_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+map_1_background = pygame.image.load("Assets/map1/map1_background.png")
+map_1_background = pygame.transform.scale(map_1_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 map_2_background = pygame.image.load("Assets/map2/map2_background.png")
 map_2_background = pygame.transform.scale(map_2_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
