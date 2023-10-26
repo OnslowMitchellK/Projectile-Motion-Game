@@ -441,7 +441,7 @@ def loop_enemies():
     global make_enemy
     make_enemy = []
     for i in range(len(level_one_coordinates)):
-        make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+        make_enemy.append(Enemy(f"Enemy {1}", 100, 100,
                     level_one_coordinates[i][0],
                     SCREEN_HEIGHT - level_one_coordinates[i][1],
                     40, 40, window, level_one_enemy[i][0],
@@ -453,19 +453,19 @@ def loop_enemies():
                     40, 40, window, level_two_enemy[i][0],
                     level_two_enemy[i][1], 2))
     for i in range(len(level_three_coordinates)):
-        make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+        make_enemy.append(Enemy(f"Enemy {3}", 100, 100,
                     level_three_coordinates[i][0],
                     SCREEN_HEIGHT - level_three_coordinates[i][1],
                     40, 40, window, level_three_enemy[i][0],
                     level_three_enemy[i][1], 3))
     for i in range(len(level_four_coordinates)):
-        make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+        make_enemy.append(Enemy(f"Enemy {4}", 100, 100,
                     level_four_coordinates[i][0],
                     SCREEN_HEIGHT - level_four_coordinates[i][1],
                     40, 40, window, level_four_enemy[i][0],
                     level_four_enemy[i][1], 4))
     for i in range(len(level_five_coordinates)):
-        make_enemy.append(Enemy(f"Enemy {2}", 100, 100,
+        make_enemy.append(Enemy(f"Enemy {5}", 100, 100,
                     level_five_coordinates[i][0],
                     SCREEN_HEIGHT - level_five_coordinates[i][1],
                     40, 40, window, level_five_enemy[i][0],
@@ -1118,7 +1118,7 @@ def level_menu():
                 if event.button == 1 and level_1_button.is_pressed():
                     pygame.display.set_caption("Level 1")
                     for i in range(len(level_one_coordinates)):
-                        level_one_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                        level_one_enemies[i] = Enemy(f"Enemy {1}", 100, 100,
                                     level_one_coordinates[i][0],
                                     SCREEN_HEIGHT - level_one_coordinates[i][1],
                                     40, 40, window, level_one_enemy[i][0],
@@ -1148,7 +1148,7 @@ def level_menu():
                 elif event.button == 1 and level_3_button.is_pressed():
                     pygame.display.set_caption("Level 3")
                     for i in range(len(level_three_coordinates)):
-                        level_three_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                        level_three_enemies[i] = Enemy(f"Enemy {3}", 100, 100,
                                     level_three_coordinates[i][0],
                                     SCREEN_HEIGHT - level_three_coordinates[i][1],
                                     40, 40, window, level_three_enemy[i][0],
@@ -1163,7 +1163,7 @@ def level_menu():
                 elif event.button == 1 and level_4_button.is_pressed():
                     pygame.display.set_caption("Level 4")
                     for i in range(len(level_four_coordinates)):
-                        level_four_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                        level_four_enemies[i] = Enemy(f"Enemy {4}", 100, 100,
                                     level_four_coordinates[i][0],
                                     SCREEN_HEIGHT - level_four_coordinates[i][1],
                                     40, 40, window, level_four_enemy[i][0],
@@ -1178,7 +1178,7 @@ def level_menu():
                 elif event.button == 1 and level_5_button.is_pressed():
                     pygame.display.set_caption("Level 5")
                     for i in range(len(level_five_coordinates)):
-                        level_five_enemies[i] = Enemy(f"Enemy {2}", 100, 100,
+                        level_five_enemies[i] = Enemy(f"Enemy {5}", 100, 100,
                                     level_five_coordinates[i][0],
                                     SCREEN_HEIGHT - level_five_coordinates[i][1],
                                     40, 40, window, level_five_enemy[i][0],
