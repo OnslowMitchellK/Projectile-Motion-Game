@@ -19,7 +19,7 @@ map_5_background = pygame.image.load("Assets/map5/map5_background.png")
 map_5_background = pygame.transform.scale(map_5_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # map background, projectile starting coords
-level_1_info = [airport_background, [40, (SCREEN_HEIGHT - 180)]]
+level_1_info = [map_1_background, [40, (SCREEN_HEIGHT - 180)]]
 level_2_info = [map_2_background, [100, 300]]
 level_3_info = [map_3_background, [145, 580]]
 level_4_info = [map_4_background, [100, 250]]
