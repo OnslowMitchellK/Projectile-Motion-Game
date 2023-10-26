@@ -58,7 +58,7 @@ level_three_enemy = [[130, 85, level_three_coordinates[0][0] + 80, SCREEN_HEIGHT
                     level_three_coordinates[0][1] + 20],
                     [150, 85, level_three_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_three_coordinates[1][1] + 20],
-                   [180, 129, level_three_coordinates[2][0] + 80, SCREEN_HEIGHT -
+                   [180, 133, level_three_coordinates[2][0] + 80, SCREEN_HEIGHT -
                     level_three_coordinates[2][1]]]
 level_four_enemies = {}
 level_four_coordinates = [[SCREEN_WIDTH - 700, 500], [SCREEN_WIDTH - 300, 340], [SCREEN_WIDTH - 100, 600]]
@@ -397,7 +397,7 @@ class Enemy_Projectile(pygame.sprite.Sprite):
         return coordinates
 
     def draw_trajectory(self):
-        coordinates = self.trajectory(1 / 10)
+        coordinates = self.trajectory(1 / 8)
         clock = pygame.time.Clock()
         pygame.event.pump()
         for coords in coordinates:
