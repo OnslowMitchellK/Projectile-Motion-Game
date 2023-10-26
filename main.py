@@ -67,13 +67,13 @@ level_one_enemies = {}
 level_one_coordinates = [[40 * 17, 40 * 6], [40 * 26, 40 * 15.05]]
 level_one_enemy = [[130, 80, level_one_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[0][1] + 20],
-                   [170, 98, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                   [170, 96, level_one_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_one_coordinates[1][1]]]
 level_two_enemies = {}
-level_two_coordinates = [[SCREEN_WIDTH - 100, 40 * 6], [SCREEN_WIDTH - 200, 40 * 15.05]]
-level_two_enemy = [[130, 87, level_two_coordinates[0][0] + 80, SCREEN_HEIGHT -
+level_two_coordinates = [[SCREEN_WIDTH - 550, 450], [SCREEN_WIDTH - 200, 230]]
+level_two_enemy = [[130, 82, level_two_coordinates[0][0] + 80, SCREEN_HEIGHT -
                     level_two_coordinates[0][1] + 20],
-                   [170, 93, level_two_coordinates[1][0] + 80, SCREEN_HEIGHT -
+                   [130, 110, level_two_coordinates[1][0] + 80, SCREEN_HEIGHT -
                     level_two_coordinates[1][1]]]
 level_three_enemies = {}
 level_three_coordinates = [[SCREEN_WIDTH - 500, 150], [SCREEN_WIDTH - 300, 360], [SCREEN_WIDTH - 120, 470]]
