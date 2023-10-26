@@ -795,23 +795,23 @@ rects = [Main_Menu_Projectile() for x in range(100)]
 UPGRADES_WIDTH = SCREEN_WIDTH
 UPGRADES_HEIGHT = SCREEN_HEIGHT
 
-upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/cannon.png", "Upgrade Trajection Display", 5, "Info", [1, 1, 2], 3)
+upgrade_1 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/upgrade_trajection.png", "Upgrade Trajection Display", 5, "Info", [1, 1, 2], 3)
 
-upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/cannon.png", "Projectile Halt", 5, "Info", [2], 1)
+upgrade_2 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/projectile_halt.png", "Projectile Halt", 5, "Info", [2], 1)
 
-upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/cannon.png", "Projectile Upgrades", 2, "Info", [1, 1], 2)
+upgrade_3 = Super_upgrade(window, UPGRADES_WIDTH / 6, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/projectile_upgrade.png", "Projectile Upgrades", 2, "Info", [1, 1], 2)
 
-upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/cannon.png", "Increase Health", 3, "Info", [1, 1, 1, 1])
+upgrade_4 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/increase_health.png", "Increase Health", 3, "Info", [1, 1, 1, 1])
 
-upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/cannon.png", "Increase Damage", 4, "Info", [1, 1, 1, 1])
+upgrade_5 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/increase_damage.png", "Increase Damage", 4, "Info", [1, 1, 1, 1])
 
-upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/cannon.png", "Increase Shield", 1, "Info", [1, 1, 1, 1])
+upgrade_6 = Upgrade(window, UPGRADES_WIDTH / 2, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/increase_shield.png", "Increase Shield", 1, "Info", [1, 1, 1, 1])
 
-upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/cannon.png", "Increase Evasion", 5, "Info", [1, 1, 1, 1])
+upgrade_7 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4, "Assets/upgrades_images/evasion.png", "Increase Evasion", 5, "Info", [1, 1, 1, 1])
 
-upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/cannon.png", "Increase Critical Hit Chance", 5, "Info", [1, 1, 1, 1])
+upgrade_8 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 2, "Assets/upgrades_images/crit_increase.png", "Increase Critical Hit Chance", 5, "Info", [1, 1, 1, 1])
 
-upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/cannon.png", "Upgrade Lifesteal", 5, "Info", [1, 1, 1, 1])
+upgrade_9 = Upgrade(window, UPGRADES_WIDTH / 6 * 5, UPGRADES_HEIGHT / 4 * 3, "Assets/upgrades_images/lifesteal.png", "Upgrade Lifesteal", 5, "Info", [1, 1, 1, 1])
 
 upgrades: list[Upgrade] = [upgrade_1, upgrade_2, upgrade_3, upgrade_4, upgrade_5, upgrade_6, upgrade_7, upgrade_8, upgrade_9]
 
