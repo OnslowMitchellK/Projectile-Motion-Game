@@ -1093,6 +1093,7 @@ def level_menu():
                                     40, 40, window, level_one_enemy[i][0],
                                     level_one_enemy[i][1], 1)
                         enemy_group.add(level_one_enemies[i])
+                    map_group.add(map_object_list[1])
                     current_player.x = player_coords[1][0]
                     current_player.y = player_coords[1][1]
                     current_player.rect.center = player_coords[1]
