@@ -1224,7 +1224,8 @@ def upload_save():
 
 current_player = Character(65, SCREEN_HEIGHT - 160, 3, 0, window)
 player_group.add(current_player)
-
+bgm = pygame.mixer.Sound("bgm.mp3")
+pygame.mixer.Sound.play(bgm, 1000)
 upload_save()
 main_menu()
 
