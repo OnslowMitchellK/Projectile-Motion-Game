@@ -11,7 +11,7 @@ Starting the Game:
 Upon starting the game, you will begin with the first level. Use your mouse to aim projectiles at enemies and defeat them to progress.
  
 Game Levels:
-Currently, there are 10 levels in the game, complete one level to progress onto the next. Be careful as diffculty increases each level.
+Currently, there are 5 levels in the game, complete one level to progress onto the next. Be careful as diffculty increases each level.
  
 Aiming and Shooting:
 To aim your shot, move your mouse to adjust the direction. A partial display of the projectile's trajectory will be shown as you move your mouse, helping you aim.
