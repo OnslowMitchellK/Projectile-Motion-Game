@@ -49,7 +49,7 @@ def make_window(width: int, height:int, caption: str)  -> pygame.Surface:
 window = make_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Menu")
 
 map_obj_1 = Map_Masks(pygame.image.load('Assets/map1/map_1_obj.png').convert_alpha())
-map_obj_2 = Map_Masks(pygame.image.load('Assets/map2/map2_objects.png').convert_alpha())
+map_obj_2 = Map_Masks(pygame.image.load('Assets/map2/map_2_obj.png').convert_alpha())
 map_obj_3 = Map_Masks(pygame.image.load('Assets/map3/map_3_obj.png').convert_alpha())
 map_obj_4 = Map_Masks(pygame.image.load('Assets/map4/map_4_obj.png').convert_alpha())
 map_obj_5 = Map_Masks(pygame.image.load('Assets/map5/map_5_obj.png').convert_alpha())
@@ -60,7 +60,7 @@ map_object_list = [0, map_obj_1, map_obj_2, map_obj_3, map_obj_4, map_obj_5]
 map_group = pygame.sprite.Group()
 
 
-player_coords = {1: (65, 600), 2: (100, 300), 3: (145, 580), 4: (100, 250), 5: (100, 420)}
+player_coords = {1: (65, 600), 2: (100, 300), 3: (145, 580), 4: (65, 250), 5: (100, 420)}
 
 
 level_one_enemies = {}
@@ -113,7 +113,7 @@ player_group = pygame.sprite.Group()
 
 
 class Main_Menu_Projectile:
-    def __init__(self, image="Assets/player_enemy_images/proj.png", possible_speeds = [-8, -7, -6, -5, -4, -3, 3, 4, 5, 6, 7, 8]) -> None:
+    def __init__(self, image="Assets/player_enemy_images/proj.png", possible_speeds = [-4, -3, -2, 2, 3, 4]) -> None:
         self._image = pygame.image.load(image)
         size = randint(30, 50)
         self._image = pygame.transform.scale(self._image, (size, size))
@@ -645,7 +645,7 @@ def level_play(info):
 
     run = True
     while run:
-        clock.tick(30)
+        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -664,10 +664,10 @@ def level_play(info):
         image_counter += 1
         screen.blit(map_background, (0, 0))
 
-        if image_counter % 6 == 0:
+        if image_counter % 10 == 0:
             current_player.change_image()
             image_counter = 0
-        if randint(0, 150) ==  0:     
+        if randint(0, 300) ==  0:     
             pygame.mixer.Sound.play(choice(taunt_sounds))
 
         map_group.draw(screen)
@@ -981,7 +981,7 @@ def main_menu():
 
     run = True
     while run:
-        main_menu_clock.tick(30)
+        main_menu_clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
